@@ -278,7 +278,7 @@
         <mxCell id="9l-zWIeUUMc-4iQuYZCV-66" value="ID" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="110" y="145" width="70" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="9l-zWIeUUMc-4iQuYZCV-67" value="Tamaño" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="9l-zWIeUUMc-4iQuYZCV-67" value="Tamaño&lt;div&gt;letra&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="320" y="30" width="70" height="50" as="geometry" />
         </mxCell>
         <mxCell id="9l-zWIeUUMc-4iQuYZCV-68" value="Paleta" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
