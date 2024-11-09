@@ -4,7 +4,8 @@
   "description": "Aplicación web para gestionar y inscribirse a eventos universitarios",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./app.js"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "http": "^0.0.1-security",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "nodemon": "^3.1.7"
   }
 }
