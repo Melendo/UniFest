@@ -1,0 +1,30 @@
+{
+  "name": "unifest",
+  "version": "1.0.0",
+  "description": "Aplicación web para gestionar y inscribirse a eventos universitarios",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Melendo/UniFest.git"
+  },
+  "keywords": [
+    "html",
+    "css",
+    "javascript",
+    "bootstrap5",
+    "node",
+    "express",
+    "universidad",
+    "complutense",
+    "gestión"
+  ],
+  "author": "Ignacio Melendo y Paula Oramas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Melendo/UniFest/issues"
+  },
+  "homepage": "https://github.com/Melendo/UniFest#readme"
+}
