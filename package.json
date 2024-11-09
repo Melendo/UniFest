@@ -26,5 +26,11 @@
   "bugs": {
     "url": "https://github.com/Melendo/UniFest/issues"
   },
-  "homepage": "https://github.com/Melendo/UniFest#readme"
+  "homepage": "https://github.com/Melendo/UniFest#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "http": "^0.0.1-security",
+    "mysql": "^2.18.1"
+  }
 }
