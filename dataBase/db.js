@@ -6,7 +6,7 @@ const pool = mysql.createPool({
     host: "localhost",
     user: "root",
     password: "",
-    database: "AW_24"
+    database: "aw_24"
 });
 
 // Función para ejecutar consultas a la base de datos

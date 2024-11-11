@@ -3,7 +3,7 @@
 //Requires
 const express = require('express');
 const path = require('path');
-//const db = require('/dataBase/db');
+const db = require('./dataBase/db');
 
 //Definimos el servidor y el puerto
 const app = express();
