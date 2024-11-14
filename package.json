@@ -1,37 +1,20 @@
 {
   "name": "unifest",
-  "version": "1.0.0",
-  "description": "Aplicación web para gestionar y inscribirse a eventos universitarios",
-  "main": "app.js",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./app.js"
+    "start": "node ./bin/www",
+    "run dev": "nodemon ./bin/www"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Melendo/UniFest.git"
-  },
-  "keywords": [
-    "html",
-    "css",
-    "javascript",
-    "bootstrap5",
-    "node",
-    "express",
-    "universidad",
-    "complutense",
-    "gestión"
-  ],
-  "author": "Ignacio Melendo y Paula Oramas",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Melendo/UniFest/issues"
-  },
-  "homepage": "https://github.com/Melendo/UniFest#readme",
   "dependencies": {
-    "dotenv": "^16.4.5",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "ejs": "^3.1.10",
     "express": "^4.21.1",
-    "http": "^0.0.1-security",
+    "express-generator": "^4.2.0",
+    "express-validator": "^7.2.0",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
     "mysql": "^2.18.1",
     "nodemon": "^3.1.7"
   }
