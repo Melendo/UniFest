@@ -25,15 +25,31 @@
           </div>
         </div>
         <div class="col-lg-6 text-bg-dark d-flex align-items-center justify-content-center ">
-          <div clas="w-75 text-center p-5">
-            <h1 class="h2">Accede a la aplicación</h1>
-            <br>
-            <div class="container-fluid d-flex justify-content-between">
-                <a href="/register" class="btn btn-light btn-lg fs-5">Regístrate</a>
-                <a href="/login" class="btn btn-light btn-lg fs-5">Iniciar Sesión</a>
-            </div>
-            <br>
-            <p class="text-secondary text-center">No te pierdas ningun evento...</p>
+          <div clas="container-fluid text-center p-5">
+            
+            <h1 class="h2">Inicio de sesión</h1>
+
+            <form action="#">
+
+                <div class="my-3">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" placeholder="Introduzca su correo" name="email">
+                </div>
+
+                <div class="mb-3">
+                    <label for="pwd">Contraseña:</label>
+                    <input type="password" class="form-control" id="pwd" placeholder="Introduzca su contraseña" name="pswd">
+                </div>
+
+                <div class="form-check mb-3">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" name="remember"> Recuerdame
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+
           </div>
         </div>
       </div>
