@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div class="header p-4 bg-danger d-flex align-items-center">
+      <a href="#" class="text-decoration-none mx-3"
+        ><h1 class="text-white">U N I F E S T</h1></a
+      >
+      <%if(rol === undefined){%>
+      <button
+        type="button"
+        class="bLogin bg-dark btn-lg h4 rounded text-white p-3 ms-auto me-5"
+      >
+        Login
+      </button>
+      <%}else{%>
+      <button type="button" class="bg-dark btn-lg h4 rounded text-white p-2 ms-auto me-5">
+        Mi perfil
+      </button>
+      <button type="button" class="bg-dark btn-lg h4 rounded text-white p-2 mx-5">
+        Mis Eventos
+      </button>
+
+      <button type="button" class="bg-dark btn-lg h4 rounded text-white p-2 mx-5">
+        Notificaciones
+      </button>
+
+      <button type="button" class="bg-dark btn-lg h4 rounded text-white p-2 mx-5">
+        Cerrar sesión
+      </button>
+      <%}%>
+    </div>
+  </body>
+</html>
