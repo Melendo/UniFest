@@ -1,0 +1,16 @@
+.header{
+    flex-direction: row;
+    justify-content: center;
+    /* position: fixed;
+    width: 100%;*/
+}
+
+button:hover{
+    text-decoration: underline;
+}
+
+h1{
+    font-size: 4rem;
+    color: black;
+}
+
