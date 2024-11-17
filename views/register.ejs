@@ -9,7 +9,9 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/stylesheets/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/javascripts/register.js"></script>
   </head>
   <body>
     <div class="container-fluid">
@@ -33,36 +35,36 @@
             
             <h1 class="h2">Regístrate</h1>
 
-            <form action="#">
+            <form id="formRegister">
 
                 <div class="form-label my-3">
                     <label for="nombre">Nombre:</label>
-                    <input type="text" class="form-control" id="nombre" placeholder="Introduzca su nombre" name="nombre">
-                </div>
-
-                <div class="form-label my-3">
-                    <label for="apellidos">Apellidos:</label>
-                    <input type="text" class="form-control" id="apellidos" placeholder="Introduzca sus apellidos" name="apellidos">
+                    <input type="text" class="form-control" id="nombre" placeholder="Introduzca su nombre" name="nombre" >
                 </div>
 
                 <div class="form-label my-3">
                     <label for="telefono">Teléfono:</label>
-                    <input type="text" class="form-control" id="telefono" placeholder="Introduzca su telefono" name="telefono">
+                    <input type="text" class="form-control" id="telefono" placeholder="Introduzca su telefono" name="telefono" >
                 </div>
 
                 <div class="form-label my-3">
-                    <label for="nombre">Email:</label>
-                    <input type="text" class="form-control" id="nombre" placeholder="Introduzca su nombre" name="nombre">
+                    <label for="email">Email:</label>
+                    <input type="text" class="form-control" id="email" placeholder="Introduzca su nombre" name="nombre" >
                 </div>
 
                 <div class="mb-3">
                     <label for="pwd">Contraseña:</label>
-                    <input type="password" class="form-control" id="pwd" placeholder="Introduzca su contraseña" name="pswd">
+                    <input type="password" class="form-control" id="pwd" placeholder="Introduzca su contraseña" name="pwd" >
+                </div>
+
+                <div class="mb-3">
+                    <laber for="confPwd">Confirma la contraseña:</laber>
+                    <input type="password" class="form-control" id="confPwd" placeholder="Repita la contraseña" name="confPwd" >
                 </div>
 
                 <label for="facultad" class="form-label">Facultad:</label>
                 <select class="form-select" id="facultad" name="facultad">
-                    <option>Informática</option>
+                    <option>Informatica</option>
                     <option>Medicina</option>
                     <option>Derecho</option>
                     <option>Farmacia</option>
@@ -70,7 +72,7 @@
 
                 <div class="form-check my-3">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" name="organizador"> Soy organizador
+                        <input class="form-check-input" type="checkbox" id="organizador" name="organizador"> Soy organizador
                     </label>
                 </div>
 
