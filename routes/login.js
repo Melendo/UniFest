@@ -30,8 +30,8 @@ router.post('/login',  async (req, res) => {
     }
     
     // Si las credenciales son correctas, guardar la sesión
-    //req.session.userId = user.ID; // Guardar el ID del usuario en la sesión
-    //req.session.nombre = user.nombre; // Guardar el nombre del usuario en la sesión
+    req.session.userId = user.ID; // Guardar el ID del usuario en la sesión
+    req.session.nombre = user.nombre; // Guardar el nombre del usuario en la sesión
     
     // Responder con éxito, redirigir a otra página o mandar un mensaje de éxito
     return res.status(200).json({ message: 'Inicio de sesión exitoso', redirect: '/dashboard' });
