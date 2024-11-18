@@ -15,36 +15,36 @@ $(document).ready(function () {
 
         // Validacion de nombre
         if (nombre === "") {
-            alert("Por favor, introduzca su nombre.");
+            Swal.fire("Por favor, introduzca su nombre.");
             return false;
         }
 
         // Validacion de teléfono
         if (!/^\d{9}$/.test(telefono)) {
-            alert("Por favor, introduzca un número de teléfono válido de 9 dígitos.");
+            Swal.fire("Por favor, introduzca un número de teléfono válido de 9 dígitos.");
             return false;
         }
 
         // Validacion de correo
         const correoSplit = correo.split("@");
         if (correoSplit.length !== 2 || correoSplit[1] !== "ucm.es") {
-            alert("El correo proporcionado no pertenece a la UCM o no tiene un formato válido.");
+            Swal.fire("El correo proporcionado no pertenece a la UCM o no tiene un formato válido.");
             return false;
         }
 
         // Validacion de contraseña
         if (contrasenia.length < 4 || confContrasenia.length < 4) {
-            alert("La contraseña debe tener al menos 4 caracteres.");
+            Swal.fire("La contraseña debe tener al menos 4 caracteres.");
             return false;
         }
         else if(confContrasenia !== contrasenia){
-            alert("Las contraseñas no coinciden");
+            Swal.fire("Las contraseñas no coinciden");
             return false;
         }
 
         // Validacion de facultad
         if (!facultad) {
-            alert("Por favor, seleccione una facultad.");
+            Swal.fire("Por favor, seleccione una facultad.");
             return false;
         }
 
@@ -54,12 +54,22 @@ $(document).ready(function () {
              method: 'POST',
              data: { nombre, telefono, correo, contrasenia, facultad, esOrganizador},
              success: function(response) {
-                 alert('Formulario enviado con éxito:' + response.message );
-                 window.location.href = '/login';
+                Swal.fire({
+                    title: "Usuario registrado!",
+                    text: response.message,
+                    icon: "success",
+                    confirmButtonText: "OK"
+                }).then(() => {
+                    window.location.href = '/login';
+                  });
              },
              error: function(error) {
                 const errorMessage = error.responseJSON?.message || 'Error desconocido. Inténtelo nuevamente.';
-                alert('Error al enviar el formulario: ' + errorMessage);
+                Swal.fire({
+                    icon: "error",
+                    title: "Algo salió mal",
+                    text: errorMessage,
+                  });
             }            
          });
     });
