@@ -30,6 +30,7 @@ router.post('/register', async (req, res) => {
   console.log('Validando usuario');
   if (resCorreo) {
     console.log('Error al registrar: El correo ya esta en uso')
+    db.real
     return res.status(400).json({ message: 'El correo ya está registrado.' });
   }
 
