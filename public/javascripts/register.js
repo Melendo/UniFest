@@ -5,9 +5,9 @@ $(document).ready(function () {
         event.preventDefault();
 
         // Obtener los valores de los campos del formulario
-        const nombre = $('#nombre').val().trim();
+        const nombre = $('#nombre').val();
         const telefono = $('#telefono').val().trim();
-        const email = $('#email').val().trim();
+        const correo = $('#correo').val().trim();
         const contrasenia = $('#pwd').val().trim();
         const confContrasenia = $('#confPwd').val().trim();
         const facultad = $('#facultad').val();
@@ -25,20 +25,20 @@ $(document).ready(function () {
             return false;
         }
 
-        // Validacion de email
-        const correoSplit = email.split("@");
+        // Validacion de correo
+        const correoSplit = correo.split("@");
         if (correoSplit.length !== 2 || correoSplit[1] !== "ucm.es") {
             alert("El correo proporcionado no pertenece a la UCM o no tiene un formato válido.");
             return false;
         }
 
         // Validacion de contraseña
-        if(confContrasenia !== contrasenia){
-            alert("Las contraseñas no coinciden");
+        if (contrasenia.length < 4 || confContrasenia.length < 4) {
+            alert("La contraseña debe tener al menos 4 caracteres.");
             return false;
         }
-        if (contrasenia.length < 4) {
-            alert("La contraseña debe tener al menos 4 caracteres.");
+        else if(confContrasenia !== contrasenia){
+            alert("Las contraseñas no coinciden");
             return false;
         }
 
@@ -49,19 +49,18 @@ $(document).ready(function () {
         }
 
         // Si todo es válido
-        alert("Formulario enviado correctamente.");
-
          $.ajax({
              url: '/register/register',
              method: 'POST',
-             data: { nombre, telefono, email, contrasenia, confContrasenia, facultad, esOrganizador},
+             data: { nombre, telefono, correo, contrasenia, facultad, esOrganizador},
              success: function(response) {
-                 console.log('Formulario enviado con éxito:', response);
+                 alert('Formulario enviado con éxito:' + response.message );
                  window.location.href = '/login';
              },
              error: function(error) {
-                 console.error('Error al enviar el formulario:', error);
-            }
+                const errorMessage = error.responseJSON?.message || 'Error desconocido. Inténtelo nuevamente.';
+                alert('Error al enviar el formulario: ' + errorMessage);
+            }            
          });
     });
 });
