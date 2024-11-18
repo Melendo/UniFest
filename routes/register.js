@@ -3,8 +3,8 @@ var router = express.Router();
 var db = require('../dataBase/db');
 var bcrypt = require('bcrypt');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
+//Carga página registro
+router.get('/', function(req, res) {
   res.render('register');
 });
 

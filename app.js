@@ -2,6 +2,7 @@
 
 //Requires
 var express = require('express');
+var session = require('express-session');
 var path = require('path');
 
 var createError = require('http-errors');
@@ -23,6 +24,13 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(session({
+  secret: 'miClaveSecreta',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } 
+}));
 
 
 // view engine setup
