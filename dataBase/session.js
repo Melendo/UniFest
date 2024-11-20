@@ -1,9 +1,10 @@
 "use strict";
 
+//Dependencias 
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 
-// Opciones de la base de datos para sesiones
+//Datos de la bd
 const dbOptions = {
   host: "localhost",
   user: "root",
@@ -11,10 +12,10 @@ const dbOptions = {
   database: "aw_24"
 };
 
-// Crear el almacén de sesiones
+//Crear el almacén de sesiones
 const sessionStore = new MySQLStore(dbOptions);
 
-// Exportar la configuración de sesiones
+//Exportar la configuración de sesiones
 const sessionMiddleware = session({
   key: 'session_cookie',      // Nombre de la cookie
   secret: 'miClaveSecreta',   // Clave secreta

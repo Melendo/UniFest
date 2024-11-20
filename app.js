@@ -1,6 +1,6 @@
 "use strict"
 
-//Importar librerias
+//Importar dependencias
 var express = require('express');
 var path = require('path');
 var createError = require('http-errors');
@@ -13,8 +13,6 @@ var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var registerRouter = require('./routes/register');
 var profileRouter = require('./routes/profile');
-
-// Importar el middleware de sesiones
 var sessionMiddleware = require('./dataBase/session');
 
 //Definimos el servidor
