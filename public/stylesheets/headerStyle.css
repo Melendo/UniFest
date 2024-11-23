@@ -1,0 +1,11 @@
+h1{
+    font-size: 3rem;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
+.logo{
+    width: 7%;
+}
