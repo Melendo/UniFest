@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 
 <head>
   <meta charset="UTF-8" />
@@ -41,9 +41,15 @@
             <li class="nav-item">
               <a class="nav-link text-white bg-dark mx-2 mb-1 rounded p-3" role="button" href="/profile">Mi perfil</a>
             </li>
+            <% if(rol === 1){ %>
             <li class="nav-item">
               <a class="nav-link text-white bg-dark mx-2 mb-1 rounded p-3" href="#">Mis eventos</a>
             </li>
+            <% }else{ %>
+              <li class="nav-item">
+                <a class="nav-link text-white bg-dark mx-2 mb-1 rounded p-3" href="#">Mis inscripciones</a>
+              </li>
+            <% } %>
             <li class="nav-item">
               <a class="nav-link text-white bg-dark mx-2 mb-1 rounded p-3" href="#">Bandeja de entrada</a>
             </li>

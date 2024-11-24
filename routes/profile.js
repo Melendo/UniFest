@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
       console.log(user.ID_facultad);
       const query = 'SELECT nombre FROM facultades WHERE id = ?';
       const [resfacultad] = await db.query(query, [user.ID_facultad]);
-      res.render('profile', {user: user, facultad: resfacultad});
+      res.render('profile', {user: user, facultad: resfacultad, rol: req.session.rol});
     }
   
   }catch(error){
