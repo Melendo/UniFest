@@ -33,95 +33,20 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-            <tr>
-              <td>Paula Oramas Badillo</td>
-              <td>Paula Oramas Badillo</td>
-            </tr>
-          </tbody>
-        </table>
+            <% if(historial !== ""){ historial.forEach(evento => {%>
+              
+              <tr>
+                <td><%= evento.título %></td>
+                <td><%= evento.fecha %></td>
+              </tr>
+              
+              <% }); %>
+              <% } %>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-
-<%- include('footer') %>
+    
+    <%- include('footer') %>
+    
