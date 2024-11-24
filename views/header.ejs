@@ -1,64 +1,61 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UniFest</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/stylesheets/headerStyle.css" />
-    <link rel="stylesheet" href="/stylesheets/profileStyle.css" />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  </head>
-  <body>
-    <div
-      class="p-4 bg-danger d-flex flex-column flex-md-row align-items-center justify-content-around"
-    >
-      <img src="/images/favicon.png" alt="Logo de Unifest" class="img-fluid rounded-pill logo"/>
-      <a href="#" class="text-decoration-none mx-3"
-        ><h1 class="text-white">U N I F E S T</h1></a
-      >
 
-      <nav class="navbar navbar-expand-lg text-center">
-        <div class="container-fluid d-flex justify-content-center">
-          <!-- Botón de colapso -->
-          <button
-            class="navbar-toggler bg-light mb-2"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniFest</title>
+  <!--Favicon-->
+  <link rel="icon" href="/images/favicon.png" type="image/x-icon">
+  <!--headerStyle.css-->
+  <link rel="stylesheet" href="/stylesheets/headerStyle.css" />
+  <!--Bootstrap5-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
 
-          <!-- Contenido colapsable -->
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link text-white bg-dark mx-3 mb-2 rounded p-3" href="/profile">Mi perfil</a>
-              </li>
-              <li class="nav-item">
-                <%if(rol == 0){%>
+<body>
+  
+  <div class="p-4 bg-danger d-flex flex-column flex-md-row align-items-center justify-content-around">
+    
+    <img src="/images/favicon.png" alt="Logo de Unifest" class="img-fluid rounded-pill logo"/>
+    
+    <a href="#" class="text-decoration-none mx-3">
+      <h1 class="text-white">U N I F E S T</h1>
+    </a>
+    
+    <nav class="navbar navbar-expand-lg text-center">
+      <div class="container-fluid d-flex justify-content-center">
+        
+        <!-- Botón de colapso -->
+        <button class="navbar-toggler bg-light mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- Contenido colapsable -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link text-white bg-dark mx-3 mb-2 rounded p-3" role="button" href="/profile">Mi perfil</a>
+            </li>
+            <li class="nav-item">
+              <%if(rol == 0){%>
                 <a class="nav-link text-white bg-dark mx-3 mb-2 rounded p-3" href="#">Inscripciones</a>
                 <% }else{ %>
-                <a class="nav-link text-white bg-dark mx-3 mb-2 rounded p-3" href="#">Mis eventos</a>
-                <% } %>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-white bg-dark mx-3 mb-2 rounded p-3" href="#">Bandeja de entrada</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-white bg-dark mx-3 mb-2 rounded p-3" href="#">Cerrar sesión</a>
-              </li>
-            </ul>
+                  <a class="nav-link text-white bg-dark mx-3 mb-2 rounded p-3" href="#">Mis eventos</a>
+                  <% } %>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-white bg-dark mx-3 mb-2 rounded p-3" href="#">Bandeja de entrada</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-white bg-dark mx-3 mb-2 rounded p-3" href="/login/logout">Cerrar sesión</a>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </nav>
-    </div>
-  </body>
-</html>
+        </nav>
+      </div>
+    </body>
+    </html>
+    
