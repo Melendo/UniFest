@@ -13,6 +13,8 @@ var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var registerRouter = require('./routes/register');
 var profileRouter = require('./routes/profile');
+var homeRouter = require('./routes/home');
+var eventoRouter = require('./routes/evento');
 var sessionMiddleware = require('./dataBase/session');
 
 //Definimos el servidor
@@ -36,6 +38,8 @@ app.use('/users', usersRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/profile', profileRouter);
+app.use('/home', homeRouter)
+app.use('/evento', eventoRouter);
 
 //Captura error 404 
 app.use(function(req, res, next) {

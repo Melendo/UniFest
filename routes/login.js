@@ -33,6 +33,7 @@ router.post('/login',  async (req, res) => {
     // Si las credenciales son correctas, guardar la sesión
     req.session.userId = user.ID; // Guardar el ID del usuario en la sesión
     req.session.nombre = user.nombre; // Guardar el nombre del usuario en la sesión
+    req.session.rol = user.organizador; //Guardamos el rol en las cookies (1 organizador, 0 usuario)
     
     // Responder con éxito, redirigir a otra página o mandar un mensaje de éxito
     return res.status(200).json({ message: 'Inicio de sesión exitoso', redirect: '/dashboard' });
@@ -42,5 +43,16 @@ router.post('/login',  async (req, res) => {
     return res.status(500).json({ message: 'Hubo un error al procesar la solicitud. Intenta de nuevo.' });
   }
 });
+
+router.get('/logout', function (req, res) {
+  req.session.destroy((err) => {
+      if (err) {
+          console.error('Error al cerrar sesión:', err);
+          return res.status(500).send('No se pudo cerrar sesión');
+      }
+      res.redirect('/login'); // Redirige al login tras cerrar sesión
+  });
+});
+
 
 module.exports = router;
