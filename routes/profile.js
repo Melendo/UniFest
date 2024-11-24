@@ -12,10 +12,6 @@ router.get('/', async (req, res) => {
   try{
     const query = 'SELECT * FROM usuarios WHERE id = ?';
     const [user] = await db.query(query, [req.session.userId]);
-    
-    // const queryEventos = 'SELECT * FROM eventos WHERE ID_usuario = ?';
-    // const [events] = [];
-    // events = await db.query(queryEventos, [16]);
 
     // Verifica si el usuario existe
     if (!user) {

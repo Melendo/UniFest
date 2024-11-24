@@ -3,7 +3,7 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res) {
+router.get('/x', function(req, res) {
 
      // Verificar si el usuario está autenticado
      if (!req.session.userId) {
