@@ -1,20 +1,48 @@
-<%- include('header', {rol:rol}) %>
+<%- include('header', {rol: rol}) %>
 <div class="container-fluid">
-    <div class="d-flex row ">
-        <h1 class="h1 text-center pt-4">Bienvenvido, <%- nombre -%>!</h1>
+    <div class="d-flex row">
+        <!-- Mostrar el nombre del usuario correctamente -->
+        <h1 class="h1 text-center pt-4">¡Bienvenido, <%- nombre %>!</h1>
+        
         <div class="col-md-6 p-4">
             <div class="m-4 border border-2 border-secondary rounded">
                 <h2 class="text-center">Eventos próximos:</h2>
+                <div class="eventTable table-responsive">
+                    <table class="table fs-5 border text-center table-striped">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Fecha</th>
+                                <th>Más información</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (proximos && proximos.length > 0) { %>
+                                <% proximos.forEach(evento => { %>
+                                    <tr>
+                                        <td><%= evento.título %></td>
+                                        <td><%= evento.fecha %></td>
+                                        <td><a href='/eventos/<%= evento.ID %>' class=" btn btn-primary"role="button">Ver evento</a></td>
+                                    </tr>
+                                    <% }); %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="3" class="text-center">No hay eventos próximos.</td>
+                                        </tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 p-4">
+                        <div class="m-4 border border-2 border-secondary rounded">
+                            <h2 class="text-center">¿Buscador de Eventos?:</h2>
+                        </div>
+                    </div>
+                </div>
             </div>
             
-        </div>
-        <div class="col-md-6 p-4">
-            <div class="m-4 border border-2 border-secondary rounded">
-                <h2 class="text-center">Nuevos eventos:</h2>
-            </div>
+            <%- include('footer') %>
             
-        </div>
-    </div>
-</div>
-
-<%- include('footer') %>

@@ -28,5 +28,13 @@ function query(sql, params) {
       });
     });
   }
+
+  function formatearFecha(fecha) {
+    const fechaObj = new Date(fecha);
+    const dia = fechaObj.getDate().toString().padStart(2, '0'); // Día con 2 dígitos
+    const mes = (fechaObj.getMonth() + 1).toString().padStart(2, '0'); // Mes (enero es 0, así que sumamos 1)
+    const anio = fechaObj.getFullYear().toString().slice(-2); // Últimos 2 dígitos del año
+    return `${dia}/${mes}/${anio}`;
+  }
   
-  module.exports = { query };
+  module.exports = { query, formatearFecha };

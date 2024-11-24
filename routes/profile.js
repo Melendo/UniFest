@@ -1,14 +1,9 @@
+"use strict";
 var express = require('express');
 var router = express.Router();
 var db = require('../dataBase/db');
 
-function formatearFecha(fecha) {
-  const fechaObj = new Date(fecha);
-  const dia = fechaObj.getDate().toString().padStart(2, '0'); // Día con 2 dígitos
-  const mes = (fechaObj.getMonth() + 1).toString().padStart(2, '0'); // Mes (enero es 0, así que sumamos 1)
-  const anio = fechaObj.getFullYear().toString().slice(-2); // Últimos 2 dígitos del año
-  return `${dia}/${mes}/${anio}`;
-}
+
 
 /* GET home page. */
 router.get('/', async (req, res) => {
@@ -39,13 +34,14 @@ router.get('/', async (req, res) => {
       const resEventos = await db.query(queryEventosPasados, [req.session.userId]);
 
       resEventos.forEach(evento =>{
-        evento.fecha = formatearFecha(evento.fecha);
-      })
+        evento.fecha = db.formatearFecha(evento.fecha);
+      });
 
       res.render('profile', {user: user, facultad: resfacultad, rol: req.session.rol, historial: resEventos});
     }
   
   }catch(error){
+    console.error('Error en el inicio de sesión:', error);
     return res.status(500).json({ message: 'Hubo un error al procesar la solicitud. Intenta de nuevo.' });
   }
 
