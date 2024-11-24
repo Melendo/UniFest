@@ -32,7 +32,7 @@ $(document).ready(function() {
                     icon: "success",
                     confirmButtonText: "OK"
                 }).then(() => {
-                    window.location.href = '/profile';
+                    window.location.href = '/home';
                 });
                 
             },

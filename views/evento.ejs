@@ -5,13 +5,11 @@
     <!-- Información principal del evento -->
     <div class="col-md-6 mb-4">
       <div class="text-center mb-4">
-        <h1 class="display-5 text-danger fw-bold">Nombre del Evento</h1>
+        <h1 class="display-5 text-danger fw-bold"><%= evento.título %></h1>
       </div>
       <div class="border border-2 border-secondary rounded p-4 bg-light">
         <h2 class="h4 fw-bold text-secondary">Descripción</h2>
-        <p class="text-justify">
-          Lorem ipsum dolor sit amet consectetur adipiscing elit cras urna, in tincidunt porta nostra eget ut lacus dis hac volutpat, litora aenean ultricies turpis sociosqu taciti donec pellentesque. Cum eros lacus hendrerit dui leo fringilla, phasellus lacinia convallis suscipit accumsan tincidunt vivamus, taciti massa venenatis at habitant. Consequat semper facilisis nam libero varius pellentesque hendrerit dapibus aenean, lacus platea ultrices magnis ad ullamcorper ultricies mus risus, quam venenatis class vitae rhoncus viverra pulvinar parturient.
-        </p>
+        <p class="text-justify"><%= evento.descripción %></p>
       </div>
     </div>
 
@@ -22,7 +20,7 @@
       </div>
       <div class="border border-2 border-secondary rounded p-4 bg-light mb-4">
         <h2 class="h4 fw-bold text-secondary">Ubicación</h2>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit cras urna, in tincidunt porta nostra eget ut lacus dis hac volutpat, litora aenean ultricies turpis.</p>
+        <p><%= evento.ubicación %></p>
       </div>
 
       <!-- Información adicional dividida en columnas -->
@@ -30,13 +28,13 @@
         <div class="col-sm-6 mb-4">
           <div class="border border-2 border-secondary rounded p-4 bg-light text-center">
             <h3 class="h5 text-secondary fw-bold">Día</h3>
-            <p class="fs-5">22/22/2222</p>
+            <p class="fs-5"><%= evento.fecha %></p>
           </div>
         </div>
         <div class="col-sm-6 mb-4">
           <div class="border border-2 border-secondary rounded p-4 bg-light text-center">
             <h3 class="h5 text-secondary fw-bold">Hora Inicio</h3>
-            <p class="fs-5">69:42</p>
+            <p class="fs-5"><%= evento.hora %></p>
           </div>
         </div>
       </div>
@@ -45,7 +43,7 @@
         <div class="col-sm-6 mb-4">
           <div class="border border-2 border-secondary rounded p-4 bg-light text-center">
             <h3 class="h5 text-secondary fw-bold">Plazas</h3>
-            <p class="fs-5">21/22</p>
+            <p class="fs-5"><%= evento.capacidad_máxima %></p>
           </div>
         </div>
         <div class="col-sm-6 mb-4 d-flex align-items-center justify-content-center">

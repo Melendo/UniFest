@@ -32,8 +32,6 @@ router.get('/', async (req, res) => {
         
     }
     
-    // Comprobar el rol y renderizar la vista correspondiente
-    
     
     
 });

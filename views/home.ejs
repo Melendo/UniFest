@@ -22,12 +22,12 @@
                                     <tr>
                                         <td><%= evento.título %></td>
                                         <td><%= evento.fecha %></td>
-                                        <td><a href='/eventos/<%= evento.ID %>' class=" btn btn-primary"role="button">Ver evento</a></td>
+                                        <td><a href='/evento/<%= evento.ID %>' class=" btn btn-primary"role="button">Ver evento</a></td>
                                     </tr>
                                     <% }); %>
                                     <% } else { %>
                                         <tr>
-                                            <td colspan="3" class="text-center">No hay eventos próximos.</td>
+                                            <td colspan="3" class="text-center">No hay eventos próximos</td>
                                         </tr>
                                         <% } %>
                                     </tbody>
