@@ -15,7 +15,7 @@ router.post('/login',  async (req, res) => {
   
   try{
     // Consulta SQL para verificar si el correo existe
-    const query = 'SELECT * FROM usuarios WHERE correo = ?';
+    const query = 'SELECT * FROM usuarios WHERE correo = ? ';
     const [user] = await db.query(query, [correo]);
     
     // Verifica si el usuario existe

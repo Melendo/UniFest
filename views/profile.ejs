@@ -1,4 +1,4 @@
-<%- include('header', {rol:rol}) %>
+<%- include('header', {rol:rol, pg:"perfil"}) %>
 <div class="container py-5">
   <div class="d-flex row justify-content-around">
     <div class="col-md-6 px-4 mb-4">
@@ -21,6 +21,12 @@
           <td><%= user.organizador ? 'Sí' : 'No' %></td>
         </tr>
       </table>
+      
+      <div class="text-center">
+        <!-- Botón para abrir el modal -->
+        <button type="button" class="btn btn-outline-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">Editar perfil</button>
+      </div>
+      
     </div>
     <div class="col-md-6 px-4">
       <h2 class="mb-4 text-decoration-underline text-center">Historial de eventos</h2>
@@ -30,14 +36,16 @@
             <tr>
               <th>Título</th>
               <th>Fecha</th>
+              <th>Más información</th>
             </tr>
           </thead>
           <tbody>
-            <% if(historial !== ""){ historial.forEach(evento => {%>
+            <% if(historial !== ""){ historial.forEach(evento => { %>
               
               <tr>
                 <td><%= evento.título %></td>
                 <td><%= evento.fecha %></td>
+                <td><a href='/evento/<%= evento.ID %>' class=" btn btn-primary" role="button">Ver evento</a></td>
               </tr>
               
               <% }); %>
@@ -49,4 +57,33 @@
     </div>
     
     <%- include('footer') %>
-    
+  </div>
+  
+  <!-- Modal para editar perfil -->
+  <div class="modal fade" id="editarPerfilModal" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editarPerfilModalLabel">Editar perfil</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formEditarPerfil">
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre completo</label>
+              <input type="text" class="form-control" id="nombre" name="nombre" value="<%= user.nombre %>" required>
+            </div>
+            <div class="mb-3">
+              <label for="telefono" class="form-label">Teléfono</label>
+              <input type="text" class="form-control" id="telefono" name="telefono" value="<%= user.telefono || '' %>">
+            </div>
+            <div class="mb-3">
+              <label for="facultad" class="form-label">Facultad</label>
+              <input type="text" class="form-control" id="facultad" name="facultad" value="<%= facultad.nombre %>" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

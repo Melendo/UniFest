@@ -1,12 +1,16 @@
-<%- include('header', {rol: rol}) %>
+<%- include('header', {rol: rol, pg: "inicio"}) %>
+
 <div class="container-fluid">
-    <div class="d-flex row">
-        <!-- Mostrar el nombre del usuario correctamente -->
-        <h1 class="h1 text-center pt-4">¡Bienvenido, <%- nombre %>!</h1>
+    <div class="row">
+        <!-- Bienvenida -->
+        <div class="col-12 bg-light border-bottom border-2 border-secondary">
+            <h1 class="h1 text-center py-4">¡Bienvenido, <%- nombre %>!</h1>
+        </div>
         
+        <!-- Eventos próximos -->
         <div class="col-md-6 p-4">
-            <div class="m-4 border border-2 border-secondary rounded">
-                <h2 class="text-center">Eventos próximos:</h2>
+            <div class="m-4">
+                <h2 class="text-center text-decoration-underline mb-3">Próximos eventos</h2>
                 <div class="eventTable table-responsive">
                     <table class="table fs-5 border text-center table-striped">
                         <thead>
@@ -22,27 +26,28 @@
                                     <tr>
                                         <td><%= evento.título %></td>
                                         <td><%= evento.fecha %></td>
-                                        <td><a href='/evento/<%= evento.ID %>' class=" btn btn-primary"role="button">Ver evento</a></td>
+                                        <td><a href='/evento/<%= evento.ID %>' class="btn btn-primary" role="button">Ver evento</a></td>
                                     </tr>
-                                    <% }); %>
-                                    <% } else { %>
-                                        <tr>
-                                            <td colspan="3" class="text-center">No hay eventos próximos</td>
-                                        </tr>
-                                        <% } %>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-6 p-4">
-                        <div class="m-4 border border-2 border-secondary rounded">
-                            <h2 class="text-center">¿Buscador de Eventos?:</h2>
-                        </div>
-                    </div>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="3" class="text-center">No hay eventos próximos</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            
-            <%- include('footer') %>
-            
+        </div>
+
+        <!-- Buscador de eventos -->
+        <div class="col-md-6 p-4">
+            <div class="m-4">
+                <h2 class="text-center">¿Buscador de Eventos?</h2>
+                <!-- Agregar el formulario o componente de búsqueda aquí si es necesario -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('footer') %>
