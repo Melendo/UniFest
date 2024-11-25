@@ -4,11 +4,19 @@ $(document).ready(function() {
     $('#formNuevoEvento').on('submit', async function (event) {
         event.preventDefault();
 
+        const título = $('#título').val();
+        const descripción = $('#descripción').val();
+        const fecha = $('#fecha').val();
+        const hora = $('#hora').val();
+        const ubicación = $('#ubicación').val();
+        const facultad = $('#facultad').val();
+        const capacidad_máxima = $('#capacidad_máxima').val();
+
         //Si todo es válido
         $.ajax({
-            url: '/misEventos/anyadirEvento',
+            url: '/misEventos/anyadir',
             method: 'POST',
-            data: { título, descripción, fecha, hora, ubicación, capacidad_máxima},
+            data: { título, descripción, fecha, hora, ubicación, facultad, capacidad_máxima},
             success: function(response){
                 Swal.fire({
                     title: "Se añadió un nuevo evento!",
@@ -16,7 +24,7 @@ $(document).ready(function() {
                     icon: "success",
                     confirmButtonText: "OK"
                 }).then(() => {
-                    window.location.href = '/misEventos';
+                    window.location.href = '/home';
                 });
                 
             },

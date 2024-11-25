@@ -1,4 +1,5 @@
 <%- include('header', {rol: rol, pg: "eventos"}) %>
+<script src="/javascripts/altaEvento.js"></script>
 
 <div class="container-fluid">
   <!-- Eventos próximos -->
@@ -73,7 +74,7 @@
           ></button>
         </div>
         <div class="modal-body">
-          <form id="formNuevoEvento" method="post" action="anyadirEvento">
+          <form id="formNuevoEvento">
             <div class="mb-3">
               <label for="título" class="form-label">Título</label>
               <input
@@ -122,9 +123,18 @@
                   required
                 />
               </div>
+              <div class="form-group mb-3">
+                <label for="facultad" class="form-label">Facultad</label>
+                <select class="form-select" id="facultad" name="facultad"><% todasFacultades.forEach(facultad => { %>
+                  <option value="<%= facultad.ID %>" > 
+                    <%= facultad.nombre %>
+                  </option>
+                  <% }); %>
+                </select>
+              </div>
               <div class="mb-3">
                 <label for="capacidad_máxima" class="form-label">Capacidad máxima</label>
-                <input type="number" name="capacidad_máxima" required step="1">
+                <input type="number" id="capacidad_máxima" name="capacidad_máxima" required step="1">
               </div>
             <button type="submit" class="btn btn-primary">
               Guardar cambios
