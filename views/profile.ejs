@@ -79,8 +79,14 @@
             </div>
             <div class="mb-3">
               <label for="facultad" class="form-label">Facultad</label>
-              <input type="text" class="form-control" id="facultad" name="facultad" value="<%= facultad.nombre %>" required>
-            </div>
+              <select class="form-select" id="facultad" name="facultad" required>
+                <% todasFacultades.forEach(facultad => { %>
+                  <option value="<%= facultad.ID %>" <%= facultad.ID === user.ID_facultad ? 'selected' : '' %>>
+                    <%= facultad.nombre %>
+                  </option>
+                <% }) %>
+              </select>
+            </div>           
             <button type="submit" class="btn btn-primary">Guardar cambios</button>
           </form>
         </div>

@@ -4,8 +4,17 @@ var db = require('../dataBase/db');
 var bcrypt = require('bcrypt');
 
 //Carga página registro
-router.get('/', function(req, res) {
-  res.render('register');
+router.get('/', async (req, res) => {
+  try{
+    const queryTodasFacultades = 'SELECT * FROM facultades';
+    const resTodasFacultades = await db.query(queryTodasFacultades);
+    res.render('register', {todasFacultades: resTodasFacultades});
+  }
+  catch(error){
+    console.error('Error en el inicio de sesión:', error);
+    return res.status(500).json({ message: 'Hubo un error al procesar la solicitud. Intenta de nuevo.' });
+  }
+
 });
 
 router.post('/register', async (req, res) => {
@@ -33,12 +42,12 @@ router.post('/register', async (req, res) => {
     db.real
     return res.status(400).json({ message: 'El correo ya está registrado.' });
   }
-
+  
   console.log('Usuario no encontrado');
-
+  
   
   // Obtención del Id de la facultad, error si no existe
-  const QueryFacultadExiste = 'SELECT ID FROM facultades WHERE nombre = ?';
+  const QueryFacultadExiste = 'SELECT * FROM facultades WHERE ID = ?';
   const [resFacultad] = await db.query(QueryFacultadExiste, [facultad]);
   console.log('Validando la facultad:', facultad);
   

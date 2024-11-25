@@ -3,7 +3,7 @@ var express = require('express');
 var router = express.Router();
 var db = require('../dataBase/db');
 
-/* GET home page. */
+// Ruta GET del perfil
 router.get('/', async (req, res) => {
 
   // Verificar si el usuario está autenticado
@@ -32,7 +32,10 @@ router.get('/', async (req, res) => {
         evento.fecha = db.formatearFecha(evento.fecha);
       });
 
-      res.render('profile', { user: user, facultad: resfacultad, rol: req.session.rol, historial: resEventos });
+      const queryTodasFacultades = 'SELECT * FROM facultades';
+      const resTodasFacultades = await db.query(queryTodasFacultades);
+
+      res.render('profile', { user: user, facultad: resfacultad, rol: req.session.rol, historial: resEventos, todasFacultades: resTodasFacultades});
     }
 
   } catch (error) {
