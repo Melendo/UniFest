@@ -43,10 +43,63 @@
         <!-- Buscador de eventos -->
         <div class="col-md-6 p-4">
             <div class="m-4">
-                <h2 class="text-center">¿Buscador de Eventos?</h2>
-                <!-- Agregar el formulario o componente de búsqueda aquí si es necesario -->
+                <h2 class="text-center">Buscador de Eventos</h2>
+                <form action="/home" method="GET" class="mb-3">
+                    <div class="mb-2">
+                        <label for="titulo" class="form-label fw-bold">Título</label>
+                        <input type="text" id="titulo" name="titulo" class="form-control" placeholder="Buscar por título" />
+                    </div>
+                    <div class="mb-2">
+                        <label for="fecha" class="form-label fw-bold">Fecha</label>
+                        <input type="date" id="fecha" name="fecha" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <p class="mb-1 fw-bold">Estado de los eventos</p>
+                        <div class="form-check">
+                            <input type="radio" id="ninguno" name="estado" value="ninguno" class="form-check-input" checked />
+                            <label for="ninguno" class="form-check-label">Todos los eventos</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" id="llenos" name="estado" value="llenos" class="form-check-input" />
+                            <label for="llenos" class="form-check-label">Solo eventos llenos</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" id="disponibles" name="estado" value="disponibles" class="form-check-input" />
+                            <label for="disponibles" class="form-check-label">Solo eventos disponibles</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </form>
+                <h3 class="text-center">Resultados</h3>
+                <div class="eventTable table-responsive">
+                    <table class="table fs-5 border text-center table-striped">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Fecha</th>
+                                <th>Más información</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (resultados && resultados.length > 0) { %>
+                                <% resultados.forEach(evento => { %>
+                                    <tr>
+                                        <td><%= evento.título %></td>
+                                        <td><%= evento.fecha %></td>
+                                        <td><a href='/evento/<%= evento.ID %>' class="btn btn-primary" role="button">Ver evento</a></td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="3" class="text-center">No se encontraron eventos</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+        
     </div>
 </div>
 
