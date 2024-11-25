@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
     const queryUsuario = 'SELECT * FROM usuarios WHERE id = ?';
     const [user] = await db.query(queryUsuario, [req.session.userId]);
 
-    // Verifica si el usuario existe
+    // Verifica si el usuario existeS
     if (!user) {
       return res.status(400).json({ message: 'Usuario no encontrado.' });
     } else {
@@ -47,6 +47,8 @@ router.get('/', async (req, res) => {
 // Ruta POST para actualizar el perfil
 router.post('/actualizar', async (req, res) => {
   const { nombre, telefono, facultad } = req.body;
+
+  console.log('hollaaaaaaaaaaaaaaaaaaa');
   
   // Verificar si el usuario está autenticado
   if (!req.session.userId) {
@@ -65,8 +67,10 @@ router.post('/actualizar', async (req, res) => {
     const result = await db.query(query, [nombre, telefono, facultad, req.session.userId]);
 
     if (result.affectedRows > 0) {
+      req.session.nombre = nombre;
       return res.json({ success: true, message: 'Perfil actualizado con éxito.' });
-    } else {
+    } 
+    else {
       return res.status(400).json({ success: false, message: 'No se pudieron actualizar los datos del perfil.' });
     }
 

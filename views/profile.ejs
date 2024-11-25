@@ -1,16 +1,20 @@
 <%- include('header', {rol:rol, pg:"perfil"}) %>
 
-<!--editarPerfil.js-->
-
 <script src="/javascripts/editarPerfil.js"></script>
+
 <div class="container py-5">
-  <div class="d-flex row justify-content-around">
+  <div class="row justify-content-around">
+    <!-- Columna izquierda -->
     <div class="col-md-6 px-4 mb-4">
-      <h2 class="text-center mb-4 text-decoration-underline"> Datos personales </h2>
+      <h2 class="text-center mb-4 text-decoration-underline">Datos personales</h2>
       <table class="table border fs-5">
         <tr>
           <th>Nombre completo:</th>
           <td><%= user.nombre %></td>
+        </tr>
+        <tr>
+          <th>Correo:</th>
+          <td><%= user.correo %></td>
         </tr>
         <tr>
           <th>Teléfono:</th>
@@ -25,13 +29,12 @@
           <td><%= user.organizador ? 'Sí' : 'No' %></td>
         </tr>
       </table>
-      
       <div class="text-center">
-        <!-- Botón para abrir el modal -->
         <button type="button" class="btn btn-outline-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">Editar perfil</button>
       </div>
-      
     </div>
+    
+    <!-- Columna derecha -->
     <div class="col-md-6 px-4">
       <h2 class="mb-4 text-decoration-underline text-center">Historial de eventos</h2>
       <div class="eventTable table-responsive">
@@ -43,57 +46,52 @@
               <th>Más información</th>
             </tr>
           </thead>
-          <tbody>
-            <% if(historial !== ""){ historial.forEach(evento => { %>
-              
-              <tr>
-                <td><%= evento.título %></td>
-                <td><%= evento.fecha %></td>
-                <td><a href='/evento/<%= evento.ID %>' class=" btn btn-primary" role="button">Ver evento</a></td>
-              </tr>
-              
-              <% }); %>
-              <% } %>
-            </table>
+          <tbody> <% if(historial && historial.length > 0) { historial.forEach(evento => { %>
+            <tr>
+              <td><%= evento.título %></td>
+              <td><%= evento.fecha %></td>
+              <td><a href='/evento/<%= evento.ID %>' class="btn btn-primary" role="button">Ver evento</a></td>
+            </tr><% }); } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div> 
+</div>
+
+<!-- Modal para editar perfil -->
+<div class="modal fade" id="editarPerfilModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editarPerfilModalLabel">Editar perfil</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formEditarPerfil">
+          <div class="form-group mb-3">
+            <label for="nombre" class="form-label">Nombre completo</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" value="<%= user.nombre %>">
           </div>
-        </div>
+          <div class="form-group mb-3">
+            <label for="telefono" class="form-label">Teléfono</label>
+            <input type="text" class="form-control" id="telefono" name="telefono" value="<%= user.telefono || '' %>">
+          </div>
+          <div class="form-group mb-3">
+            <label for="facultad" class="form-label">Facultad</label>
+            <select class="form-select" id="facultad" name="facultad"><% todasFacultades.forEach(facultad => { %>
+              <option value="<%= facultad.ID %>" <%= facultad.ID === user.ID_facultad ? 'selected' : '' %> > 
+                <%= facultad.nombre %>
+              </option>
+              <% }); %>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </form>
       </div>
     </div>
-    
-    <%- include('footer') %>
-  </div>
-  
-  <!-- Modal para editar perfil -->
-  <div class="modal fade" id="editarPerfilModal" >
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editarPerfilModalLabel">Editar perfil</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <form id="formEditarPerfil">
-            <div class="mb-3">
-              <label for="nombre" class="form-label">Nombre completo</label>
-              <input type="text" class="form-control" id="nombre" name="nombre" value="<%= user.nombre %>" required>
-            </div>
-            <div class="mb-3">
-              <label for="telefono" class="form-label">Teléfono</label>
-              <input type="text" class="form-control" id="telefono" name="telefono" value="<%= user.telefono || '' %>">
-            </div>
-            <div class="mb-3">
-              <label for="facultad" class="form-label">Facultad</label>
-              <select class="form-select" id="facultad" name="facultad" required>
-                <% todasFacultades.forEach(facultad => { %>
-                  <option value="<%= facultad.ID %>" <%= facultad.ID === user.ID_facultad ? 'selected' : '' %>>
-                    <%= facultad.nombre %>
-                  </option>
-                <% }) %>
-              </select>
-            </div>           
-            <button type="submit" class="btn btn-primary">Guardar cambios</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+  </div> 
+</div> 
+
+<%- include('footer') %>
+
