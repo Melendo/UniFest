@@ -134,7 +134,26 @@ router.get("/misInscripciones", async (req, res) => {
     });
   }
 
-  res.render("misInscripciones", { rol: req.session.rol });
+  try {
+    //Consulta eventos proximos
+    const queryProximos =
+      "SELECT eventos.título, eventos.fecha, eventos.ID FROM eventos JOIN inscripciones ON eventos.ID = inscripciones.ID_evento WHERE inscripciones.ID_usuario = ? AND inscripciones.estado = 'inscrito' AND eventos.fecha > NOW() ORDER BY eventos.fecha DESC";
+    const resProximos = await db.query(queryProximos, [req.session.userId]);
+
+    resProximos.forEach((evento) => {
+      evento.fecha = db.formatearFecha(evento.fecha);
+    });
+
+    res.render("misInscripciones", {
+      rol: req.session.rol,
+      proximos: resProximos,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).json({
+      message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
+    });
+  }
 });
 
 module.exports = router;
