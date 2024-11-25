@@ -16,27 +16,39 @@ router.get("/misEventos", async (req, res) => {
   try {
     //Consulta eventos proximos
     const queryProximos =
-      "SELECT * FROM eventos WHERE fecha > NOW() AND eventos.ID_org = ? ORDER BY fecha ASC LIMIT 5";
+      "SELECT * FROM eventos WHERE fecha > NOW() AND eventos.ID_org = ? ORDER BY fecha ASC";
     const resProximos = await db.query(queryProximos, [req.session.userId]);
 
     resProximos.forEach((evento) => {
       evento.fecha = db.formatearFecha(evento.fecha);
     });
 
-    res.render("misEventos", { rol: req.session.rol, proximos: resProximos });
+    const queryTodasFacultades = "SELECT * FROM facultades";
+    const resTodasFacultades = await db.query(queryTodasFacultades);
+
+    res.render("misEventos", {
+      rol: req.session.rol,
+      proximos: resProximos,
+      todasFacultades: resTodasFacultades,
+    });
   } catch (error) {
     console.error("Error en el inicio de sesión:", error);
-    return res
-      .status(500)
-      .json({
-        message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
-      });
+    return res.status(500).json({
+      message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
+    });
   }
 });
 
-router.post("/anyadirEvento", async (req, res) => {
-  const { título, descripción, fecha, hora, ubicación, capacidad_máxima } =
-    req.body;
+router.post("/anyadir", async (req, res) => {
+  const {
+    título,
+    descripción,
+    fecha,
+    hora,
+    ubicación,
+    facultad,
+    capacidad_máxima,
+  } = req.body;
 
   // Verificar si el usuario está autenticado
   if (!req.session.userId) {
@@ -46,8 +58,8 @@ router.post("/anyadirEvento", async (req, res) => {
   try {
     // Consulta SQL para insertar los datos en la base de datos
     const query = `
-          INSERT INTO eventos (título, descripción, fecha, hora, ubicación, capacidad_máxima, ID_org, activo)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+          INSERT INTO eventos (título, descripción, fecha, hora, ubicación, ID_facultad, capacidad_máxima, ID_org, activo)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
     const params = [
       título,
@@ -55,20 +67,22 @@ router.post("/anyadirEvento", async (req, res) => {
       fecha,
       hora,
       ubicación,
+      facultad,
       capacidad_máxima,
       req.session.userId,
       1,
     ];
 
     await db.query(query, params);
-    
+
     // Si todo es exitoso, redirigir al usuario al login
-    return res.status(200).json({ message: 'Alta de evento exitosa.' });
-  } 
-  catch (error) {
+    return res.status(200).json({ message: "Alta de evento exitosa." });
+  } catch (error) {
     // Si ocurre un error al hacer el hash o la consulta, enviar un error 500
-    console.error('Error al registrar nuevo evento:', error.message, error.sql);
-    return res.status(500).json({ message: 'Error al registrar el evento. Inténtelo de nuevo.' });
+    console.error("Error al registrar nuevo evento:", error.message, error.sql);
+    return res
+      .status(500)
+      .json({ message: "Error al registrar el evento. Inténtelo de nuevo." });
   }
 });
 
