@@ -93,9 +93,9 @@ router.post("/anyadir", async (req, res) => {
       horaFin.toISOString().slice(11, 19),
     ];
 
-    const [conflicts] = await db.query(conflictQuery, conflictParams);
+    const conflicts = await db.query(conflictQuery, conflictParams);
 
-    if (conflicts.length > 0) {
+    if (conflicts.lenght > 0) {
       return res
         .status(400)
         .json({ message: "Ya existe un evento en el mismo lugar y horario." });
