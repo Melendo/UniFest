@@ -1,5 +1,8 @@
 <%- include('header', {rol: rol, pg: "inicio"}) %>
 
+<!-- Script calendario-->
+ <script src="/javascripts/calendario.js"></script>
+
 <div class="container-fluid">
     <div class="row">
         <!-- Bienvenida -->
@@ -11,7 +14,9 @@
         <div class="col-md-6 p-4">
             <div class="m-4 text-center">
                 <h2>Calendario de Eventos</h2>
-                <button class="btn btn-outline-secondary text-center mb-4" type="button"> Mostrar Calendario </button>
+                <button class="btn btn-outline-secondary text-center mb-4" type="button" data-bs-toggle="modal" data-bs-target="#calendarModal">
+                    Mostrar Calendario
+                </button>
                 <h3 class="text-center text-decoration-underline mb-3">Próximos eventos</h3>
                 <div class="eventTable table-responsive">
                     <table class="table fs-5 border text-center table-striped">
@@ -114,5 +119,21 @@
         
     </div>
 </div>
+
+<!-- Modal de Calendario -->
+<div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="calendarModalLabel">Calendario de Eventos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="modalBodyCalendario" class="modal-body" >
+                <div id="calendar" ></div> 
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <%- include('footer') %>

@@ -42,6 +42,8 @@ router.get('/', async (req, res) => {
             queryBuscar += ` AND ID IN ( SELECT e.ID FROM eventos e LEFT JOIN inscripciones i ON e.ID = i.ID_evento AND i.estado = 'inscrito' GROUP BY e.ID, e.capacidad_máxima HAVING COUNT(i.ID) < e.capacidad_máxima)` ;
         }
 
+        queryBuscar += 'ORDER BY fecha ASC';
+
         const resultados = await db.query(queryBuscar, params);
         resultados.forEach(evento => {
             evento.fecha = db.formatearFecha(evento.fecha);
@@ -53,6 +55,29 @@ router.get('/', async (req, res) => {
         res.status(500).json({ message: 'Hubo un error al procesar la solicitud.' });
     }
 });
+
+//Obtener todos los eventos para el FullCalendar
+router.get('/obtenerEventos', async (req, res) => {
+
+    try {
+        // Consulta para obtener los eventos futuros
+        const eventos = await db.query('SELECT * FROM eventos WHERE fecha >= NOW()');
+        
+        // Formatear los eventos en un formato que FullCalendar espera
+        const eventosFormateados = eventos.map(evento => ({
+            title: evento.título,
+            start: evento.fecha,
+            end: evento.fecha,
+        }));
+
+        // Responde con los eventos en formato JSON
+        res.json(eventosFormateados);
+    } catch (error) {
+        console.error('Error al obtener eventos:', error);
+        res.status(500).send('Error al obtener eventos');
+    }
+});
+
 
 
 module.exports = router;
