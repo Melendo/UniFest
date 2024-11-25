@@ -1,8 +1,139 @@
-<%- include('header', {rol:rol, pg:"eventos"}) %>
-<div class="container py-5">
-    <div class="d-flex row justify-content-around">
-        
+<%- include('header', {rol: rol, pg: "eventos"}) %>
+
+<div class="container-fluid">
+  <!-- Eventos próximos -->
+  <div class="p-4">
+    <div class="m-4">
+      <h2 class="text-center text-decoration-underline mb-3">
+        Mis próximos eventos
+      </h2>
+      <div class="eventTable table-responsive">
+        <table class="table fs-5 border text-center table-striped">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Fecha</th>
+              <th>Más información</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (proximos && proximos.length > 0) { %> <%
+            proximos.forEach(evento => { %>
+            <tr>
+              <td><%= evento.título %></td>
+              <td><%= evento.fecha %></td>
+              <td>
+                <a
+                  href="/evento/<%= evento.ID %>"
+                  class="btn btn-primary"
+                  role="button"
+                  >Ver evento</a
+                >
+              </td>
+            </tr>
+            <% }); %> <% } else { %>
+            <tr>
+              <td colspan="3" class="text-center">
+                No ha creado aún ningún evento
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <!-- Botón para abrir el modal -->
+      <button
+        type="button"
+        class="btn btn-outline-secondary btn-lg"
+        data-bs-toggle="modal"
+        data-bs-target="#añadirNuevoEvento"
+      >
+        Añadir nuevo evento
+      </button>
     </div>
     
-</div>  
+  </div>
+
+  <!-- Modal para editar perfil -->
+  <div class="modal fade" id="añadirNuevoEvento">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="añadirNuevoEventoLabel">
+            Añadir nuevo evento
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Cerrar"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form id="formNuevoEvento" method="post" action="anyadirEvento">
+            <div class="mb-3">
+              <label for="título" class="form-label">Título</label>
+              <input
+                type="text"
+                class="form-control"
+                id="título"
+                name="título"
+                value=""
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="descripción" class="form-label">Descripción</label>
+              <br/>
+              <textarea class="form-control" name="descripción" id="descripción" rows="6"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="fecha" class="form-label">Fecha</label>
+              <input
+                type="date"
+                class="form-control"
+                id="fecha"
+                name="fecha"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="hora" class="form-label">Hora</label>
+              <input
+                type="time"
+                class="form-control"
+                id="hora"
+                name="hora"
+                step="1"
+                required
+              />
+            </div>
+            <div class="mb-3">
+                <label for="ubicación" class="form-label">Ubicación</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ubicación"
+                  name="ubicación"
+                  value=""
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="capacidad_máxima" class="form-label">Capacidad máxima</label>
+                <input type="number" name="capacidad_máxima" required step="1">
+              </div>
+            <button type="submit" class="btn btn-primary">
+              Guardar cambios
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <%- include('footer') %>
