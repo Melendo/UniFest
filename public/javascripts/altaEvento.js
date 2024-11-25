@@ -1,41 +1,81 @@
 "use strict";
 
-$(document).ready(function() {
-    $('#formNuevoEvento').on('submit', async function (event) {
-        event.preventDefault();
+$(document).ready(function () {
+  $("#formNuevoEvento").on("submit", async function (event) {
+    event.preventDefault();
 
-        const título = $('#título').val();
-        const descripción = $('#descripción').val();
-        const fecha = $('#fecha').val();
-        const hora = $('#hora').val();
-        const ubicación = $('#ubicación').val();
-        const facultad = $('#facultad').val();
-        const capacidad_máxima = $('#capacidad_máxima').val();
+    const título = $("#título").val();
+    const descripción = $("#descripción").val();
+    const fecha = $("#fecha").val();
+    const hora = $("#hora").val();
+    const duración = parseInt($("#duración").val(), 10);
+    const ubicación = $("#ubicación").val();
+    const facultad = $("#facultad").val();
+    const capacidad_máxima = $("#capacidad_máxima").val();
 
-        //Si todo es válido
-        $.ajax({
-            url: '/misEventos/anyadir',
-            method: 'POST',
-            data: { título, descripción, fecha, hora, ubicación, facultad, capacidad_máxima},
-            success: function(response){
-                Swal.fire({
-                    title: "Se añadió un nuevo evento!",
-                    text: response.message,
-                    icon: "success",
-                    confirmButtonText: "OK"
-                }).then(() => {
-                    window.location.href = '/home';
-                });
-                
-            },
-            error: function(error) {
-                const errorMessage = error.responseJSON?.message || 'Error desconocido. Intentelo nuevamente';
-                Swal.fire({
-                    icon:"error",
-                    title: "Algo salió mal",
-                    text: errorMessage,
-                });
-            }
+    if (título === " ") {
+      Swal.fire("El título no puede ser vacío");
+      return false;
+    }
+
+    // Validar que la fecha y la hora sean posteriores al momento actual
+    const ahora = new Date(); // Momento actual
+    const fechaHoraIngresada = new Date(`${fecha}T${hora}`); // Combinar fecha y hora
+
+    if (fechaHoraIngresada <= ahora) {
+      Swal.fire("La fecha y hora deben ser posteriores al momento actual");
+      return false;
+    }
+
+    if (isNaN(duración) || duración <= 0) {
+      Swal.fire("La duración debe ser un número mayor a 0");
+      return false;
+    }
+
+    if (ubicación === " ") {
+      Swal.fire("La ubicación no puede ser vacía");
+      return false;
+    }
+
+    if (capacidad_máxima <= 0) {
+      Swal.fire("La capacidad debe ser positiva");
+      return false;
+    }
+
+    //Si todo es válido
+    $.ajax({
+      url: "/misEventos/anyadir",
+      method: "POST",
+      data: {
+        título,
+        descripción,
+        fecha,
+        hora,
+        duración,
+        ubicación,
+        facultad,
+        capacidad_máxima,
+      },
+      success: function (response) {
+        Swal.fire({
+          title: "Se añadió un nuevo evento!",
+          text: response.message,
+          icon: "success",
+          confirmButtonText: "OK",
+        }).then(() => {
+          window.location.href = "/misEventos/misEventos";
         });
+      },
+      error: function (error) {
+        const errorMessage =
+          error.responseJSON?.message ||
+          "Error desconocido. Intentelo nuevamente";
+        Swal.fire({
+          icon: "error",
+          title: "Algo salió mal",
+          text: errorMessage,
+        });
+      },
     });
+  });
 });

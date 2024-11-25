@@ -47,8 +47,6 @@ router.get('/', async (req, res) => {
 // Ruta POST para actualizar el perfil
 router.post('/actualizar', async (req, res) => {
   const { nombre, telefono, facultad } = req.body;
-
-  console.log('hollaaaaaaaaaaaaaaaaaaa');
   
   // Verificar si el usuario está autenticado
   if (!req.session.userId) {
