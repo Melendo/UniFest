@@ -11,9 +11,7 @@ router.get('/', async (req, res) => {
         return res.redirect('/login'); // Redirigir al login si no está autenticado
     }
     const nombre = req.session.nombre;
-    console.log("holalaaa")
     try{
-        console.log("holalaaa")
         //Consulta eventos proximos
         const queryProximos = 'SELECT * FROM eventos WHERE fecha > NOW() ORDER BY fecha ASC LIMIT 5';
         const resProximos = await db.query(queryProximos);
@@ -22,7 +20,6 @@ router.get('/', async (req, res) => {
             evento.fecha = db.formatearFecha(evento.fecha);
         });
 
-        console.log("holalaaa")
         console.log(resProximos);
         
         res.render('home', { rol: req.session.rol, nombre, proximos : resProximos });
