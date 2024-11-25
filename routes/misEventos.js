@@ -64,38 +64,27 @@ router.post("/anyadir", async (req, res) => {
   }
 
   try {
-    // Calcular hora de inicio y fin del nuevo evento
-    const horaInicio = new Date(`${fecha}T${hora}`);
-    const horaFin = new Date(horaInicio.getTime() + duración * 60000);
-
-    // Comprobar si ya existe un evento en conflicto
     const conflictQuery = `
-      SELECT * FROM eventos 
-      WHERE 
-        fecha = ? AND 
-        ubicación = ? AND 
-        ID_facultad = ? AND 
-        (
-          (hora BETWEEN ? AND ?) OR
-          (ADDTIME(hora, SEC_TO_TIME(duración_minutos * 60)) BETWEEN ? AND ?) OR
-          (hora <= ? AND ADDTIME(hora, SEC_TO_TIME(duración_minutos * 60)) >= ?)
-        )
+      SELECT *
+      FROM eventos
+      WHERE TIMESTAMP(fecha, hora) < DATE_ADD(TIMESTAMP(?, ?), INTERVAL ? MINUTE)
+        AND DATE_ADD(TIMESTAMP(fecha, hora), INTERVAL duración_minutos MINUTE) > TIMESTAMP(?, ?)
+        AND ubicación = ? AND ID_facultad = ?
     `;
+
     const conflictParams = [
-      fecha,
-      ubicación,
+      fecha, // Fecha del nuevo evento
+      hora, // Hora de inicio del nuevo evento
+      duración, // Duración en minutos del nuevo evento
+      fecha, // Fecha del nuevo evento
+      hora, // Hora de inicio del nuevo evento
+      ubicación, // Ubicación del nuevo evento
       facultad,
-      horaInicio.toISOString().slice(11, 19), // Formato HH:MM:SS
-      horaFin.toISOString().slice(11, 19),
-      horaInicio.toISOString().slice(11, 19),
-      horaFin.toISOString().slice(11, 19),
-      horaInicio.toISOString().slice(11, 19),
-      horaFin.toISOString().slice(11, 19),
     ];
 
     const conflicts = await db.query(conflictQuery, conflictParams);
 
-    if (conflicts.lenght > 0) {
+    if (conflicts.length > 0) {
       return res
         .status(400)
         .json({ message: "Ya existe un evento en el mismo lugar y horario." });
