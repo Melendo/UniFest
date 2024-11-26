@@ -1,0 +1,38 @@
+<%- include('header', {rol:rol, pg:"bandeja"}) %>
+<div class="container-fluid mb-5">
+  <div class="p-4">
+    <div class="m-4">
+      <h2 class="text-center text-decoration-underline mb-3">
+        Mis notificaciones
+      </h2>
+      <div class="eventTable table-responsive">
+        <table class="table fs-5 border text-center table-striped">
+          <thead>
+            <tr>
+              <th>Mensaje</th>
+              <th>Tipo</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (bandeja && bandeja.length > 0) { %> <%
+            bandeja.forEach(notificacion => { %>
+            <tr>
+              <td><%= notificacion.mensaje %></td>
+              <td><%= notificacion.tipo %></td>
+              <td><%= notificacion.fecha %></td>
+            </tr>
+            <% }); %> <% } else { %>
+            <tr>
+              <td colspan="3" class="text-center">
+                No tiene notificaciones por leer
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <%- include('footer') %>
+</div>

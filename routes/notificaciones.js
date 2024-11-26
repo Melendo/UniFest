@@ -11,17 +11,23 @@ router.get("/", async (req, res) => {
   }
 
   try {
-    // Consulta datos usuario
-    const queryUsuario = "SELECT * FROM usuarios WHERE id = ?";
-    const [user] = await db.query(queryUsuario, [req.session.userId]);
+    const query = `SELECT * FROM notificaciones WHERE ID_usuario = ? AND leido = 0 ORDER BY fecha DESC`;
+    const notificaciones = await db.query(query, [req.session.userId]);
 
-    res.render("notificaciones");
+    notificaciones.forEach((notificacion) => {
+      notificacion.fecha = db.formatearFecha(notificacion.fecha);
+    });
+
+    res.render("notificaciones", {
+      bandeja: notificaciones,
+      rol: req.session.rol,
+    });
   } catch (error) {
     console.error("Error al cargar la bandeja de entrada:", error);
-    return res
-      .status(500)
-      .json({
-        message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
-      });
+    return res.status(500).json({
+      message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
+    });
   }
 });
+
+module.exports = router;

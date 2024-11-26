@@ -16,8 +16,10 @@ var profileRouter = require('./routes/profile');
 var homeRouter = require('./routes/home');
 var eventoRouter = require('./routes/evento');
 var misEventosRouter = require('./routes/misEventos');
+var notificacionesRouter = require('./routes/notificaciones');
 
 var sessionMiddleware = require('./dataBase/session');
+var jobsMiddleware = require('./jobs/cron')
 
 //Definimos el servidor
 var app = express();
@@ -43,6 +45,7 @@ app.use('/profile', profileRouter);
 app.use('/home', homeRouter)
 app.use('/evento', eventoRouter);
 app.use('/misEventos', misEventosRouter);
+app.use('/notificaciones', notificacionesRouter);
 
 //Captura error 404 
 app.use(function(req, res, next) {
