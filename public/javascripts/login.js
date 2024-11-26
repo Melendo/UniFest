@@ -26,6 +26,7 @@ $(document).ready(function() {
             method: 'POST',
             data: { correo, contraseña},
             success: function(response){
+                alert("hola");
                 Swal.fire({
                     title: "Has iniciado sesión!",
                     text: response.message,

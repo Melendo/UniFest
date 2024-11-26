@@ -1,5 +1,7 @@
 <%- include('header', {rol: rol, pg:""}) %>
 
+<script src="../../javascripts/gestionInscripcion"></script>
+
 <div class="container-fluid py-5">
   <div class="row">
     <!-- Información principal del evento -->
@@ -12,11 +14,15 @@
         <p class="text-justify"><%= evento.descripción %></p>
       </div>
       
-      <div class="text-center mt-4">
-        <button type="button" class="btn btn-outline-secondary btn-lg fw-bold px-4 py-3 ">
-          INSCRÍBETE YA
-        </button>
-      </div>
+      <% if(rol === 0) {%>
+        <div class="text-center mt-4">
+          <button type="button" class="btn btn-outline-secondary btn-lg fw-bold px-4 py-3 btn-inscribirse" data-evento-id="<%= evento.ID %>">INSCRÍBETE YA</button>
+        </div>
+      <% }else if( id === evento.ID_org){ %>
+        <div class="text-center mt-4">
+          <button type="button" class="btn btn-outline-secondary btn-lg fw-bold px-4 py-3 ">Historial de asistentes</button>
+        </div>
+      <% } %>
       
     </div>
     
@@ -38,7 +44,7 @@
         
         <div class="p-3">
           <h2 class="h4 fw-bold text-secondary">Plazas disponibles</h2>
-          <p>Plazas ocupadas: <b><%= evento.cap_actual %></b></p>
+          <p>Plazas ocupadas: <b><%= capActual %></b></p>
           <p>Plazas totales: <b><%= evento.capacidad_máxima %></b></p>
         </div>
       </div> 
