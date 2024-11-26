@@ -5,55 +5,46 @@
     <!-- Información principal del evento -->
     <div class="col-md-6 mb-4">
       <div class="text-center mb-4">
-        <h1 class="display-5 text-danger fw-bold"><%= evento.título %></h1>
+        <h1 class="display-5 fw-bold">Evento: <%= evento.título %></h1>
       </div>
       <div class="border border-2 border-secondary rounded p-4 bg-light">
         <h2 class="h4 fw-bold text-secondary">Descripción</h2>
         <p class="text-justify"><%= evento.descripción %></p>
       </div>
+      
+      <div class="text-center mt-4">
+        <button type="button" class="btn btn-outline-secondary btn-lg fw-bold px-4 py-3 ">
+          INSCRÍBETE YA
+        </button>
+      </div>
+      
     </div>
-
+    
     <!-- Información adicional -->
     <div class="col-md-6 mb-4">
-      <div class="text-center mb-4">
-        <h1 class="display-5 text-danger fw-bold">Más Información</h1>
+      <div class="text-center mb-4 ">
+        <h1 class="display-5 fw-bold">Más Información</h1>
       </div>
-      <div class="border border-2 border-secondary rounded p-4 bg-light mb-4">
-        <h2 class="h4 fw-bold text-secondary">Ubicación</h2>
-        <p><%= evento.ubicación %></p>
-      </div>
-
-      <!-- Información adicional dividida en columnas -->
-      <div class="row">
-        <div class="col-sm-6 mb-4">
-          <div class="border border-2 border-secondary rounded p-4 bg-light text-center">
-            <h3 class="h5 text-secondary fw-bold">Día</h3>
-            <p class="fs-5"><%= evento.fecha %></p>
-          </div>
+      <div class="border border-2 border-secondary rounded bg-light">
+        <div class="p-3">
+          <h2 class="h4 fw-bold text-secondary">Ubicación</h2>
+          <p>Facultad de <b><%= facultad.nombre %></b> en <b><%= evento.ubicación %></b></p>
         </div>
-        <div class="col-sm-6 mb-4">
-          <div class="border border-2 border-secondary rounded p-4 bg-light text-center">
-            <h3 class="h5 text-secondary fw-bold">Hora Inicio</h3>
-            <p class="fs-5"><%= evento.hora %></p>
-          </div>
+        
+        <div class="p-3">
+          <h2 class="h4 fw-bold text-secondary">Fecha del evento</h2>
+          <p>El evento empezara el dia <b><%= evento.fecha %></b> a las <b><%= evento.hora %></b> y durará un total de <b><%= evento.duración_minutos %> minutos</b>.</p>
         </div>
-      </div>
-
-      <div class="row">
-        <div class="col-sm-6 mb-4">
-          <div class="border border-2 border-secondary rounded p-4 bg-light text-center">
-            <h3 class="h5 text-secondary fw-bold">Plazas</h3>
-            <p class="fs-5"><%= evento.capacidad_máxima %></p>
-          </div>
+        
+        <div class="p-3">
+          <h2 class="h4 fw-bold text-secondary">Plazas disponibles</h2>
+          <p>Plazas ocupadas: <b><%= evento.cap_actual %></b></p>
+          <p>Plazas totales: <b><%= evento.capacidad_máxima %></b></p>
         </div>
-        <div class="col-sm-6 mb-4 d-flex align-items-center justify-content-center">
-            <button type="button" class="btn btn-primary btn-lg fw-bold px-4 py-3">
-              INSCRÍBETE YA
-            </button>
-          </div>
-      </div>
+      </div> 
     </div>
   </div>
 </div>
+
 
 <%- include('footer') %>

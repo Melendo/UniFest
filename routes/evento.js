@@ -8,7 +8,7 @@ router.get('/:id', async(req, res) =>{
     
     // Verificar si el usuario está autenticado
     if (!req.session.userId) {
-        return res.redirect('/login'); // Redirigir al login si no está autenticado
+        return res.redirect('/login');
     }
     
     const idEvento = req.params.id;
@@ -25,11 +25,13 @@ router.get('/:id', async(req, res) =>{
         if (!resEvento) {
             return res.status(400).json({ message: 'Evento no encontrado.' });
         }
-        
-        console.log(resEvento);
+
         
         resEvento.fecha = db.formatearFecha(resEvento.fecha);
-        res.render('evento', { rol: req.session.rol, evento: resEvento });
+
+        const queryFacultadEvento = 'SELECT * FROM facultades WHERE ID = ?';
+        const [resFacultad] = await db.query(queryFacultadEvento, resEvento.ID_facultad); 
+        res.render('evento', { rol: req.session.rol, evento: resEvento, facultad: resFacultad});
     }
     catch(error){
         console.error('Error en el inicio de sesión:', error);
