@@ -14,43 +14,44 @@
         <p class="text-justify"><%= evento.descripción %></p>
       </div>
       
-      <% if(rol === 0) {%>
+      <% if (rol === 0) { %>
         <div class="text-center mt-4">
           <button type="button" class="btn btn-outline-secondary btn-lg fw-bold px-4 py-3 btn-inscripcion" data-evento-id="<%= evento.ID %>"><%= inscrito %></button>
         </div>
-      <% }else if( id === evento.ID_org){ %>
+      <% } else if (id === evento.ID_org) { %>
         <div class="text-center mt-4">
-          <button type="button" class="btn btn-outline-secondary btn-lg fw-bold px-4 py-3 ">Historial de asistentes</button>
+          <a href="/evento/listadoAsistentes/<%= evento.ID %>" class="btn btn-outline-secondary btn-lg fw-bold px-4 py-3">Listado de asistentes</a>
         </div>
       <% } %>
-      
+          
+        </div>
+        
+        <!-- Información adicional -->
+        <div class="col-md-6 mb-4">
+          <div class="text-center mb-4 ">
+            <h1 class="display-5 fw-bold">Más Información</h1>
+          </div>
+          <div class="border border-2 border-secondary rounded bg-light">
+            <div class="p-3">
+              <h2 class="h4 fw-bold text-secondary">Ubicación</h2>
+              <p>Puedes encontrarnos en la Facultad de <b><%= facultad.nombre %></b> en <b><%= evento.ubicación %></b></p>
+            </div>
+            
+            <div class="p-3">
+              <h2 class="h4 fw-bold text-secondary">Fecha del evento</h2>
+              <p>El evento empezara el dia <b><%= evento.fecha %></b> a las <b><%= evento.hora %></b> y durará un total de <b><%= evento.duración_minutos %> minutos</b>.</p>
+            </div>
+            
+            <div class="p-3">
+              <h2 class="h4 fw-bold text-secondary">Plazas disponibles</h2>
+              <p>Plazas ocupadas: <b><%= capActual %></b></p>
+              <p>Plazas totales: <b><%= evento.capacidad_máxima %></b></p>
+            </div>
+          </div> 
+        </div>
+      </div>
     </div>
     
-    <!-- Información adicional -->
-    <div class="col-md-6 mb-4">
-      <div class="text-center mb-4 ">
-        <h1 class="display-5 fw-bold">Más Información</h1>
-      </div>
-      <div class="border border-2 border-secondary rounded bg-light">
-        <div class="p-3">
-          <h2 class="h4 fw-bold text-secondary">Ubicación</h2>
-          <p>Puedes encontrarnos en la Facultad de <b><%= facultad.nombre %></b> en <b><%= evento.ubicación %></b></p>
-        </div>
-        
-        <div class="p-3">
-          <h2 class="h4 fw-bold text-secondary">Fecha del evento</h2>
-          <p>El evento empezara el dia <b><%= evento.fecha %></b> a las <b><%= evento.hora %></b> y durará un total de <b><%= evento.duración_minutos %> minutos</b>.</p>
-        </div>
-        
-        <div class="p-3">
-          <h2 class="h4 fw-bold text-secondary">Plazas disponibles</h2>
-          <p>Plazas ocupadas: <b><%= capActual %></b></p>
-          <p>Plazas totales: <b><%= evento.capacidad_máxima %></b></p>
-        </div>
-      </div> 
-    </div>
-  </div>
-</div>
-
-
-<%- include('footer') %>
+    
+    <%- include('footer') %>
+    

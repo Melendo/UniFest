@@ -1,0 +1,71 @@
+<%- include('header', { rol: rol, pg: "listadoAsistentes" }) %>
+
+<div class="container-fluid">
+    <div class="row">
+        
+        <!-- Columna de usuarios inscritos -->
+        <div class="col-md-6 p-4">
+            <h2 class="text-center">Usuarios Inscritos </h2>
+            <h4 class="text-center text-secondary">(<%= totalInscritos %>)</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Fecha de inscripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (inscritos && inscritos.length > 0) { %>
+                        <% inscritos.forEach(usuario => { %>
+                            <tr>
+                                <td><%= usuario.nombre %></td>
+                                <td><%= usuario.correo %></td>
+                                <td><%= usuario.fecha %></td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="3" class="text-center">No hay usuarios inscritos</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Columna de usuarios en lista de espera -->
+        <div class="col-md-6 p-4">
+            <h2 class="text-center">Usuarios en Lista de Espera </h2>
+            <h4 class="text-center text-secondary">(<%= totalEspera %>)</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Posición cola</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Fecha de inscripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (espera && espera.length > 0) { %>
+                        <% espera.forEach(usuario => { %>
+                            <tr>
+                                <td><%= usuario.posicion %></td>
+                                <td><%= usuario.nombre %></td>
+                                <td><%= usuario.correo %></td>
+                                <td><%= usuario.fecha %></td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="4" class="text-center">No hay usuarios en lista de espera</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
+
+<%- include('footer') %>
