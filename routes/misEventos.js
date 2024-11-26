@@ -144,9 +144,23 @@ router.get("/misInscripciones", async (req, res) => {
       evento.fecha = db.formatearFecha(evento.fecha);
     });
 
+    //Consulta eventos proximos
+    const queryEspera =
+      "SELECT eventos.título, eventos.fecha, eventos.ID FROM eventos JOIN inscripciones ON eventos.ID = inscripciones.ID_evento WHERE inscripciones.ID_usuario = ? AND inscripciones.estado = 'en_espera' AND eventos.fecha > NOW() ORDER BY eventos.fecha DESC";
+    const resEspera = await db.query(queryEspera, [req.session.userId]);
+
+    resProximos.forEach((evento) => {
+      evento.fecha = db.formatearFecha(evento.fecha);
+    });
+
+    resEspera.forEach((evento) => {
+      evento.fecha = db.formatearFecha(evento.fecha);
+    });
+
     res.render("misInscripciones", {
       rol: req.session.rol,
       proximos: resProximos,
+      espera: resEspera,
     });
   } catch (error) {
     console.error("Error:", error);

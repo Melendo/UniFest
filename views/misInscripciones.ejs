@@ -1,44 +1,90 @@
 <%- include('header', {rol:rol, pg:"inscripciones"}) %>
-<div class="container-fluid mb-5">
-  <!-- Eventos próximos -->
-  <div class="p-4">
-    <div class="m-4">
-      <h2 class="text-center text-decoration-underline mb-3">
-        Mis próximos eventos
-      </h2>
-      <div class="eventTable table-responsive">
-        <table class="table fs-5 border text-center table-striped">
-          <thead>
-            <tr>
-              <th>Título</th>
-              <th>Fecha</th>
-              <th>Más información</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% if (proximos && proximos.length > 0) { %> <%
-            proximos.forEach(evento => { %>
-            <tr>
-              <td><%= evento.título %></td>
-              <td><%= evento.fecha %></td>
-              <td>
-                <a
-                  href="/evento/evento/<%= evento.ID %>"
-                  class="btn btn-primary"
-                  role="button"
-                  >Ver evento</a
-                >
-              </td>
-            </tr>
-            <% }); %> <% } else { %>
-            <tr>
-              <td colspan="3" class="text-center">
-                No se ha inscrito aún en ningún evento
-              </td>
-            </tr>
-            <% } %>
-          </tbody>
-        </table>
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Eventos inscritos -->
+    <div class="col-md-6 p-4">
+      <div class="m-4">
+        <h2 class="text-center text-decoration-underline mb-3">
+          Mis próximos eventos
+        </h2>
+        <div class="eventTable table-responsive">
+          <table class="table fs-5 border text-center table-striped">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Fecha</th>
+                <th>Más información</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (proximos && proximos.length > 0) { %> 
+                <%proximos.forEach(evento => { %>
+              <tr>
+                <td><%= evento.título %></td>
+                <td><%= evento.fecha %></td>
+                <td>
+                  <a
+                    href="/evento/evento/<%= evento.ID %>"
+                    class="btn btn-primary"
+                    role="button"
+                    >Ver evento</a
+                  >
+                </td>
+              </tr>
+              <% }); %> <% } else { %>
+              <tr>
+                <td colspan="3" class="text-center">
+                  No se encuentra inscrito aún en ningún evento
+                </td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Eventos en lista de espera -->
+    <div class="col-md-6 p-4">
+      <div class="m-4">
+        <h2 class="text-center text-decoration-underline mb-3">
+          Eventos en lista de espera
+        </h2>
+        <div class="eventTable table-responsive">
+          <table class="table fs-5 border text-center table-striped">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Fecha</th>
+                <th>Más información</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (espera && espera.length > 0) { %> 
+                <%espera.forEach(evento => { %>
+              <tr>
+                <td><%= evento.título %></td>
+                <td><%= evento.fecha %></td>
+                <td>
+                  <a
+                    href="/evento/evento/<%= evento.ID %>"
+                    class="btn btn-primary"
+                    role="button"
+                    >Ver evento</a
+                  >
+                </td>
+              </tr>
+              <% }); %> <% } else { %>
+              <tr>
+                <td colspan="3" class="text-center">
+                  No se encuentra en la lista de espera de ningún evento
+                </td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
