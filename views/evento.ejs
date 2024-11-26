@@ -1,6 +1,6 @@
 <%- include('header', {rol: rol, pg:""}) %>
 
-<script src="../../javascripts/gestionInscripcion"></script>
+<script src="../../javascripts/gestionInscripcion.js"></script>
 
 <div class="container-fluid py-5">
   <div class="row">
@@ -16,7 +16,7 @@
       
       <% if(rol === 0) {%>
         <div class="text-center mt-4">
-          <button type="button" class="btn btn-outline-secondary btn-lg fw-bold px-4 py-3 btn-inscribirse" data-evento-id="<%= evento.ID %>">INSCRÍBETE YA</button>
+          <button type="button" class="btn btn-outline-secondary btn-lg fw-bold px-4 py-3 btn-inscripcion" data-evento-id="<%= evento.ID %>"><%= inscrito %></button>
         </div>
       <% }else if( id === evento.ID_org){ %>
         <div class="text-center mt-4">
