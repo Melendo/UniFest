@@ -36,5 +36,22 @@ function query(sql, params) {
     const anio = fechaObj.getFullYear().toString().slice(-2); // Últimos 2 dígitos del año
     return `${dia}/${mes}/${anio}`;
   }
+
+  function formatearFechaEditar(fecha) {
+    const fechaObj = new Date(fecha);
+    const anio = fechaObj.getFullYear();
+    const mes = (fechaObj.getMonth() + 1).toString().padStart(2, '0');
+    const dia = fechaObj.getDate().toString().padStart(2, '0');
+    return `${anio}-${mes}-${dia}`;
+  }
+
+  function convertirAFormatoYYYYMMDD(fechaISO) {
+    const fecha = new Date(fechaISO); // Crear un objeto Date desde la cadena
+    const año = fecha.getFullYear();
+    const mes = String(fecha.getMonth() + 1).padStart(2, "0"); // Mes empieza en 0
+    const día = String(fecha.getDate()).padStart(2, "0");
   
-  module.exports = { query, formatearFecha };
+    return `${año}-${mes}-${día}`;
+  }
+  
+  module.exports = { query, formatearFecha, formatearFechaEditar };

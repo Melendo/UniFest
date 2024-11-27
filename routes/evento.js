@@ -28,6 +28,8 @@ router.get("/evento/:id", async (req, res) => {
     const capActual = capacidad.inscritos;
 
     // Formateamos la fecha
+    const fechaBD = db.formatearFechaEditar(resEvento.fecha);
+    console.log(fechaBD);
     resEvento.fecha = db.formatearFecha(resEvento.fecha);
 
     // Obtenemos la facultad
@@ -64,6 +66,7 @@ router.get("/evento/:id", async (req, res) => {
       id: req.session.userId,
       capActual,
       inscrito,
+      fechaBD,
       todasFacultades: resTodasFacultades,
     });
   } catch (error) {
