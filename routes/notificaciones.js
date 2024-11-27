@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
   }
 
   try {
-    const query = `SELECT * FROM notificaciones WHERE ID_usuario = ? AND leido = 0 ORDER BY fecha DESC`;
+    const query = `SELECT * FROM notificaciones WHERE ID_usuario = ? AND leido = 0 AND activo = 1 ORDER BY fecha DESC`;
     const notificaciones = await db.query(query, [req.session.userId]);
 
     notificaciones.forEach((notificacion) => {

@@ -14,6 +14,10 @@ const enviarRecordatorios = async () => {
       WHERE DATE(e.fecha) = DATE_ADD(CURDATE(), INTERVAL 1 DAY)
     `);
 
+    eventosDia1.forEach((evento) => {
+      evento.fecha = db.formatearFecha(evento.fecha);
+    });
+
     for (const evento of eventosDia1) {
       const mensaje = `¡Recuerda! El evento "${evento.título}" es mañana, ${evento.fecha}.`;
       await db.query(
@@ -31,6 +35,10 @@ const enviarRecordatorios = async () => {
       JOIN usuarios u ON i.ID_usuario = u.ID
       WHERE DATE(e.fecha) = DATE_ADD(CURDATE(), INTERVAL 3 DAY)
     `);
+
+    eventosDia3.forEach((evento) => {
+      evento.fecha = db.formatearFecha(evento.fecha);
+    });
 
     for (const evento of eventosDia3) {
       const mensaje = `¡Falta poco! El evento "${evento.título}" será en 3 días, el ${evento.fecha}.`;
@@ -50,6 +58,10 @@ const enviarRecordatorios = async () => {
       WHERE DATE(e.fecha) = DATE_ADD(CURDATE(), INTERVAL 7 DAY)
     `);
 
+    eventosDia7.forEach((evento) => {
+      evento.fecha = db.formatearFecha(evento.fecha);
+    });
+
     for (const evento of eventosDia7) {
       const mensaje = `Planifica con tiempo: El evento "${evento.título}" será en 7 días, el ${evento.fecha}.`;
       await db.query(
@@ -68,14 +80,14 @@ const limpiarNotificacionesAntiguas = async () => {
   console.log("Ejecutando tarea: Limpieza de notificaciones antiguas...");
 
   try {
-    const resultado = await db.query(`DELETE FROM notificaciones WHERE fecha <  DATE_ADD(CURDATE(), INTERVAL 7 DAY)`);
+    const resultado = await db.query(`UPDATE notificaciones SET activo = 0 WHERE fecha <  DATE_ADD(CURDATE(), INTERVAL 14 DAY)`);
     console.log(`Limpieza completada. Filas eliminadas: ${resultado.affectedRows}`);
   } catch (error) {
     console.error("Error al limpiar notificaciones antiguas:", error.message);
   }
 };
 
-cron.schedule("0 0 * * *", enviarRecordatorios);
-cron.schedule("0 1 * * *", limpiarNotificacionesAntiguas);
+cron.schedule("0 11 * * *", limpiarNotificacionesAntiguas);
+cron.schedule("15 12 * * *", enviarRecordatorios);
 
 console.log("Tareas cron configuradas.");

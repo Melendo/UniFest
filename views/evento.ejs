@@ -13,45 +13,183 @@
         <h2 class="h4 fw-bold text-secondary">Descripción</h2>
         <p class="text-justify"><%= evento.descripción %></p>
       </div>
-      
+
       <% if (rol === 0) { %>
-        <div class="text-center mt-4">
-          <button type="button" class="btn btn-outline-secondary btn-lg fw-bold px-4 py-3 btn-inscripcion" data-evento-id="<%= evento.ID %>"><%= inscrito %></button>
-        </div>
+      <div class="text-center mt-4">
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-lg fw-bold px-4 py-3 btn-inscripcion"
+          data-evento-id="<%= evento.ID %>"
+        >
+          <%= inscrito %>
+        </button>
+      </div>
       <% } else if (id === evento.ID_org) { %>
-        <div class="text-center mt-4">
-          <a href="/evento/listadoAsistentes/<%= evento.ID %>" class="btn btn-outline-secondary btn-lg fw-bold px-4 py-3">Listado de asistentes</a>
-        </div>
+      <div class="text-center mt-4">
+        <a
+          href="/evento/listadoAsistentes/<%= evento.ID %>"
+          class="btn btn-outline-secondary btn-lg fw-bold px-4 py-3"
+          >Listado de asistentes</a
+        >
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-lg fs-1"
+          data-bs-toggle="modal"
+          data-bs-target="#editarEvento"
+        >
+          <i class="fa fa-pencil"></i>
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-lg fs-1"
+          data-bs-toggle="modal"
+          data-bs-target="#editarEvento"
+        >
+          <i class="fa fa-close"></i>
+        </button>
+      </div>
       <% } %>
-          
+    </div>
+
+    <!-- Información adicional -->
+    <div class="col-md-6 mb-4">
+      <div class="text-center mb-4">
+        <h1 class="display-5 fw-bold">Más Información</h1>
+      </div>
+      <div class="border border-2 border-secondary rounded bg-light">
+        <div class="p-3">
+          <h2 class="h4 fw-bold text-secondary">Ubicación</h2>
+          <p>
+            Puedes encontrarnos en la Facultad de
+            <b><%= facultad.nombre %></b> en <b><%= evento.ubicación %></b>
+          </p>
         </div>
-        
-        <!-- Información adicional -->
-        <div class="col-md-6 mb-4">
-          <div class="text-center mb-4 ">
-            <h1 class="display-5 fw-bold">Más Información</h1>
-          </div>
-          <div class="border border-2 border-secondary rounded bg-light">
-            <div class="p-3">
-              <h2 class="h4 fw-bold text-secondary">Ubicación</h2>
-              <p>Puedes encontrarnos en la Facultad de <b><%= facultad.nombre %></b> en <b><%= evento.ubicación %></b></p>
-            </div>
-            
-            <div class="p-3">
-              <h2 class="h4 fw-bold text-secondary">Fecha del evento</h2>
-              <p>El evento empezara el dia <b><%= evento.fecha %></b> a las <b><%= evento.hora %></b> y durará un total de <b><%= evento.duración_minutos %> minutos</b>.</p>
-            </div>
-            
-            <div class="p-3">
-              <h2 class="h4 fw-bold text-secondary">Plazas disponibles</h2>
-              <p>Plazas ocupadas: <b><%= capActual %></b></p>
-              <p>Plazas totales: <b><%= evento.capacidad_máxima %></b></p>
-            </div>
-          </div> 
+
+        <div class="p-3">
+          <h2 class="h4 fw-bold text-secondary">Fecha del evento</h2>
+          <p>
+            El evento empezara el dia <b><%= evento.fecha %></b> a las
+            <b><%= evento.hora %></b> y durará un total de
+            <b><%= evento.duración_minutos %> minutos</b>.
+          </p>
+        </div>
+
+        <div class="p-3">
+          <h2 class="h4 fw-bold text-secondary">Plazas disponibles</h2>
+          <p>Plazas ocupadas: <b><%= capActual %></b></p>
+          <p>Plazas totales: <b><%= evento.capacidad_máxima %></b></p>
         </div>
       </div>
     </div>
-    
-    
-    <%- include('footer') %>
-    
+  </div>
+</div>
+
+<!-- Modal para añadir evento -->
+<div class="modal fade" id="editarEvento">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editarEventoLabel">Editar evento</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="formEditarEvento">
+          <div class="mb-3">
+            <label for="título" class="form-label">Título</label>
+            <input
+              type="text"
+              class="form-control"
+              id="título"
+              name="título"
+              value=""
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="descripción" class="form-label">Descripción</label>
+            <br />
+            <textarea
+              class="form-control"
+              name="descripción"
+              id="descripción"
+              rows="6"
+            ></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="fecha" class="form-label">Fecha</label>
+            <input
+              type="date"
+              class="form-control"
+              id="fecha"
+              name="fecha"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="hora" class="form-label">Hora</label>
+            <input
+              type="time"
+              class="form-control"
+              id="hora"
+              name="hora"
+              step="1"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="duración" class="form-label"
+              >Duración (en minutos):</label
+            >
+            <input
+              type="number"
+              class="form-control"
+              id="duración"
+              name="duración"
+              step="1"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="ubicación" class="form-label">Ubicación</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ubicación"
+              name="ubicación"
+              value=""
+              required
+            />
+          </div>
+          <div class="form-group mb-3">
+            <label for="facultad" class="form-label">Facultad</label>
+            <select class="form-select" id="facultad" name="facultad">
+              <% todasFacultades.forEach(facultad => { %>
+              <option value="<%= facultad.ID %>"><%= facultad.nombre %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="capacidad_máxima" class="form-label"
+              >Capacidad máxima</label
+            >
+            <input
+              type="number"
+              id="capacidad_máxima"
+              name="capacidad_máxima"
+              required
+              step="1"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('footer') %>
