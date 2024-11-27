@@ -29,7 +29,6 @@ router.get("/evento/:id", async (req, res) => {
 
     // Formateamos la fecha
     const fechaBD = db.formatearFechaEditar(resEvento.fecha);
-    console.log(fechaBD);
     resEvento.fecha = db.formatearFecha(resEvento.fecha);
 
     // Obtenemos la facultad
