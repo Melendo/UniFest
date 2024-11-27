@@ -1,3 +1,53 @@
 <div>
-    <button type="button" class="btn btn-secondary btn-lg position-fixed btn-menu" ><h4>Configuración de accesibilidad</h4></button>
+  <button
+    type="button"
+    class="btn btn-secondary btn-lg position-fixed btn-menu"
+    data-bs-toggle="modal"
+    data-bs-target="#menuAccesibilidad"
+  >
+    <h4>Configuración de accesibilidad</h4>
+  </button>
+
+  <!-- Modal para añadir evento -->
+  <div class="modal fade" id="menuAccesibilidad">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="menuAccesibilidadLabel">
+            Ajustes de accesibilidad
+          </h3>
+          <button
+            type="button"
+            class="btn-close border border-secondary"
+            data-bs-dismiss="modal"
+            aria-label="Cerrar"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form id="formNuevoEvento">
+            <div class="mb-3">
+              <label for="tamaño-letra">Tamaño de letra:</label>
+              <select id="tamaño-letra" class="form-control">
+                <option value="normal">Normal</option>
+                <option value="grande">Grande</option>
+                <option value="muy-grande">Muy Grande</option>
+              </select>
+            </div>
+
+            <!-- Opciones de esquema de colores -->
+            <div class="mb-3">
+              <label for="esquema-colores">Esquema de colores:</label>
+              <select id="esquema-colores" class="form-control">
+                <option value="claro">Claro</option>
+                <option value="oscuro">Oscuro</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Aplicar cambios
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
