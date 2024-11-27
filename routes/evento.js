@@ -338,6 +338,24 @@ router.post("/actualizar/:id", async (req, res) => {
 
     await db.query(query, params);
 
+    // Notificación a los usuarios afectados
+    const queryAfectados =
+      "SELECT eventos.título, eventos.fecha, inscripciones.ID_usuario FROM eventos JOIN inscripciones ON eventos.ID = inscripciones.ID_evento WHERE inscripciones.ID_evento = ? AND eventos.fecha > NOW() ORDER BY eventos.fecha DESC";
+    const resAfectados = await db.query(queryAfectados, [req.params.id]);
+
+    resAfectados.forEach((evento) => {
+      evento.fecha = db.formatearFecha(evento.fecha);
+    });
+
+    for (const evento of resAfectados) {
+      const mensaje = `Atención! El evento "${evento.título}" ha sido actualizado. Comprueba si los cambios no afectan a tu disponibilidad!`;
+      await db.query(
+        `INSERT INTO notificaciones (ID_usuario, mensaje, tipo, ID_evento) VALUES (?, ?, 'actualización', ?)`,
+        [evento.ID_usuario, mensaje, evento.ID]
+      );
+      console.log(`Notificación programada por actualización para usuario ${evento.ID_usuario}.`);
+    }
+
     // Si todo es exitoso, devolver éxito
     return res
       .status(200)
@@ -367,6 +385,24 @@ router.post("/cancelarEvento/:id", async (req, res) => {
     `;
 
     await db.query(query, [eventId]);
+
+    // Notificación a los usuarios afectados
+    const queryAfectados =
+      "SELECT eventos.título, eventos.fecha, inscripciones.ID_usuario FROM eventos JOIN inscripciones ON eventos.ID = inscripciones.ID_evento WHERE inscripciones.ID_evento = ? AND eventos.fecha > NOW() ORDER BY eventos.fecha DESC";
+    const resAfectados = await db.query(queryAfectados, [req.params.id]);
+
+    resAfectados.forEach((evento) => {
+      evento.fecha = db.formatearFecha(evento.fecha);
+    });
+
+    for (const evento of resAfectados) {
+      const mensaje = `Lo lamentamos mucho, pero el evento "${evento.título}" ha sido cancelado.`;
+      await db.query(
+        `INSERT INTO notificaciones (ID_usuario, mensaje, tipo, ID_evento) VALUES (?, ?, 'cancelación', ?)`,
+        [evento.ID_usuario, mensaje, evento.ID]
+      );
+      console.log(`Notificación programada por cancelación para usuario ${evento.ID_usuario}.`);
+    }
 
     const queryEliminarInscripcion = `
       DELETE FROM inscripciones 

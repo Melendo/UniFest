@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
         const facultades = await db.query(queryFacultades);
 
         // Consulta para los eventos próximos
-        const queryProximos = 'SELECT * FROM eventos WHERE fecha > NOW() ORDER BY fecha ASC LIMIT 5';
+        const queryProximos = 'SELECT * FROM eventos WHERE activo = 1 AND fecha > NOW() ORDER BY fecha ASC LIMIT 5';
         const resProximos = await db.query(queryProximos);
         resProximos.forEach(evento => {
             evento.fecha = db.formatearFecha(evento.fecha);
@@ -86,7 +86,7 @@ router.get('/obtenerEventos', async (req, res) => {
 
     try {
         // Consulta para obtener los eventos futuros
-        const eventos = await db.query('SELECT * FROM eventos WHERE fecha >= NOW()');
+        const eventos = await db.query('SELECT * FROM eventos WHERE activo = 1 AND fecha >= NOW()');
         
         // Formatear los eventos en un formato que FullCalendar espera
         const eventosFormateados = eventos.map(evento => ({
