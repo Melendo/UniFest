@@ -1,6 +1,7 @@
 <%- include('header', {rol: rol, pg:""}) %>
 
 <script src="../../javascripts/gestionInscripcion.js"></script>
+<script src="/javascripts/editarEvento.js"></script>
 
 <div class="container-fluid py-5">
   <div class="row">
@@ -188,6 +189,18 @@
               step="1"
             />
           </div>
+          <input
+              type="hidden"
+              id="capacidad_original"
+              name="capacidad_original"
+              value="<%= evento.capacidad_máxima %>"
+          />
+          <input
+              type="hidden"
+              id="id"
+              name="id"
+              value="<%= evento.ID %>"
+          />
           <button type="submit" class="btn btn-primary">Guardar cambios</button>
         </form>
       </div>

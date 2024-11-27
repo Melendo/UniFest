@@ -277,4 +277,80 @@ router.get("/listadoAsistentes/:id", async (req, res) => {
   }
 });
 
+router.post("/actualizar/:id", async (req, res) => {
+  const {
+    título,
+    descripción,
+    fecha,
+    hora,
+    duración,
+    ubicación,
+    facultad,
+    capacidad_máxima,
+  } = req.body;
+
+  // Verificar si el usuario está autenticado
+  if (!req.session.userId) {
+    return res.status(401).json({ message: "Usuario no autenticado" });
+  }
+
+  try {
+    const conflictQuery = `
+      SELECT *
+      FROM eventos
+      WHERE TIMESTAMP(fecha, hora) < DATE_ADD(TIMESTAMP(?, ?), INTERVAL ? MINUTE)
+        AND DATE_ADD(TIMESTAMP(fecha, hora), INTERVAL duración_minutos MINUTE) > TIMESTAMP(?, ?)
+        AND ubicación = ? AND ID_facultad = ? AND ID != ?
+    `;
+
+    const conflictParams = [
+      fecha, // Fecha del nuevo evento
+      hora, // Hora de inicio del nuevo evento
+      duración, // Duración en minutos del nuevo evento
+      fecha, // Fecha del nuevo evento
+      hora, // Hora de inicio del nuevo evento
+      ubicación, // Ubicación del nuevo evento
+      facultad,
+      req.params.id,
+    ];
+
+    const conflicts = await db.query(conflictQuery, conflictParams);
+
+    if (conflicts.length > 0) {
+      return res
+        .status(400)
+        .json({ message: "Ya existe un evento en el mismo lugar y horario." });
+    }
+
+    // Si no hay conflictos, insertar el nuevo evento
+    const query = `
+      UPDATE eventos 
+      SET título = ?, descripción = ?, fecha = ?, hora = ?, duración_minutos = ?, ubicación = ?, ID_facultad = ?, capacidad_máxima = ?
+      WHERE ID = ?;
+    `;
+    const params = [
+      título,
+      descripción,
+      fecha,
+      hora,
+      duración,
+      ubicación,
+      facultad,
+      capacidad_máxima,
+      req.params.id
+    ];
+
+    await db.query(query, params);
+
+    // Si todo es exitoso, devolver éxito
+    return res.status(200).json({ message: "Alta de evento exitosa." });
+  } catch (error) {
+    // Si ocurre un error al hacer la consulta, manejar el error
+    console.error("Error al registrar nuevo evento:", error.message, error.sql);
+    return res
+      .status(500)
+      .json({ message: "Error al registrar el evento. Inténtelo de nuevo." });
+  }
+});
+
 module.exports = router;
