@@ -138,12 +138,10 @@ router.post("/inscribirse/:id", async (req, res) => {
     return res.status(200).json({ message: mensaje, estado, titulo });
   } catch (error) {
     console.error("Error al inscribirse:", error);
-    return res
-      .status(500)
-      .json({
-        message: "Ocurrió un error al procesar tu inscripción.",
-        titulo: "Error",
-      });
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar tu inscripción.",
+      titulo: "Error",
+    });
   }
 });
 
@@ -203,12 +201,10 @@ router.post("/cancelar/:id", async (req, res) => {
       .json({ message: "Tu inscripción ha sido cancelada.", titulo: "Adiós" });
   } catch (error) {
     console.error("Error al cancelar inscripción:", error);
-    return res
-      .status(500)
-      .json({
-        message: "Ocurrió un error al cancelar tu inscripción.",
-        titulo: "Error",
-      });
+    return res.status(500).json({
+      message: "Ocurrió un error al cancelar tu inscripción.",
+      titulo: "Error",
+    });
   }
 });
 
@@ -337,19 +333,55 @@ router.post("/actualizar/:id", async (req, res) => {
       ubicación,
       facultad,
       capacidad_máxima,
-      req.params.id
+      req.params.id,
     ];
 
     await db.query(query, params);
 
     // Si todo es exitoso, devolver éxito
-    return res.status(200).json({ message: "Alta de evento exitosa." });
+    return res
+      .status(200)
+      .json({ message: "Actualización de evento exitosa." });
   } catch (error) {
     // Si ocurre un error al hacer la consulta, manejar el error
-    console.error("Error al registrar nuevo evento:", error.message, error.sql);
+    console.error("Error al actualizar evento:", error.message, error.sql);
     return res
       .status(500)
-      .json({ message: "Error al registrar el evento. Inténtelo de nuevo." });
+      .json({ message: "Error al actualizar el evento. Inténtelo de nuevo." });
+  }
+});
+
+router.post("/cancelarEvento/:id", async (req, res) => {
+  const eventId = req.params.id;
+
+  // Verificar si el usuario está autenticado
+  if (!req.session.userId) {
+    return res.status(401).json({ message: "Usuario no autenticado" });
+  }
+
+  try {
+    const query = `
+      UPDATE eventos 
+      SET activo = 0
+      WHERE ID = ?;
+    `;
+
+    await db.query(query, [eventId]);
+
+    const queryEliminarInscripcion = `
+      DELETE FROM inscripciones 
+      WHERE ID_evento = ?`;
+
+    await db.query(queryEliminarInscripcion, [eventId]);
+
+    // Si todo es exitoso, devolver éxito
+    return res.status(200).json({ message: "Cancelación de evento exitosa." });
+  } catch (error) {
+    // Si ocurre un error al hacer la consulta, manejar el error
+    console.error("Error al cancelar evento:", error.message, error.sql);
+    return res
+      .status(500)
+      .json({ message: "Error al cancelar evento. Inténtelo de nuevo." });
   }
 });
 

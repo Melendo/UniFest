@@ -2,6 +2,7 @@
 
 <script src="../../javascripts/gestionInscripcion.js"></script>
 <script src="/javascripts/editarEvento.js"></script>
+<script src="/javascripts/cancelarEvento.js"></script>
 
 <div class="container-fluid py-5">
   <div class="row">
@@ -40,11 +41,14 @@
         >
           Editar evento
         </button>
-        <a
-          href="/evento/cancelar/<%= evento.ID %>"
+        <button
+          type="button"
           class="btn btn-outline-secondary btn-lg fw-bold px-4 py-3"
-          >Cancelar evento</a
+          data-bs-toggle="modal"
+          data-bs-target="#cancelarEvento"
         >
+          Cancelar evento
+        </button>
       </div>
       <% } %>
     </div>
@@ -82,7 +86,7 @@
   </div>
 </div>
 
-<!-- Modal para añadir evento -->
+<!-- Modal para actualizar evento -->
 <div class="modal fade" id="editarEvento">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -203,6 +207,31 @@
           />
           <button type="submit" class="btn btn-primary">Guardar cambios</button>
         </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para cancelar evento -->
+<div class="modal fade" id="cancelarEvento">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cancelarEventoLabel">Cancelar evento</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+      <div class="modal-body">
+          <h3 class="text-center">Está seguro de querer cancelar su evento?</h3>
+          <br/>
+          <h3 class="text-center mb-4">Sus usuarios inscritos serán notificados en caso de confirmación</h3>
+          <div class="d-flex justify-content-center">
+            <button type="button" class="btn btn-danger fs-4 btn-cancelar" data-evento-id="<%= evento.ID %>">Confirmar cancelación</button>
+          </div>
       </div>
     </div>
   </div>

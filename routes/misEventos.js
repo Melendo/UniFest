@@ -23,7 +23,7 @@ router.get("/misEventos", async (req, res) => {
   try {
     //Consulta eventos proximos
     const queryProximos =
-      "SELECT * FROM eventos WHERE fecha > NOW() AND eventos.ID_org = ? ORDER BY fecha ASC";
+      "SELECT * FROM eventos WHERE fecha > NOW() AND activo = 1 AND eventos.ID_org = ? ORDER BY fecha ASC";
     const resProximos = await db.query(queryProximos, [req.session.userId]);
 
     resProximos.forEach((evento) => {
