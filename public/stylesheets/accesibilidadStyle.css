@@ -12,7 +12,12 @@
   color: white;
 }
 
-.dark-scheme .modal-content {
+.dark-scheme .modal-content, .dark-scheme select, .dark-scheme input, .dark-scheme textarea, .dark-scheme input:focus, .dark-scheme textarea:focus {
+  background-color: #3d4246;
+  color: white;
+}
+
+.dark-scheme input:focus{
   background-color: #3d4246;
   color: white;
 }
