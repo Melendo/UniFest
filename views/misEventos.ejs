@@ -48,7 +48,7 @@
       <!-- Botón para abrir el modal -->
       <button
         type="button"
-        class="btn btn-outline-secondary"
+        class="btn btn-secondary"
         data-bs-toggle="modal"
         data-bs-target="#añadirNuevoEvento"
       >
@@ -155,21 +155,23 @@
               >
               <input
                 type="number"
+                class="form-control"
                 id="capacidad_máxima"
                 name="capacidad_máxima"
                 required
                 step="1"
               />
             </div>
-            <button type="submit" class="btn btn-primary">
-              Guardar cambios
-            </button>
+            <div class="d-flex justify-content-center">
+              <button type="submit" class="btn btn-secondary">
+                Guardar cambios
+              </button>
+            </div>
           </form>
         </div>
       </div>
     </div>
   </div>
-
 </div>
 
 <%- include('footer') %>

@@ -25,9 +25,9 @@
         </div>
         <div class="modal-body">
           <form id="formNuevoEvento">
-            <div class="mb-3">
+            <div class="mb-3 fs-4">
               <label for="tamaño-letra">Tamaño de letra:</label>
-              <select id="tamaño-letra" class="form-control">
+              <select id="tamaño-letra" class="form-select fs-5">
                 <option value="normal">Normal</option>
                 <option value="grande">Grande</option>
                 <option value="muy-grande">Muy Grande</option>
@@ -35,16 +35,18 @@
             </div>
 
             <!-- Opciones de esquema de colores -->
-            <div class="mb-3">
+            <div class="mb-3 fs-4">
               <label for="esquema-colores">Esquema de colores:</label>
-              <select id="esquema-colores" class="form-control">
+              <select id="esquema-colores" class="form-select fs-5">
                 <option value="claro">Claro</option>
                 <option value="oscuro">Oscuro</option>
               </select>
             </div>
-            <button type="submit" class="btn btn-primary">
-              Aplicar cambios
-            </button>
+            <div class="d-flex justify-content-center">
+              <button type="submit" class="btn btn-secondary btn-lg">
+                Aplicar cambios
+              </button>
+            </div>
           </form>
         </div>
       </div>

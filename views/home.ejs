@@ -4,18 +4,18 @@
 <!-- Script calendario-->
 <script src="/javascripts/calendario.js"></script>
 
-<div class="container-fluid" style="background-color: black;">
+<div class="container-fluid">
     <div class="row">
         <!-- Bienvenida -->
-        <div class="col-12 bg-light border-bottom border-2 border-secondary" style="background-color: black;">
-            <h1 class="text-center py-4" style="background-color: black;">¡Hola, <%- nombre %>!</h1>
+        <div class="col-12 border-bottom border-2 border-secondary">
+            <h1 class="text-center py-4">¡Hola, <%- nombre %>!</h1>
         </div>
         
         <!-- Eventos próximos -->
         <div class="col-md-6 py-4 px-2">
             <div class="mx-4 mt-4 text-center">
                 <h2>Calendario de Eventos</h2>
-                <button class="btn btn-outline-secondary text-center mb-4" type="button" data-bs-toggle="modal" data-bs-target="#calendarModal">
+                <button class="btn btn-secondary text-center mb-4" type="button" data-bs-toggle="modal" data-bs-target="#calendarModal">
                     Mostrar Calendario
                 </button>
                 <h3 class="text-center text-decoration-underline">Próximos eventos</h3>
@@ -34,7 +34,7 @@
                                     <tr>
                                         <td><%= evento.título %></td>
                                         <td><%= evento.fecha %></td>
-                                        <td><a href='/evento/evento/<%= evento.ID %>' class="btn btn-primary" role="button">Ver evento</a></td>
+                                        <td><a href='/evento/evento/<%= evento.ID %>' class="btn btn-secondary" role="button">Ver evento</a></td>
                                     </tr>
                                     <% }); %>
                                     <% } else { %>
@@ -53,7 +53,7 @@
                         <div class="m-4">
                             <h2 class="text-center">Buscador de Eventos</h2>
                             <div class="text-center mb-3">
-                                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#buscadorCollapse" aria-expanded="false" aria-controls="buscadorCollapse">
+                                <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#buscadorCollapse" aria-expanded="false" aria-controls="buscadorCollapse">
                                     Mostrar Buscador
                                 </button>
                             </div>
@@ -104,7 +104,7 @@
                                             </div>
                                         </div>
                                         
-                                        <button type="submit" class="btn btn-primary">Buscar</button>
+                                        <button type="submit" class="btn btn-secondary">Buscar</button>
                                     </form>
                                     
                                 </div>
@@ -127,7 +127,7 @@
                                                     <tr>
                                                         <td><%= evento.título %></td>
                                                         <td><%= evento.fecha %></td>
-                                                        <td><a href='/evento/evento/<%= evento.ID %>' class="btn btn-primary" role="button">Ver evento</a></td>
+                                                        <td><a href='/evento/evento/<%= evento.ID %>' class="btn btn-secondary" role="button">Ver evento</a></td>
                                                     </tr>
                                                     <% }); %>
                                                     <% } else { %>

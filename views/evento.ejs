@@ -11,7 +11,7 @@
       <div class="text-center mb-4">
         <h1 class="fw-bold">Evento: <%= evento.título %></h1>
       </div>
-      <div class="border border-2 border-secondary rounded p-4 bg-light">
+      <div class="border border-2 border-secondary rounded p-4">
         <h5 class="fw-bold text-secondary">Descripción</h5>
         <p class="text-justify"><%= evento.descripción %></p>
       </div>
@@ -20,7 +20,7 @@
       <div class="text-center mt-4">
         <button
           type="button"
-          class="btn btn-outline-secondary fw-bold px-4 py-3 btn-inscripcion"
+          class="btn btn-secondary fw-bold px-4 py-3 btn-inscripcion"
           data-evento-id="<%= evento.ID %>"
         >
           <%= inscrito %>
@@ -30,12 +30,12 @@
       <div class="text-center mt-4 d-flex flex-row justify-content-around">
         <a
           href="/evento/listadoAsistentes/<%= evento.ID %>"
-          class="btn btn-outline-secondary fw-bold"
+          class="btn btn-secondary fw-bold"
           >Listado de asistentes</a
         >
         <button
           type="button"
-          class="btn btn-outline-secondary fw-bold"
+          class="btn btn-secondary fw-bold"
           data-bs-toggle="modal"
           data-bs-target="#editarEvento"
         >
@@ -43,7 +43,7 @@
         </button>
         <button
           type="button"
-          class="btn btn-outline-secondary fw-bold"
+          class="btn btn-secondary fw-bold"
           data-bs-toggle="modal"
           data-bs-target="#cancelarEvento"
         >
@@ -58,7 +58,7 @@
       <div class="text-center mb-4">
         <h1 class="fw-bold">Más Información</h1>
       </div>
-      <div class="border border-2 border-secondary rounded bg-light">
+      <div class="border border-2 border-secondary rounded">
         <div class="p-3">
           <h5 class="fw-bold text-secondary">Ubicación</h5>
           <p>
@@ -186,6 +186,7 @@
             >
             <input
               type="number"
+              class="form-control"
               id="capacidad_máxima"
               name="capacidad_máxima"
               value="<%= evento.capacidad_máxima %>"
@@ -205,7 +206,9 @@
               name="id"
               value="<%= evento.ID %>"
           />
-          <button type="submit" class="btn btn-primary">Guardar cambios</button>
+          <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-secondary">Guardar cambios</button>
+          </div>
         </form>
       </div>
     </div>
