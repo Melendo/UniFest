@@ -12,7 +12,7 @@
         <h1 class="fw-bold">Evento: <%= evento.título %></h1>
       </div>
       <div class="border border-2 border-secondary rounded p-4">
-        <h5 class="fw-bold text-secondary">Descripción</h5>
+        <h4 class="fw-bold text-secondary">Descripción</h4>
         <p class="text-justify"><%= evento.descripción %></p>
       </div>
 
@@ -60,7 +60,7 @@
       </div>
       <div class="border border-2 border-secondary rounded">
         <div class="p-3">
-          <h5 class="fw-bold text-secondary">Ubicación</h5>
+          <h4 class="fw-bold text-secondary">Ubicación</h4>
           <p>
             Puedes encontrarnos en la Facultad de
             <b><%= facultad.nombre %></b> en <b><%= evento.ubicación %></b>
@@ -68,7 +68,7 @@
         </div>
 
         <div class="p-3">
-          <h5 class="fw-bold text-secondary">Fecha del evento</h5>
+          <h4 class="fw-bold text-secondary">Fecha del evento</h4>
           <p>
             El evento empezara el dia <b><%= evento.fecha %></b> a las
             <b><%= evento.hora %></b> y durará un total de
@@ -77,7 +77,7 @@
         </div>
 
         <div class="p-3">
-          <h5 class="fw-bold text-secondary">Plazas disponibles</h5>
+          <h4 class="fw-bold text-secondary">Plazas disponibles</h4>
           <p>Plazas ocupadas: <b><%= capActual %></b></p>
           <p>Plazas totales: <b><%= evento.capacidad_máxima %></b></p>
         </div>
