@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
     }
 
     const nombre = req.session.nombre;
-    const { titulo, fecha_inicio, fecha_fin, facultad, estado } = req.query;
+    const { titulo, fecha_inicio, fecha_fin, facultad, estado, tipo } = req.query;
 
     try {
         // Obtener las facultades
@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
         const facultades = await db.query(queryFacultades);
 
         // Consulta para los eventos próximos
-        const queryProximos = 'SELECT * FROM eventos WHERE activo = 1 AND fecha > NOW() ORDER BY fecha ASC LIMIT 5';
+        const queryProximos = 'SELECT * FROM eventos WHERE activo = 1 AND fecha > NOW() ORDER BY fecha ASC LIMIT 4';
         const resProximos = await db.query(queryProximos);
         resProximos.forEach(evento => {
             evento.fecha = db.formatearFecha(evento.fecha);
@@ -48,6 +48,12 @@ router.get('/', async (req, res) => {
         if (facultad) {
             queryBuscar += ' AND ID_facultad = ?';
             params.push(facultad);
+        }
+
+        // Filtrar por facultad
+        if (tipo) {
+            queryBuscar += ' AND tipo = ?';
+            params.push(tipo);
         }
 
         // Filtrar por estado (llenos o disponibles)

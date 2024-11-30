@@ -4,159 +4,253 @@
 <script src="/javascripts/calendario.js"></script>
 
 <div class="container-fluid">
-    <div class="row">
-        <!-- Bienvenida -->
-        <div class="col-12 border-bottom border-2 border-secondary">
-            <h1 class="text-center py-4">¡Hola, <%- nombre %>!</h1>
+  <div class="row">
+    <!-- Bienvenida -->
+    <div class="col-12 border-bottom border-2 border-secondary">
+      <h1 class="text-center py-4">¡Hola, <%- nombre %>!</h1>
+    </div>
+
+    <!-- Eventos próximos -->
+    <div class="col-md-6 py-4 px-2">
+      <div class="mx-4 mt-4 text-center">
+        <h2>Calendario de Eventos</h2>
+        <button
+          class="btn btn-secondary text-center mb-4"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#calendarModal"
+        >
+          Mostrar Calendario
+        </button>
+        <h3 class="text-center text-decoration-underline">Próximos eventos</h3>
+        <div class="table-responsive">
+          <table class="table border text-center table-striped">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Fecha</th>
+                <th>Más información</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (proximos && proximos.length > 0) { %> <%
+              proximos.forEach(evento => { %>
+              <tr>
+                <td><%= evento.título %></td>
+                <td><%= evento.fecha %></td>
+                <td>
+                  <a
+                    href="/evento/evento/<%= evento.ID %>"
+                    class="btn btn-secondary"
+                    role="button"
+                    >Ver evento</a
+                  >
+                </td>
+              </tr>
+              <% }); %> <% } else { %>
+              <tr>
+                <td colspan="3" class="text-center">No hay eventos próximos</td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
         </div>
-        
-        <!-- Eventos próximos -->
-        <div class="col-md-6 py-4 px-2">
-            <div class="mx-4 mt-4 text-center">
-                <h2>Calendario de Eventos</h2>
-                <button class="btn btn-secondary text-center mb-4" type="button" data-bs-toggle="modal" data-bs-target="#calendarModal">
-                    Mostrar Calendario
-                </button>
-                <h3 class="text-center text-decoration-underline">Próximos eventos</h3>
-                <div class="table-responsive">
-                    <table class="table border text-center table-striped">
-                        <thead>
-                            <tr>
-                                <th>Título</th>
-                                <th>Fecha</th>
-                                <th>Más información</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if (proximos && proximos.length > 0) { %>
-                                <% proximos.forEach(evento => { %>
-                                    <tr>
-                                        <td><%= evento.título %></td>
-                                        <td><%= evento.fecha %></td>
-                                        <td><a href='/evento/evento/<%= evento.ID %>' class="btn btn-secondary" role="button">Ver evento</a></td>
-                                    </tr>
-                                    <% }); %>
-                                    <% } else { %>
-                                        <tr>
-                                            <td colspan="3" class="text-center">No hay eventos próximos</td>
-                                        </tr>
-                                        <% } %>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Buscador de eventos -->
-                    <div class="col-md-6 p-4">
-                        <div class="m-4">
-                            <h2 class="text-center">Buscador de Eventos</h2>
-                            <div class="text-center mb-3">
-                                <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#buscadorCollapse" aria-expanded="false" aria-controls="buscadorCollapse">
-                                    Mostrar Buscador
-                                </button>
-                            </div>
-                            <div class="collapse" id="buscadorCollapse">
-                                <!-- Formulario de búsqueda -->
-                                <form action="/home" method="GET" class="mb-3">
-                                    <div class="mb-2">
-                                        <label for="titulo" class="form-label fw-bold">Título</label>
-                                        <input type="text" id="titulo" name="titulo" class="form-control" placeholder="Buscar por título" />
-                                    </div>
-                                    
-                                    <!-- Rango de fechas -->
-                                    <div class="mb-2">
-                                        <label for="fecha_inicio" class="form-label fw-bold">Fecha de inicio</label>
-                                        <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control" />
-                                    </div>
-                                    <div class="mb-2">
-                                        <label for="fecha_fin" class="form-label fw-bold">Fecha de fin</label>
-                                        <input type="date" id="fecha_fin" name="fecha_fin" class="form-control" />
-                                    </div>
-                                    
-                                    <!-- Facultades -->
-                                    <div class="mb-2">
-                                        <label for="facultad" class="form-label fw-bold">Facultad</label>
-                                        <select id="facultad" name="facultad" class="form-select">
-                                            <option value="">Seleccionar facultad</option>
-                                            <!-- Aquí se insertan las facultades disponibles -->
-                                            <% facultades.forEach(facultad => { %>
-                                                <option value="<%= facultad.ID %>"><%= facultad.nombre %></option>
-                                                <% }); %>
-                                            </select>
-                                        </div>
-                                        
-                                        <!-- Estado de los eventos -->
-                                        <div class="mb-3">
-                                            <p class="mb-1 fw-bold">Estado de los eventos</p>
-                                            <div class="form-check">
-                                                <input type="radio" id="ninguno" name="estado" value="ninguno" class="form-check-input" checked />
-                                                <label for="ninguno" class="form-check-label">Todos los eventos</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="radio" id="llenos" name="estado" value="llenos" class="form-check-input" />
-                                                <label for="llenos" class="form-check-label">Solo eventos llenos</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="radio" id="disponibles" name="estado" value="disponibles" class="form-check-input" />
-                                                <label for="disponibles" class="form-check-label">Solo eventos disponibles</label>
-                                            </div>
-                                        </div>
-                                        
-                                        <button type="submit" class="btn btn-secondary">Buscar</button>
-                                    </form>
-                                    
-                                </div>
-                            </div>
-                            
-                            <div class="mt-4 mx-2 mAccesible">
-                                <h3 class="text-center text-decoration-underline">Resultados</h3>
-                                <div class="table-responsive eventTable">
-                                    <table class="table border text-center table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Título</th>
-                                                <th>Fecha</th>
-                                                <th>Más información</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% if (resultados && resultados.length > 0) { %>
-                                                <% resultados.forEach(evento => { %>
-                                                    <tr>
-                                                        <td><%= evento.título %></td>
-                                                        <td><%= evento.fecha %></td>
-                                                        <td><a href='/evento/evento/<%= evento.ID %>' class="btn btn-secondary" role="button">Ver evento</a></td>
-                                                    </tr>
-                                                    <% }); %>
-                                                    <% } else { %>
-                                                        <tr>
-                                                            <td colspan="3" class="text-center">No se encontraron eventos</td>
-                                                        </tr>
-                                                        <% } %>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        
-                                        
-                                    </div>
-                                </div>
-                                
-                                <!-- Modal de Calendario -->
-                                <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="calendarModalLabel">Calendario de Eventos</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div id="modalBodyCalendario" class="modal-body" >
-                                                <div id="calendar" ></div> 
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <%- include('footer') %>
-                                
+      </div>
+    </div>
+
+    <!-- Buscador de eventos -->
+    <div class="col-md-6 p-4">
+      <div class="m-4">
+        <h2 class="text-center">Buscador de Eventos</h2>
+        <div class="text-center mb-3">
+          <button
+            class="btn btn-secondary"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#buscadorCollapse"
+            aria-expanded="false"
+            aria-controls="buscadorCollapse"
+          >
+            Mostrar Buscador
+          </button>
+        </div>
+        <div class="collapse" id="buscadorCollapse">
+          <!-- Formulario de búsqueda -->
+          <form action="/home" method="GET" class="mb-3">
+            <div class="mb-2">
+              <label for="titulo" class="form-label fw-bold">Título</label>
+              <input
+                type="text"
+                id="titulo"
+                name="titulo"
+                class="form-control"
+                placeholder="Buscar por título"
+              />
+            </div>
+
+            <!-- Tipo -->
+            <div class="mb-2">
+              <label for="tipo" class="form-label fw-bold">Tipo de evento</label>
+              <select id="tipo" name="tipo" class="form-select">
+                <option value="">Seleccionar tipo de evento deseado</option>
+                <option value="conferencia">Conferencia</option>
+                <option value="seminario">Seminario</option>
+                <option value="taller">Taller</option>
+              </select>
+            </div>
+
+            <!-- Rango de fechas -->
+            <div class="mb-2">
+              <label for="fecha_inicio" class="form-label fw-bold"
+                >Fecha de inicio</label
+              >
+              <input
+                type="date"
+                id="fecha_inicio"
+                name="fecha_inicio"
+                class="form-control"
+              />
+            </div>
+            <div class="mb-2">
+              <label for="fecha_fin" class="form-label fw-bold"
+                >Fecha de fin</label
+              >
+              <input
+                type="date"
+                id="fecha_fin"
+                name="fecha_fin"
+                class="form-control"
+              />
+            </div>
+
+            <!-- Facultades -->
+            <div class="mb-2">
+              <label for="facultad" class="form-label fw-bold">Facultad</label>
+              <select id="facultad" name="facultad" class="form-select">
+                <option value="">Seleccionar facultad</option>
+                <!-- Aquí se insertan las facultades disponibles -->
+                <% facultades.forEach(facultad => { %>
+                <option value="<%= facultad.ID %>">
+                  <%= facultad.nombre %>
+                </option>
+                <% }); %>
+              </select>
+            </div>
+
+            <!-- Estado de los eventos -->
+            <div class="mb-3">
+              <p class="mb-1 fw-bold">Estado de los eventos</p>
+              <div class="form-check">
+                <input
+                  type="radio"
+                  id="ninguno"
+                  name="estado"
+                  value="ninguno"
+                  class="form-check-input"
+                  checked
+                />
+                <label for="ninguno" class="form-check-label"
+                  >Todos los eventos</label
+                >
+              </div>
+              <div class="form-check">
+                <input
+                  type="radio"
+                  id="llenos"
+                  name="estado"
+                  value="llenos"
+                  class="form-check-input"
+                />
+                <label for="llenos" class="form-check-label"
+                  >Solo eventos llenos</label
+                >
+              </div>
+              <div class="form-check">
+                <input
+                  type="radio"
+                  id="disponibles"
+                  name="estado"
+                  value="disponibles"
+                  class="form-check-input"
+                />
+                <label for="disponibles" class="form-check-label"
+                  >Solo eventos disponibles</label
+                >
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-secondary">Buscar</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="mt-4 mx-2 mAccesible">
+        <h3 class="text-center text-decoration-underline">Resultados</h3>
+        <div class="table-responsive eventTable">
+          <table class="table border text-center table-striped">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Fecha</th>
+                <th>Más información</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (resultados && resultados.length > 0) { %> <%
+              resultados.forEach(evento => { %>
+              <tr>
+                <td><%= evento.título %></td>
+                <td><%= evento.fecha %></td>
+                <td>
+                  <a
+                    href="/evento/evento/<%= evento.ID %>"
+                    class="btn btn-secondary"
+                    role="button"
+                    >Ver evento</a
+                  >
+                </td>
+              </tr>
+              <% }); %> <% } else { %>
+              <tr>
+                <td colspan="3" class="text-center">
+                  No se encontraron eventos
+                </td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Calendario -->
+  <div
+    class="modal fade"
+    id="calendarModal"
+    tabindex="-1"
+    aria-labelledby="calendarModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="calendarModalLabel">
+            Calendario de Eventos
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div id="modalBodyCalendario" class="modal-body">
+          <div id="calendar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('footer') %>
+</div>

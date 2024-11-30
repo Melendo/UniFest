@@ -10,6 +10,7 @@ $(document).ready(function () {
 
     const título = $("#título").val();
     const descripción = $("#descripción").val();
+    const tipo = $("#tipo").val();
     const fecha = $("#fecha").val();
     const hora = $("#hora").val();
     const duración = parseInt($("#duración").val(), 10);
@@ -59,6 +60,7 @@ $(document).ready(function () {
       data: {
         título,
         descripción,
+        tipo,
         fecha,
         hora,
         duración,

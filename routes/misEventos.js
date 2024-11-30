@@ -52,6 +52,7 @@ router.post("/anyadir", async (req, res) => {
   const {
     título,
     descripción,
+    tipo,
     fecha,
     hora,
     duración,
@@ -94,12 +95,13 @@ router.post("/anyadir", async (req, res) => {
 
     // Si no hay conflictos, insertar el nuevo evento
     const query = `
-      INSERT INTO eventos (título, descripción, fecha, hora, duración_minutos, ubicación, ID_facultad, capacidad_máxima, ID_org, activo)
+      INSERT INTO eventos (título, descripción, tipo, fecha, hora, duración_minutos, ubicación, ID_facultad, capacidad_máxima, ID_org)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     const params = [
       título,
       descripción,
+      tipo,
       fecha,
       hora,
       duración,
@@ -107,7 +109,6 @@ router.post("/anyadir", async (req, res) => {
       facultad,
       capacidad_máxima,
       req.session.userId,
-      1,
     ];
 
     await db.query(query, params);

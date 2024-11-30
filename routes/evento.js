@@ -290,6 +290,7 @@ router.post("/actualizar/:id", async (req, res) => {
   const {
     título,
     descripción,
+    tipo,
     fecha,
     hora,
     duración,
@@ -335,12 +336,13 @@ router.post("/actualizar/:id", async (req, res) => {
     // Si no hay conflictos, insertar el nuevo evento
     const query = `
       UPDATE eventos 
-      SET título = ?, descripción = ?, fecha = ?, hora = ?, duración_minutos = ?, ubicación = ?, ID_facultad = ?, capacidad_máxima = ?
+      SET título = ?, descripción = ?, tipo = ?, fecha = ?, hora = ?, duración_minutos = ?, ubicación = ?, ID_facultad = ?, capacidad_máxima = ?
       WHERE ID = ?;
     `;
     const params = [
       título,
       descripción,
+      tipo,
       fecha,
       hora,
       duración,

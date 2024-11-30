@@ -123,6 +123,15 @@
             ><%= evento.descripción %></textarea>
           </div>
           <div class="mb-3">
+            <label for="tipo" class="form-label">Tipo de evento</label>
+            <select id="tipo" name="tipo" class="form-select">
+              <option value="-" <%= evento.tipo === '-' ? 'selected' : '' %>>-</option>
+              <option value="conferencia" <%= evento.tipo === 'conferencia' ? 'selected' : '' %>>Conferencia</option>
+              <option value="seminario" <%= evento.tipo === 'seminario' ? 'selected' : '' %>>Seminario</option>
+              <option value="taller" <%= evento.tipo === 'taller' ? 'selected' : '' %>>Taller</option>
+            </select>
+          </div>
+          <div class="mb-3">
             <label for="fecha" class="form-label">Fecha</label>
             <input
               type="date"
