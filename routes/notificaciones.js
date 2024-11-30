@@ -21,6 +21,8 @@ router.get("/", async (req, res) => {
     res.render("notificaciones", {
       bandeja: notificaciones,
       rol: req.session.rol,
+      color: req.session.color,
+      font: req.session.font,
     });
   } catch (error) {
     console.error("Error al cargar la bandeja de entrada:", error);

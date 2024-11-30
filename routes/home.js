@@ -72,7 +72,9 @@ router.get('/', async (req, res) => {
             nombre, 
             proximos: resProximos, 
             resultados, 
-            facultades 
+            facultades,
+            color: req.session.color,
+            font: req.session.font
         });
     } catch (error) {
         console.error('Error al procesar la solicitud:', error);

@@ -37,7 +37,7 @@ $(document).ready(function () {
                     icon: "success",
                     confirmButtonText: "OK"
                 }).then(() => {
-                    window.location.href = '/profile';
+                    window.location.reload();
                 });
             },
             error: function(error) {

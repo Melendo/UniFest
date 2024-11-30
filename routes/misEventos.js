@@ -14,9 +14,9 @@ router.get("/misEventos", async (req, res) => {
   }
 
   if (!req.session.rol) {
-    return res.status(404).render("error", { 
-      message: "Página no encontrada", 
-      error: { status: 404, stack: "No se encontró la página requerida." }
+    return res.status(404).render("error", {
+      message: "Página no encontrada",
+      error: { status: 404, stack: "No se encontró la página requerida." },
     });
   }
 
@@ -37,6 +37,8 @@ router.get("/misEventos", async (req, res) => {
       rol: req.session.rol,
       proximos: resProximos,
       todasFacultades: resTodasFacultades,
+      color: req.session.color,
+      font: req.session.font,
     });
   } catch (error) {
     console.error("Error en el inicio de sesión:", error);
@@ -125,12 +127,12 @@ router.get("/misInscripciones", async (req, res) => {
   // Verificar si el usuario está autenticado
   if (!req.session.userId) {
     return res.redirect("/login"); // Redirigir al login si no está autenticado
-  } 
-  
+  }
+
   if (req.session.rol) {
-    return res.status(404).render("error", { 
-      message: "Página no encontrada", 
-      error: { status: 404, stack: "No se encontró la página requerida." }
+    return res.status(404).render("error", {
+      message: "Página no encontrada",
+      error: { status: 404, stack: "No se encontró la página requerida." },
     });
   }
 
@@ -161,6 +163,8 @@ router.get("/misInscripciones", async (req, res) => {
       rol: req.session.rol,
       proximos: resProximos,
       espera: resEspera,
+      color: req.session.color,
+      font: req.session.font,
     });
   } catch (error) {
     console.error("Error:", error);

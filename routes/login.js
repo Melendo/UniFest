@@ -34,7 +34,17 @@ router.post('/login',  async (req, res) => {
     req.session.userId = user.ID; // Guardar el ID del usuario en la sesión
     req.session.nombre = user.nombre; // Guardar el nombre del usuario en la sesión
     req.session.rol = user.organizador; //Guardamos el rol en las cookies (1 organizador, 0 usuario)
-    
+
+    const queryConf = "SELECT * FROM conf_accesibilidad WHERE ID_usuario = ?";
+    const [resConf] = await db.query(queryConf, req.session.userId);
+
+    if (!resConf) {
+      return res.status(400).json({ message: "No hay configuración establecida para este usuario." });
+    }
+
+    req.session.color = resConf.colores;
+    req.session.font = resConf.t_size;
+  
     // Responder con éxito, redirigir a otra página o mandar un mensaje de éxito
     return res.status(200).json({ message: 'Inicio de sesión exitoso', redirect: '/dashboard' });
     

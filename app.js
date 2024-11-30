@@ -17,6 +17,7 @@ var homeRouter = require('./routes/home');
 var eventoRouter = require('./routes/evento');
 var misEventosRouter = require('./routes/misEventos');
 var notificacionesRouter = require('./routes/notificaciones');
+var accesibilidadRouter = require('./routes/accesibilidad');
 
 var sessionMiddleware = require('./dataBase/session');
 var jobsMiddleware = require('./jobs/cron')
@@ -46,6 +47,7 @@ app.use('/home', homeRouter)
 app.use('/evento', eventoRouter);
 app.use('/misEventos', misEventosRouter);
 app.use('/notificaciones', notificacionesRouter);
+app.use('/accesibilidad', accesibilidadRouter);
 
 //Captura error 404 
 app.use(function(req, res, next) {

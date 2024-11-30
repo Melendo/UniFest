@@ -1,91 +1,120 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var db = require('../dataBase/db');
-var bcrypt = require('bcrypt');
+var db = require("../dataBase/db");
+var bcrypt = require("bcrypt");
 
 //Carga página registro
-router.get('/', async (req, res) => {
-  try{
-    const queryTodasFacultades = 'SELECT * FROM facultades';
+router.get("/", async (req, res) => {
+  try {
+    const queryTodasFacultades = "SELECT * FROM facultades";
     const resTodasFacultades = await db.query(queryTodasFacultades);
-    res.render('register', {todasFacultades: resTodasFacultades});
+    res.render("register", { todasFacultades: resTodasFacultades });
+  } catch (error) {
+    console.error("Error en el inicio de sesión:", error);
+    return res
+      .status(500)
+      .json({
+        message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
+      });
   }
-  catch(error){
-    console.error('Error en el inicio de sesión:', error);
-    return res.status(500).json({ message: 'Hubo un error al procesar la solicitud. Intenta de nuevo.' });
-  }
-
 });
 
-router.post('/register', async (req, res) => {
+router.post("/register", async (req, res) => {
   // Obtención de datos del formulario
-  const { nombre, telefono, correo, contrasenia, facultad, esOrganizador } = req.body;
-  
+  const { nombre, telefono, correo, contrasenia, facultad, esOrganizador } =
+    req.body;
+
   // Validación de formato de teléfono (solo números de 9 dígitos)
   if (!/^\d{9}$/.test(telefono)) {
-    return res.status(400).json({ message: 'El número de teléfono debe tener 9 dígitos.' });
+    return res
+      .status(400)
+      .json({ message: "El número de teléfono debe tener 9 dígitos." });
   }
-  
+
   // Validación del correo (solo correo de dominio ucm.es)
   const correoSplit = correo.split("@");
   if (correoSplit.length !== 2 || correoSplit[1] !== "ucm.es") {
-    return res.status(400).json({ message: 'El correo debe ser un correo institucional de la UCM (@ucm.es).' });
+    return res
+      .status(400)
+      .json({
+        message:
+          "El correo debe ser un correo institucional de la UCM (@ucm.es).",
+      });
   }
-  
-  
+
   // Comprobación de que no exista un usuario con el mismo correo
-  const QueryCorreoExiste = 'SELECT * FROM usuarios WHERE correo = ?';
+  const QueryCorreoExiste = "SELECT * FROM usuarios WHERE correo = ?";
   const [resCorreo] = await db.query(QueryCorreoExiste, [correo]);
-  console.log('Validando usuario');
+  console.log("Validando usuario");
   if (resCorreo) {
-    console.log('Error al registrar: El correo ya esta en uso')
-    db.real
-    return res.status(400).json({ message: 'El correo ya está registrado.' });
+    console.log("Error al registrar: El correo ya esta en uso");
+    db.real;
+    return res.status(400).json({ message: "El correo ya está registrado." });
   }
-  
-  console.log('Usuario no encontrado');
-  
-  
+
+  console.log("Usuario no encontrado");
+
   // Obtención del Id de la facultad, error si no existe
-  const QueryFacultadExiste = 'SELECT * FROM facultades WHERE ID = ?';
+  const QueryFacultadExiste = "SELECT * FROM facultades WHERE ID = ?";
   const [resFacultad] = await db.query(QueryFacultadExiste, [facultad]);
-  console.log('Validando la facultad:', facultad);
-  
+  console.log("Validando la facultad:", facultad);
+
   if (!resFacultad) {
-    console.error('Facultad no encontrada en la base de datos:', facultad);
-    return res.status(400).json({ message: 'La facultad no existe.' });
+    console.error("Facultad no encontrada en la base de datos:", facultad);
+    return res.status(400).json({ message: "La facultad no existe." });
   }
-  
-  console.log('Facultad encontrada, ID:', resFacultad.ID);
-  
-  
+
+  console.log("Facultad encontrada, ID:", resFacultad.ID);
+
   // Si existe, obtenemos el ID de la facultad
   const idFacultad = resFacultad.ID;
-  
-  
-  
+
   // Hasheo de la contraseña antes de guardarla en la base de datos
   const hashedPassword = await bcrypt.hash(contrasenia, 10);
-  
+
   try {
-    
     // Consulta SQL para insertar los datos en la base de datos
     const query = `
       INSERT INTO usuarios (nombre, correo, telefono, ID_facultad, organizador, contrasenia)
       VALUES (?, ?, ?, ?, ?, ?)
     `;
-    const params = [nombre, correo, telefono, idFacultad, esOrganizador, hashedPassword];
-    
+    const params = [
+      nombre,
+      correo,
+      telefono,
+      idFacultad,
+      esOrganizador,
+      hashedPassword,
+    ];
+
     // Ejecutar la consulta de inserción en la base de datos
-    await db.query(query, params);
-    
+    const result = await db.query(query, params);
+
+    const userId = result.insertId;
+
+    // Consulta SQL para insertar los datos en la base de datos
+    const confQuery = `
+      INSERT INTO conf_accesibilidad (ID_usuario)
+      VALUES (?)
+    `;
+
+    // Ejecutar la consulta de inserción en la base de datos
+    await db.query(confQuery, userId);
+    await connection.commit();
+
     // Si todo es exitoso, redirigir al usuario al login
-    return res.status(200).json({ message: 'Registro exitoso, por favor inicie sesión.' });
-  } 
-  catch (error) {
+    return res
+      .status(200)
+      .json({ message: "Registro exitoso, por favor inicie sesión." });
+  } catch (error) {
     // Si ocurre un error al hacer el hash o la consulta, enviar un error 500
-    console.error('Error al registrar el usuario:', error.message, error.sql);
-    return res.status(500).json({ message: 'Error al registrar el usuario. Inténtelo de nuevo.' });
+    await connection.rollback();
+    console.error("Error al registrar el usuario:", error.message, error.sql);
+    return res
+      .status(500)
+      .json({ message: "Error al registrar el usuario. Inténtelo de nuevo." });
+  } finally {
+    connection.release();
   }
 });
 

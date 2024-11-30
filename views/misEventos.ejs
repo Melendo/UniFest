@@ -1,4 +1,4 @@
-<%- include('header', {rol: rol, pg: "eventos"}) %>
+<%- include('header', {rol: rol, pg: "eventos", color: color, font: font}) %>
 <script src="/javascripts/altaEvento.js"></script>
 
 <div class="container-fluid mb-5">
@@ -26,7 +26,7 @@
               <td>
                 <a
                   href="/evento/evento/<%= evento.ID %>"
-                  class="btn btn-primary"
+                  class="btn btn-secondary"
                   role="button"
                   >Ver evento</a
                 >

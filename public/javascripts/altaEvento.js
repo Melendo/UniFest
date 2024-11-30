@@ -63,7 +63,7 @@ $(document).ready(function () {
           icon: "success",
           confirmButtonText: "OK",
         }).then(() => {
-          window.location.href = "/misEventos/misEventos";
+          window.location.reload();
         });
       },
       error: function (error) {

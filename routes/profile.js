@@ -1,62 +1,75 @@
 "use strict";
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var db = require('../dataBase/db');
+var db = require("../dataBase/db");
 
 // Ruta GET del perfil
-router.get('/', async (req, res) => {
-
+router.get("/", async (req, res) => {
   // Verificar si el usuario está autenticado
   if (!req.session.userId) {
-    return res.redirect('/login'); 
+    return res.redirect("/login");
   }
 
   try {
     // Consulta datos usuario
-    const queryUsuario = 'SELECT * FROM usuarios WHERE id = ?';
+    const queryUsuario = "SELECT * FROM usuarios WHERE id = ?";
     const [user] = await db.query(queryUsuario, [req.session.userId]);
 
     // Verifica si el usuario existeS
     if (!user) {
-      return res.status(400).json({ message: 'Usuario no encontrado.' });
+      return res.status(400).json({ message: "Usuario no encontrado." });
     } else {
       // Consulta nombre facultad
-      const queryFacultad = 'SELECT nombre FROM facultades WHERE id = ?';
+      const queryFacultad = "SELECT nombre FROM facultades WHERE id = ?";
       const [resfacultad] = await db.query(queryFacultad, [user.ID_facultad]);
 
       // Consulta historial de eventos
       var queryEventosPasados;
-      if(req.session.rol === 0){
-        queryEventosPasados = "SELECT eventos.título, eventos.fecha, eventos.ID FROM eventos JOIN inscripciones ON eventos.ID = inscripciones.ID_evento WHERE inscripciones.ID_usuario = ? AND inscripciones.estado = 'inscrito' AND eventos.fecha < NOW() ORDER BY eventos.fecha DESC";
+      if (req.session.rol === 0) {
+        queryEventosPasados =
+          "SELECT eventos.título, eventos.fecha, eventos.ID FROM eventos JOIN inscripciones ON eventos.ID = inscripciones.ID_evento WHERE inscripciones.ID_usuario = ? AND inscripciones.estado = 'inscrito' AND eventos.fecha < NOW() ORDER BY eventos.fecha DESC";
+      } else {
+        queryEventosPasados =
+          "SELECT eventos.título, eventos.fecha, eventos.ID FROM eventos WHERE ID_org = ? AND eventos.fecha < NOW() ORDER BY eventos.fecha DESC";
       }
-      else{
-        queryEventosPasados = "SELECT eventos.título, eventos.fecha, eventos.ID FROM eventos WHERE ID_org = ? AND eventos.fecha < NOW() ORDER BY eventos.fecha DESC";
-      }
-      const resEventos = await db.query(queryEventosPasados, [req.session.userId]);
+      const resEventos = await db.query(queryEventosPasados, [
+        req.session.userId,
+      ]);
 
-      resEventos.forEach(evento => {
+      resEventos.forEach((evento) => {
         evento.fecha = db.formatearFecha(evento.fecha);
       });
 
-      const queryTodasFacultades = 'SELECT * FROM facultades';
+      const queryTodasFacultades = "SELECT * FROM facultades";
       const resTodasFacultades = await db.query(queryTodasFacultades);
 
-      res.render('profile', { user: user, facultad: resfacultad, rol: req.session.rol, historial: resEventos, todasFacultades: resTodasFacultades});
+      res.render("profile", {
+        user: user,
+        facultad: resfacultad,
+        rol: req.session.rol,
+        historial: resEventos,
+        todasFacultades: resTodasFacultades,
+        color: req.session.color,
+        font: req.session.font,
+      });
     }
-
   } catch (error) {
-    console.error('Error en el inicio de sesión:', error);
-    return res.status(500).json({ message: 'Hubo un error al procesar la solicitud. Intenta de nuevo.' });
+    console.error("Error al cargar el perfil:", error);
+    return res
+      .status(500)
+      .json({
+        message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
+      });
   }
 });
 
 // Ruta POST para actualizar el perfil
-router.post('/actualizar', async (req, res) => {
+router.post("/actualizar", async (req, res) => {
   const { nombre, telefono, facultad } = req.body;
-  
+
   // Verificar si el usuario está autenticado
   if (!req.session.userId) {
-    return res.status(401).json({ message: 'Usuario no autenticado' });
+    return res.status(401).json({ message: "Usuario no autenticado" });
   }
 
   try {
@@ -66,21 +79,37 @@ router.post('/actualizar', async (req, res) => {
       SET nombre = ?, telefono = ?, ID_facultad = ?
       WHERE id = ?;
     `;
-    
+
     // Actualizamos los datos del usuario en la base de datos
-    const result = await db.query(query, [nombre, telefono, facultad, req.session.userId]);
+    const result = await db.query(query, [
+      nombre,
+      telefono,
+      facultad,
+      req.session.userId,
+    ]);
 
     if (result.affectedRows > 0) {
       req.session.nombre = nombre;
-      return res.json({ success: true, message: 'Perfil actualizado con éxito.' });
-    } 
-    else {
-      return res.status(400).json({ success: false, message: 'No se pudieron actualizar los datos del perfil.' });
+      return res.json({
+        success: true,
+        message: "Perfil actualizado con éxito.",
+      });
+    } else {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "No se pudieron actualizar los datos del perfil.",
+        });
     }
-
   } catch (error) {
-    console.error('Error al actualizar el perfil:', error);
-    return res.status(500).json({ success: false, message: 'Hubo un error al actualizar el perfil. Intenta de nuevo.' });
+    console.error("Error al actualizar el perfil:", error);
+    return res
+      .status(500)
+      .json({
+        success: false,
+        message: "Hubo un error al actualizar el perfil. Intenta de nuevo.",
+      });
   }
 });
 

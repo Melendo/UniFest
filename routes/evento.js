@@ -67,6 +67,8 @@ router.get("/evento/:id", async (req, res) => {
       inscrito,
       fechaBD,
       todasFacultades: resTodasFacultades,
+      color: req.session.color,
+      font: req.session.font,
     });
   } catch (error) {
     console.error("Error al cargar el evento:", error);
@@ -263,6 +265,8 @@ router.get("/listadoAsistentes/:id", async (req, res) => {
       espera,
       totalInscritos: inscritos.length,
       totalEspera: espera.length,
+      color: req.session.color,
+      font: req.session.font,
     });
   } catch (error) {
     console.error("Error al obtener el listado de asistentes:", error);
@@ -352,7 +356,9 @@ router.post("/actualizar/:id", async (req, res) => {
         `INSERT INTO notificaciones (ID_usuario, mensaje, tipo, ID_evento) VALUES (?, ?, 'actualización', ?)`,
         [evento.ID_usuario, mensaje, evento.ID]
       );
-      console.log(`Notificación programada por actualización para usuario ${evento.ID_usuario}.`);
+      console.log(
+        `Notificación programada por actualización para usuario ${evento.ID_usuario}.`
+      );
     }
 
     // Si todo es exitoso, devolver éxito
@@ -400,7 +406,9 @@ router.post("/cancelarEvento/:id", async (req, res) => {
         `INSERT INTO notificaciones (ID_usuario, mensaje, tipo, ID_evento) VALUES (?, ?, 'cancelación', ?)`,
         [evento.ID_usuario, mensaje, evento.ID]
       );
-      console.log(`Notificación programada por cancelación para usuario ${evento.ID_usuario}.`);
+      console.log(
+        `Notificación programada por cancelación para usuario ${evento.ID_usuario}.`
+      );
     }
 
     const queryEliminarInscripcion = `
