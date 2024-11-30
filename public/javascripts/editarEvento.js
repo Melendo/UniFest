@@ -65,6 +65,7 @@ $(document).ready(function () {
         ubicación,
         facultad,
         capacidad_máxima,
+        capacidad_original
       },
       success: function (response) {
         Swal.fire({

@@ -188,6 +188,16 @@ router.post("/cancelar/:id", async (req, res) => {
           siguiente.ID_usuario,
           eventId,
         ]);
+
+        const mensaje = `Alguien ha cancelado su inscripción del evento ${eventId} y has pasado de la lista de espera a estar inscrito!`;
+
+        await db.query(
+          `INSERT INTO notificaciones (ID_usuario, mensaje, tipo, ID_evento) VALUES (?, ?, 'actualización', ?)`,
+          [siguiente.ID_usuario, mensaje, req.params.id]
+        );
+        console.log(
+          `Notificación programada por actualización de cola para usuario ${siguiente.ID_usuario}.`
+        );
       }
     }
 
@@ -286,6 +296,7 @@ router.post("/actualizar/:id", async (req, res) => {
     ubicación,
     facultad,
     capacidad_máxima,
+    capacidad_original,
   } = req.body;
 
   // Verificar si el usuario está autenticado
@@ -359,6 +370,48 @@ router.post("/actualizar/:id", async (req, res) => {
       console.log(
         `Notificación programada por actualización para usuario ${evento.ID_usuario}.`
       );
+    }
+
+    //Comprobar ampliación de aforo
+    if (capacidad_máxima > capacidad_original) {
+      const querySiguienteEnCola = `
+                SELECT ID_usuario 
+                FROM inscripciones 
+                WHERE ID_evento = ? AND estado = 'en_espera' 
+                ORDER BY fecha ASC 
+                LIMIT ?`;
+      const siguientes = await db.query(querySiguienteEnCola, [
+        req.params.id,
+        capacidad_máxima - capacidad_original,
+      ]);
+
+      if (siguientes.length > 0) {
+        // Actualizar a los siguientes como inscritos
+        const queryActualizarSiguientes = `
+          UPDATE inscripciones 
+          SET estado = 'inscrito'
+          WHERE ID_usuario = ? AND ID_evento = ?`;
+
+        // Iterar sobre cada usuario en la lista de espera
+        for (const siguiente of siguientes) {
+          // Actualizar estado a "inscrito"
+          await db.query(queryActualizarSiguientes, [
+            siguiente.ID_usuario,
+            req.params.id,
+          ]);
+
+          // Enviar notificación
+          const mensaje = `El evento "${título}" ha ampliado su aforo y has pasado de la lista de espera a estar inscrito!`;
+
+          await db.query(
+            `INSERT INTO notificaciones (ID_usuario, mensaje, tipo, ID_evento) VALUES (?, ?, 'actualización', ?)`,
+            [siguiente.ID_usuario, mensaje, req.params.id]
+          );
+          console.log(
+            `Notificación programada por actualización de cola para usuario ${siguiente.ID_usuario}.`
+          );
+        }
+      }
     }
 
     // Si todo es exitoso, devolver éxito
