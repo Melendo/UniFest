@@ -64,8 +64,14 @@
                 </li>
                 <% } %>
                 <li class="nav-item">
-                  <a class="nav-link text-white mx-2 mb-1 rounded p-3 fs-4 <% if(pg === "bandeja") { %> text-decoration-underline <% } %>" href="/notificaciones">Bandeja de entrada</a>
-                </li>
+                  <a class="position-relative nav-link text-white mx-2 mb-1 rounded p-3 fs-4 <% if(pg === "bandeja") { %> text-decoration-underline <% } %>" href="/notificaciones">
+                    Bandeja de entrada
+                    <% if(hayNotificaciones > 0){ %>
+                      <span class="position-absolute top-50 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+                        <span class="visually-hidden">Notificaciones sin leer</span>
+                      </span>
+                    <% } %>
+                  </a></li>
                 <li class="nav-item">
                   <a class="nav-link text-white mx-2 mb-1 rounded p-3 fs-4" href="/login/logout">Cerrar sesión</a>
                 </li>

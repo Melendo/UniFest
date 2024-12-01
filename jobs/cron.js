@@ -112,6 +112,6 @@ const limpiarNotificacionesAntiguas = async () => {
 };
 
 cron.schedule("0 11 * * *", limpiarNotificacionesAntiguas);
-cron.schedule("10 18 * * *", enviarRecordatorios);
+cron.schedule("37 15 * * *", enviarRecordatorios);
 
 console.log("Tareas cron configuradas.");

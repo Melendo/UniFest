@@ -9,7 +9,6 @@ var logger = require('morgan');
 
 //Importar rutas
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var registerRouter = require('./routes/register');
 var profileRouter = require('./routes/profile');
@@ -39,7 +38,6 @@ app.use(logger('dev'));
 
 //Rutas
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/profile', profileRouter);

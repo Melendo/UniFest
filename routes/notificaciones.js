@@ -18,11 +18,18 @@ router.get("/", async (req, res) => {
       notificacion.fecha = db.formatearFecha(notificacion.fecha);
     });
 
+    // Consulta para contar las notificaciones no leídas del usuario
+    const queryNoti = `SELECT COUNT(*) as hayNotificaciones FROM notificaciones WHERE leido = 0 AND activo = 1 AND ID_usuario = ?`;
+    const resNoti = await db.query(queryNoti, [req.session.userId]);
+
+    const hayNotificaciones = resNoti[0].hayNotificaciones;
+
     res.render("notificaciones", {
       bandeja: notificaciones,
       rol: req.session.rol,
       color: req.session.color,
       font: req.session.font,
+      hayNotificaciones,
     });
   } catch (error) {
     console.error("Error al cargar la bandeja de entrada:", error);

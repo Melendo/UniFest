@@ -43,6 +43,12 @@ router.get("/", async (req, res) => {
       const queryTodasFacultades = "SELECT * FROM facultades";
       const resTodasFacultades = await db.query(queryTodasFacultades);
 
+      // Consulta para contar las notificaciones no leídas del usuario
+      const queryNoti = `SELECT COUNT(*) as hayNotificaciones FROM notificaciones WHERE leido = 0  AND activo = 1 AND ID_usuario = ?`;
+      const resNoti = await db.query(queryNoti, [req.session.userId]);
+
+      const hayNotificaciones = resNoti[0].hayNotificaciones;
+
       res.render("profile", {
         user: user,
         facultad: resfacultad,
@@ -51,15 +57,14 @@ router.get("/", async (req, res) => {
         todasFacultades: resTodasFacultades,
         color: req.session.color,
         font: req.session.font,
+        hayNotificaciones,
       });
     }
   } catch (error) {
     console.error("Error al cargar el perfil:", error);
-    return res
-      .status(500)
-      .json({
-        message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
-      });
+    return res.status(500).json({
+      message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
+    });
   }
 });
 
@@ -95,21 +100,17 @@ router.post("/actualizar", async (req, res) => {
         message: "Perfil actualizado con éxito.",
       });
     } else {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "No se pudieron actualizar los datos del perfil.",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "No se pudieron actualizar los datos del perfil.",
+      });
     }
   } catch (error) {
     console.error("Error al actualizar el perfil:", error);
-    return res
-      .status(500)
-      .json({
-        success: false,
-        message: "Hubo un error al actualizar el perfil. Intenta de nuevo.",
-      });
+    return res.status(500).json({
+      success: false,
+      message: "Hubo un error al actualizar el perfil. Intenta de nuevo.",
+    });
   }
 });
 

@@ -33,12 +33,19 @@ router.get("/misEventos", async (req, res) => {
     const queryTodasFacultades = "SELECT * FROM facultades";
     const resTodasFacultades = await db.query(queryTodasFacultades);
 
+    // Consulta para contar las notificaciones no leídas del usuario
+    const queryNoti = `SELECT COUNT(*) as hayNotificaciones FROM notificaciones WHERE leido = 0 AND activo = 1 AND ID_usuario = ?`;
+    const resNoti = await db.query(queryNoti, [req.session.userId]);
+
+    const hayNotificaciones = resNoti[0].hayNotificaciones;
+
     res.render("misEventos", {
       rol: req.session.rol,
       proximos: resProximos,
       todasFacultades: resTodasFacultades,
       color: req.session.color,
       font: req.session.font,
+      hayNotificaciones,
     });
   } catch (error) {
     console.error("Error en el inicio de sesión:", error);
@@ -160,12 +167,19 @@ router.get("/misInscripciones", async (req, res) => {
       evento.fecha = db.formatearFecha(evento.fecha);
     });
 
+    // Consulta para contar las notificaciones no leídas del usuario
+    const queryNoti = `SELECT COUNT(*) as hayNotificaciones FROM notificaciones WHERE leido = 0 AND activo = 1 AND ID_usuario = ?`;
+    const resNoti = await db.query(queryNoti, [req.session.userId]);
+
+    const hayNotificaciones = resNoti[0].unreadCount;
+
     res.render("misInscripciones", {
       rol: req.session.rol,
       proximos: resProximos,
       espera: resEspera,
       color: req.session.color,
       font: req.session.font,
+      hayNotificaciones,
     });
   } catch (error) {
     console.error("Error:", error);

@@ -1,4 +1,4 @@
-<%- include('header', {rol:rol, pg:"bandeja", color: color, font: font}) %>
+<%- include('header', {rol:rol, pg:"bandeja", color: color, font: font, hayNotificaciones: hayNotificaciones}) %>
 <script src="/javascripts/marcarLeido.js"></script>
 
 <div class="container-fluid mb-5">
@@ -40,7 +40,7 @@
             </tr>
             <% }); %> <% } else { %>
             <tr>
-              <td colspan="3" class="text-center">
+              <td colspan="4" class="text-center">
                 No tiene notificaciones por leer
               </td>
             </tr>

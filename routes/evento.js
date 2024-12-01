@@ -58,6 +58,12 @@ router.get("/evento/:id", async (req, res) => {
     const queryTodasFacultades = "SELECT * FROM facultades";
     const resTodasFacultades = await db.query(queryTodasFacultades);
 
+    // Consulta para contar las notificaciones no leídas del usuario
+    const queryNoti = `SELECT COUNT(*) as hayNotificaciones FROM notificaciones WHERE leido = 0 AND activo = 1 AND ID_usuario = ?`;
+    const resNoti = await db.query(queryNoti, [req.session.userId]);
+
+    const hayNotificaciones = resNoti[0].hayNotificaciones;
+
     res.render("evento", {
       rol: req.session.rol,
       evento: resEvento,
@@ -69,6 +75,7 @@ router.get("/evento/:id", async (req, res) => {
       todasFacultades: resTodasFacultades,
       color: req.session.color,
       font: req.session.font,
+      hayNotificaciones,
     });
   } catch (error) {
     console.error("Error al cargar el evento:", error);
@@ -267,6 +274,12 @@ router.get("/listadoAsistentes/:id", async (req, res) => {
       usuario.posicion = index + 1; // Posición en base al orden
     });
 
+    // Consulta para contar las notificaciones no leídas del usuario
+    const queryNoti = `SELECT COUNT(*) as hayNotificaciones FROM notificaciones WHERE leido = 0 AND activo = 1 AND ID_usuario = ?`;
+    const resNoti = await db.query(queryNoti, [req.session.userId]);
+
+    const hayNotificaciones = resNoti[0].hayNotificaciones;
+
     // Renderizar la vista de listado de asistentes
     res.render("listadoAsistentes", {
       rol: req.session.rol,
@@ -277,6 +290,7 @@ router.get("/listadoAsistentes/:id", async (req, res) => {
       totalEspera: espera.length,
       color: req.session.color,
       font: req.session.font,
+      hayNotificaciones,
     });
   } catch (error) {
     console.error("Error al obtener el listado de asistentes:", error);
