@@ -20,8 +20,8 @@ $(document).ready(function () {
         }
         
         // Validacion de teléfono
-        if (!/^\d{9}$/.test(telefono)) {
-            Swal.fire("Por favor, introduzca un número de teléfono válido de 9 dígitos.");
+        if (telefono !== "" && !/^\d{9}$/.test(telefono)) {
+            Swal.fire("Por favor, introduzca un número de teléfono válido de 9 dígitos o deje el campo vacío.");
             return false;
         }
         

@@ -25,10 +25,10 @@ router.post("/register", async (req, res) => {
     req.body;
 
   // Validación de formato de teléfono (solo números de 9 dígitos)
-  if (!/^\d{9}$/.test(telefono)) {
+  if (telefono !== "" && !/^\d{9}$/.test(telefono)) {
     return res
       .status(400)
-      .json({ message: "El número de teléfono debe tener 9 dígitos." });
+      .json({ message: "El número de teléfono debe tener 9 dígitos o ser vacío." });
   }
 
   // Validación del correo (solo correo de dominio ucm.es)
@@ -100,7 +100,6 @@ router.post("/register", async (req, res) => {
 
     // Ejecutar la consulta de inserción en la base de datos
     await db.query(confQuery, userId);
-    await connection.commit();
 
     // Si todo es exitoso, redirigir al usuario al login
     return res
@@ -108,13 +107,10 @@ router.post("/register", async (req, res) => {
       .json({ message: "Registro exitoso, por favor inicie sesión." });
   } catch (error) {
     // Si ocurre un error al hacer el hash o la consulta, enviar un error 500
-    await connection.rollback();
     console.error("Error al registrar el usuario:", error.message, error.sql);
     return res
       .status(500)
       .json({ message: "Error al registrar el usuario. Inténtelo de nuevo." });
-  } finally {
-    connection.release();
   }
 });
 
