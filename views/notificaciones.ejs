@@ -1,4 +1,6 @@
 <%- include('header', {rol:rol, pg:"bandeja", color: color, font: font}) %>
+<script src="/javascripts/marcarLeido.js"></script>
+
 <div class="container-fluid mb-5">
   <div class="p-2">
     <div class="m-4">
@@ -12,15 +14,29 @@
               <th>Mensaje</th>
               <th>Tipo</th>
               <th>Fecha</th>
+              <th>Leído</th>
             </tr>
           </thead>
           <tbody>
             <% if (bandeja && bandeja.length > 0) { %> <%
             bandeja.forEach(notificacion => { %>
-            <tr>
+            <tr class="<%= notificacion.leido === 0 ? 'fw-bold' : '' %>">
               <td><%= notificacion.mensaje %></td>
               <td><%= notificacion.tipo %></td>
               <td><%= notificacion.fecha %></td>
+              <td>
+                <% if (notificacion.leido === 1) { %>
+                  Leído
+                <% } else { %>
+                  <button
+                  type="button"
+                  class="btn btn-secondary btn-leido"
+                  data-id="<%= notificacion.ID %>"
+                >
+                  Marcar como leído
+                </button>
+                <% } %>
+              </td>
             </tr>
             <% }); %> <% } else { %>
             <tr>

@@ -101,7 +101,7 @@ const limpiarNotificacionesAntiguas = async () => {
 
   try {
     const resultado = await db.query(
-      `UPDATE notificaciones SET activo = 0 WHERE fecha <  DATE_ADD(CURDATE(), INTERVAL 14 DAY)`
+      `UPDATE notificaciones SET activo = 0 WHERE fecha <  DATE_SUB(CURDATE(), INTERVAL 14 DAY)`
     );
     console.log(
       `Limpieza completada. Filas eliminadas: ${resultado.affectedRows}`
