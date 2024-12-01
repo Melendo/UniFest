@@ -9,13 +9,13 @@
     <!-- Información principal del evento -->
     <div class="col-md-6 mb-4">
       <div class="text-center mb-4">
-        <h1 class="fw-bold">Evento: <%= evento.título %></h1>
+        <h1 id="eventoTitulo" class="fw-bold">Evento: <%= evento.título %></h1>
       </div>
       <div class="border border-2 border-secondary rounded p-4">
         <h4 class="fw-bold text-secondary">Tipo de evento:</h4>
-        <p class="text-justify"><%= evento.tipo %></p>
+        <p id="eventoTipo" class="text-justify"><%= evento.tipo %></p>
         <h4 class="fw-bold text-secondary">Descripción</h4>
-        <p class="text-justify"><%= evento.descripción %></p>
+        <p id="eventoDescripcion" class="text-justify"><%= evento.descripción %></p>
       </div>
 
       <% if (rol === 0) { %>
@@ -65,23 +65,23 @@
           <h4 class="fw-bold text-secondary">Ubicación</h4>
           <p>
             Puedes encontrarnos en la Facultad de
-            <b><%= facultad.nombre %></b> en <b><%= evento.ubicación %></b>
+            <b id="eventoFacultad"><%= facultad.nombre %></b> en <b id="eventoUbicacion"><%= evento.ubicación %></b>
           </p>
         </div>
 
         <div class="p-3">
           <h4 class="fw-bold text-secondary">Fecha del evento</h4>
           <p>
-            El evento empezara el dia <b><%= evento.fecha %></b> a las
-            <b><%= evento.hora %></b> y durará un total de
-            <b><%= evento.duración_minutos %> minutos</b>.
+            El evento empezara el dia <b id="eventoFecha"><%= evento.fecha %></b> a las
+            <b id="eventoHora"><%= evento.hora %></b> y durará un total de
+            <b id="eventoDuracion"><%= evento.duración_minutos %> minutos</b>.
           </p>
         </div>
 
         <div class="p-3">
           <h4 class="fw-bold text-secondary">Plazas disponibles</h4>
-          <p>Plazas ocupadas: <b><%= capActual %></b></p>
-          <p>Plazas totales: <b><%= evento.capacidad_máxima %></b></p>
+          <p>Plazas ocupadas: <b id="eventoOcupado"><%= capActual %></b></p>
+          <p>Plazas totales: <b id="eventoCapacidad"><%= evento.capacidad_máxima %></b></p>
         </div>
       </div>
     </div>

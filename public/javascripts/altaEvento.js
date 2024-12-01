@@ -65,7 +65,42 @@ $(document).ready(function () {
           icon: "success",
           confirmButtonText: "OK",
         }).then(() => {
-          window.location.reload();
+          const fechaFormateada = new Date(fecha).toLocaleDateString("es-ES", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "2-digit",
+          });
+
+          const nuevaFila = `
+            <tr>
+              <td>${título}</td>
+              <td>${fechaFormateada}</td>
+              <td>
+                <a href="/evento/evento/${response.eventoId}" class="btn btn-secondary" role="button">Ver evento</a>
+              </td>
+            </tr>
+          `;
+
+          const tabla = $("table tbody");
+          const filas = tabla.find("tr");
+
+          let añadido = false;
+
+          filas.each(function () {
+            const fechaExistente = new Date($(this).find("td:nth-child(2)").text());
+            if (fechaHoraIngresada < fechaExistente) {
+              $(this).before(nuevaFila);
+              añadido = true;
+              return false;
+            }
+          });
+
+          if (!añadido) {
+            tabla.append(nuevaFila); // Agregar al final si no hay eventos más tardíos
+          }
+
+          $("#formNuevoEvento")[0].reset();
+          $("#añadirNuevoEvento").modal("hide");
         });
       },
       error: function (error) {

@@ -1,12 +1,21 @@
 "use strict";
 
+// Función para formatear la fecha como DD/MM/YY
+function formatearFecha(fecha) {
+  const date = new Date(fecha);
+  const dia = String(date.getDate()).padStart(2, '0'); // Asegura que el día tenga 2 dígitos
+  const mes = String(date.getMonth() + 1).padStart(2, '0'); // Los meses empiezan desde 0
+  const año = String(date.getFullYear()).slice(2); // Extrae los dos últimos dígitos del año
+  
+  return `${dia}/${mes}/${año}`;
+}
+
 $(document).ready(function () {
   $("#formEditarEvento").on("submit", async function (event) {
     event.preventDefault();
 
     const eventoId = $("#id").val();
     const url = `/evento/actualizar/${eventoId}`;
-    const urlRefresh = `/evento/evento/${eventoId}`;
 
     const título = $("#título").val();
     const descripción = $("#descripción").val();
@@ -67,7 +76,7 @@ $(document).ready(function () {
         ubicación,
         facultad,
         capacidad_máxima,
-        capacidad_original
+        capacidad_original,
       },
       success: function (response) {
         Swal.fire({
@@ -76,7 +85,24 @@ $(document).ready(function () {
           icon: "success",
           confirmButtonText: "OK",
         }).then(() => {
-          window.location.href = urlRefresh;
+
+          const fechaFormateada = formatearFecha(fecha);
+
+          $("#eventoTitulo").text(título);
+          $("#eventoDescripcion").text(descripción);
+          $("#eventoTipo").text(tipo);
+          $("#eventoFecha").text(fechaFormateada);
+          $("#eventoHora").text(hora);
+          $("#eventoDuracion").text(duración + " minutos");
+          $("#eventoUbicacion").text(ubicación);
+          $("#eventoCapacidad").text(capacidad_máxima);
+
+          // Actualizar la facultad seleccionada
+          const facultadNombre = $("#facultad option:selected").text();
+          $("#eventoFacultad").text(facultadNombre);
+
+          // Cerrar el modal de edición
+          $("#editarEvento").modal("hide");
         });
       },
       error: function (error) {

@@ -6,6 +6,7 @@ var path = require('path');
 var createError = require('http-errors');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var db = require("./dataBase/db");
 
 //Importar rutas
 var indexRouter = require('./routes/index');
@@ -59,7 +60,12 @@ app.use(function(err, req, res, next) {
 
   //Carga de la página de error
   res.status(err.status || 500);
-  res.render('error');
+  res.render('error',{
+    rol: req.session?.rol,
+    color: req.session?.color,
+    font: req.session?.font,
+    hayNotificaciones: false
+  });
 });
 
 module.exports = app;

@@ -118,10 +118,12 @@ router.post("/anyadir", async (req, res) => {
       req.session.userId,
     ];
 
-    await db.query(query, params);
+    const resEvento = await db.query(query, params);
+
+    const eventoId = resEvento.insertId;
 
     // Si todo es exitoso, devolver éxito
-    return res.status(200).json({ message: "Alta de evento exitosa." });
+    return res.status(200).json({ message: "Alta de evento exitosa." , eventoId});
   } catch (error) {
     // Si ocurre un error al hacer la consulta, manejar el error
     console.error("Error al registrar nuevo evento:", error.message, error.sql);

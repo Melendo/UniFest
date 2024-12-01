@@ -143,7 +143,7 @@ router.post("/inscribirse/:id", async (req, res) => {
             VALUES (?, ?, ?, NOW())`;
     await db.query(queryInscribir, [userId, eventId, estado]);
 
-    return res.status(200).json({ message: mensaje, estado, titulo });
+    return res.status(200).json({ message: mensaje, estado, titulo, plazasOcupadas });
   } catch (error) {
     console.error("Error al inscribirse:", error);
     return res.status(500).json({
@@ -214,9 +214,17 @@ router.post("/cancelar/:id", async (req, res) => {
             WHERE ID_usuario = ? AND ID_evento = ?`;
     await db.query(queryEliminarInscripcion, [userId, eventId]);
 
+    const queryCapacidadActual = `
+            SELECT COUNT(*) AS inscritos 
+            FROM inscripciones 
+            WHERE ID_evento = ? AND estado = 'inscrito'`;
+    const [capacidad] = await db.query(queryCapacidadActual, [eventId]);
+
+    const plazasOcupadas = capacidad.inscritos;
+
     return res
       .status(200)
-      .json({ message: "Tu inscripción ha sido cancelada.", titulo: "Adiós" });
+      .json({ message: "Tu inscripción ha sido cancelada.", titulo: "Adiós", plazasOcupadas });
   } catch (error) {
     console.error("Error al cancelar inscripción:", error);
     return res.status(500).json({

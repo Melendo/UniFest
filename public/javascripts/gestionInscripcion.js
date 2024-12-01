@@ -18,7 +18,18 @@ $(document).ready(function () {
                         icon: "success",
                         confirmButtonText: "OK"
                     }).then(() => {
-                        window.location.reload(); 
+                        $('.btn-inscripcion').text('Cancelar inscripción'); 
+                        $('#eventoOcupado').text(response.plazasOcupadas + 1);
+                    });
+                }
+                else if(response.estado === "en_espera"){
+                    Swal.fire({
+                        title: response.titulo,
+                        text: response.message,
+                        confirmButtonText: "OK"
+                    }).then(() => {
+                        $('.btn-inscripcion').text('Cancelar espera');
+                        $('#eventoOcupado').text(response.plazasOcupadas + 1);
                     });
                 }
                 else{
@@ -27,7 +38,8 @@ $(document).ready(function () {
                         text: response.message,
                         confirmButtonText: "OK"
                     }).then(() => {
-                        window.location.reload(); 
+                        $('.btn-inscripcion').text('Inscríbete ya!');
+                        $('#eventoOcupado').text(response.plazasOcupadas);
                     });
                 }
                 

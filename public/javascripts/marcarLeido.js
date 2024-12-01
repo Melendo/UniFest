@@ -1,3 +1,5 @@
+"use strict";
+
 $(document).ready(function () {
   $(".btn-leido").click(function (event) {
     event.preventDefault();
@@ -7,28 +9,32 @@ $(document).ready(function () {
 
     // Realizar la petición AJAX
     $.ajax({
-        url: url,
-        type: "POST",
-        success: function (response) {
-          Swal.fire({
-            title: "Notificación marcada como leída!",
-            text: response.message,
-            icon: "success",
-            confirmButtonText: "OK",
-          }).then(() => {
-            window.location.reload();
-          });
-        },
-        error: function (error) {
-          const errorMessage =
-            error.responseJSON?.message ||
-            "Error desconocido. Intentelo nuevamente";
-          Swal.fire({
-            icon: "error",
-            title: "Algo salió mal",
-            text: errorMessage,
-          });
-        },
-      });
+      url: url,
+      type: "POST",
+      success: function (response) {
+        Swal.fire({
+          title: "Notificación marcada como leída!",
+          text: response.message,
+          icon: "success",
+          confirmButtonText: "OK",
+        }).then(() => {
+          const row = $(`[data-id="${id}"]`).closest("tr");
+          const button = $(`[data-id=${id}]`);
+          button.replaceWith("<span>Leído</span>");
+          row.find(".btn-leido").remove(); // Elimina el botón, ya que está marcado
+          row.removeClass("fw-bold"); // Quitar el estilo de no leído
+        });
+      },
+      error: function (error) {
+        const errorMessage =
+          error.responseJSON?.message ||
+          "Error desconocido. Intentelo nuevamente";
+        Swal.fire({
+          icon: "error",
+          title: "Algo salió mal",
+          text: errorMessage,
+        });
+      },
+    });
   });
 });

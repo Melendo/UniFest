@@ -7,7 +7,7 @@ var db = require("../dataBase/db");
 router.get("/", async (req, res) => {
   // Verificar si el usuario está autenticado
   if (!req.session.userId) {
-    return res.redirect("/login");
+    return res.status(401).json({ message: "Usuario no autenticado" });
   }
 
   try {
@@ -69,12 +69,10 @@ router.post("/marcar-leida/:id", async (req, res) => {
       error.message,
       error.sql
     );
-    return res
-      .status(500)
-      .json({
-        message:
-          "Error al marcar la notificación como leída. Inténtelo de nuevo.",
-      });
+    return res.status(500).json({
+      message:
+        "Error al marcar la notificación como leída. Inténtelo de nuevo.",
+    });
   }
 });
 
