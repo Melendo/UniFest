@@ -4,22 +4,26 @@ var db = require("../dataBase/db");
 var bcrypt = require("bcrypt");
 
 //Carga página registro
-router.get("/", async (req, res) => {
-  try {
-    const queryTodasFacultades = "SELECT * FROM facultades";
-    const resTodasFacultades = await db.query(queryTodasFacultades);
+router.get("/", (req, res) => {
+  const queryTodasFacultades = "SELECT * FROM facultades";
+
+  db.query(queryTodasFacultades, (err, resTodasFacultades) => {
+    if (err) {
+      console.error("Error al consultar las facultades:", err);
+      return res
+        .status(500)
+        .json({
+          message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
+        });
+    }
+
+    // Renderizar la vista con las facultades
     res.render("register", { todasFacultades: resTodasFacultades });
-  } catch (error) {
-    console.error("Error en el inicio de sesión:", error);
-    return res
-      .status(500)
-      .json({
-        message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
-      });
-  }
+  });
 });
 
-router.post("/register", async (req, res) => {
+
+router.post("/register", (req, res) => {
   // Obtención de datos del formulario
   const { nombre, telefono, correo, contrasenia, facultad, esOrganizador } =
     req.body;
@@ -44,74 +48,103 @@ router.post("/register", async (req, res) => {
 
   // Comprobación de que no exista un usuario con el mismo correo
   const QueryCorreoExiste = "SELECT * FROM usuarios WHERE correo = ?";
-  const [resCorreo] = await db.query(QueryCorreoExiste, [correo]);
-  console.log("Validando usuario");
-  if (resCorreo) {
-    console.log("Error al registrar: El correo ya esta en uso");
-    db.real;
-    return res.status(400).json({ message: "El correo ya está registrado." });
-  }
+  db.query(QueryCorreoExiste, [correo], (err, resCorreo) => {
+    if (err) {
+      console.error("Error al verificar el correo:", err);
+      return res
+        .status(500)
+        .json({ message: "Error al verificar el correo." });
+    }
 
-  console.log("Usuario no encontrado");
+    if (resCorreo.length > 0) {
+      console.log("Error al registrar: El correo ya está en uso");
+      return res
+        .status(400)
+        .json({ message: "El correo ya está registrado." });
+    }
 
-  // Obtención del Id de la facultad, error si no existe
-  const QueryFacultadExiste = "SELECT * FROM facultades WHERE ID = ?";
-  const [resFacultad] = await db.query(QueryFacultadExiste, [facultad]);
-  console.log("Validando la facultad:", facultad);
+    console.log("Usuario no encontrado");
 
-  if (!resFacultad) {
-    console.error("Facultad no encontrada en la base de datos:", facultad);
-    return res.status(400).json({ message: "La facultad no existe." });
-  }
+    // Obtención del ID de la facultad, error si no existe
+    const QueryFacultadExiste = "SELECT * FROM facultades WHERE ID = ?";
+    db.query(QueryFacultadExiste, [facultad], (err, resFacultad) => {
+      if (err) {
+        console.error("Error al verificar la facultad:", err);
+        return res
+          .status(500)
+          .json({ message: "Error al verificar la facultad." });
+      }
 
-  console.log("Facultad encontrada, ID:", resFacultad.ID);
+      if (resFacultad.length === 0) {
+        console.error("Facultad no encontrada en la base de datos:", facultad);
+        return res.status(400).json({ message: "La facultad no existe." });
+      }
 
-  // Si existe, obtenemos el ID de la facultad
-  const idFacultad = resFacultad.ID;
+      console.log("Facultad encontrada, ID:", resFacultad[0].ID);
 
-  // Hasheo de la contraseña antes de guardarla en la base de datos
-  const hashedPassword = await bcrypt.hash(contrasenia, 10);
+      const idFacultad = resFacultad[0].ID;
 
-  try {
-    // Consulta SQL para insertar los datos en la base de datos
-    const query = `
-      INSERT INTO usuarios (nombre, correo, telefono, ID_facultad, organizador, contrasenia)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `;
-    const params = [
-      nombre,
-      correo,
-      telefono,
-      idFacultad,
-      esOrganizador,
-      hashedPassword,
-    ];
+      // Hasheo de la contraseña antes de guardarla en la base de datos
+      bcrypt.hash(contrasenia, 10, (err, hashedPassword) => {
+        if (err) {
+          console.error("Error al hashear la contraseña:", err);
+          return res
+            .status(500)
+            .json({ message: "Error al procesar la contraseña." });
+        }
 
-    // Ejecutar la consulta de inserción en la base de datos
-    const result = await db.query(query, params);
+        // Consulta SQL para insertar los datos en la base de datos
+        const query = `
+          INSERT INTO usuarios (nombre, correo, telefono, ID_facultad, organizador, contrasenia)
+          VALUES (?, ?, ?, ?, ?, ?)
+        `;
+        const params = [
+          nombre,
+          correo,
+          telefono,
+          idFacultad,
+          esOrganizador,
+          hashedPassword,
+        ];
 
-    const userId = result.insertId;
+        db.query(query, params, (err, result) => {
+          if (err) {
+            console.error("Error al insertar el usuario:", err);
+            return res
+              .status(500)
+              .json({ message: "Error al registrar el usuario." });
+          }
 
-    // Consulta SQL para insertar los datos en la base de datos
-    const confQuery = `
-      INSERT INTO conf_accesibilidad (ID_usuario)
-      VALUES (?)
-    `;
+          const userId = result.insertId;
 
-    // Ejecutar la consulta de inserción en la base de datos
-    await db.query(confQuery, userId);
+          // Consulta SQL para insertar configuración de accesibilidad
+          const confQuery = `
+            INSERT INTO conf_accesibilidad (ID_usuario)
+            VALUES (?)
+          `;
 
-    // Si todo es exitoso, redirigir al usuario al login
-    return res
-      .status(200)
-      .json({ message: "Registro exitoso, por favor inicie sesión." });
-  } catch (error) {
-    // Si ocurre un error al hacer el hash o la consulta, enviar un error 500
-    console.error("Error al registrar el usuario:", error.message, error.sql);
-    return res
-      .status(500)
-      .json({ message: "Error al registrar el usuario. Inténtelo de nuevo." });
-  }
+          db.query(confQuery, [userId], (err) => {
+            if (err) {
+              console.error("Error al insertar configuración de accesibilidad:", err);
+              return res
+                .status(500)
+                .json({
+                  message: "Error al configurar accesibilidad para el usuario.",
+                });
+            }
+
+            // Respuesta exitosa
+            return res
+              .status(200)
+              .json({
+                message: "Registro exitoso, por favor inicie sesión.",
+              });
+          });
+        });
+      });
+    });
+  });
 });
+
 
 module.exports = router;
