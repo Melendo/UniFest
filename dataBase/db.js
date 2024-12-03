@@ -47,7 +47,11 @@ function query(sql, params, callback) {
         return callback(error);  // Si hay un error en la consulta, pasa el error al callback
       }
 
-      console.log("Consulta ejecutada correctamente. Resultados:", results);
+      console.log("Consulta ejecutada correctamente");
+
+      //Debugging
+      //console.log("Consulta ejecutada correctamente. Resultados:", results);
+
       callback(null, results);  // Llama al callback con null para el error y los resultados
     });
   });
