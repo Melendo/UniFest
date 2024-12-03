@@ -9,26 +9,6 @@ const pool = mysql.createPool({
   database: "aw_24",
 });
 
-// Función para ejecutar consultas a la base de datos
-// function query(sql, params) {
-//   return new Promise((resolve, reject) => {
-//     pool.getConnection((err, connection) => {
-//       if (err) {
-//         reject(err);
-//       } else {
-//         connection.query(sql, params, (error, results) => {
-//           connection.release(); // Libera la conexión una vez terminada la consulta
-//           if (error) {
-//             reject(error);
-//           } else {
-//             resolve(results);
-//           }
-//         });
-//       }
-//     });
-//   });
-// }
-
 function query(sql, params, callback) {
   console.log("Iniciando consulta a la base de datos...");
 
