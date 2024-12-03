@@ -11,7 +11,7 @@ const enviarRecordatorios = async () => {
       FROM eventos e
       JOIN inscripciones i ON e.ID = i.ID_evento
       JOIN usuarios u ON i.ID_usuario = u.ID
-      WHERE DATE(e.fecha) = DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+      WHERE DATE(e.fecha) = DATE_ADD(CURDATE(), INTERVAL 1 DAY) AND i.activo = 1
       UNION
       SELECT e.ID, e.título, e.fecha, o.ID AS ID_usuario
       FROM eventos e
@@ -40,7 +40,7 @@ const enviarRecordatorios = async () => {
       FROM eventos e
       JOIN inscripciones i ON e.ID = i.ID_evento
       JOIN usuarios u ON i.ID_usuario = u.ID
-      WHERE DATE(e.fecha) = DATE_ADD(CURDATE(), INTERVAL 3 DAY)
+      WHERE DATE(e.fecha) = DATE_ADD(CURDATE(), INTERVAL 3 DAY) AND i.activo = 1
       UNION
       SELECT e.ID, e.título, e.fecha, o.ID AS ID_usuario
       FROM eventos e
@@ -69,7 +69,7 @@ const enviarRecordatorios = async () => {
       FROM eventos e
       JOIN inscripciones i ON e.ID = i.ID_evento
       JOIN usuarios u ON i.ID_usuario = u.ID
-      WHERE DATE(e.fecha) = DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+      WHERE DATE(e.fecha) = DATE_ADD(CURDATE(), INTERVAL 7 DAY) AND i.activo = 1
       UNION
       SELECT e.ID, e.título, e.fecha, o.ID AS ID_usuario
       FROM eventos e
@@ -111,7 +111,7 @@ const limpiarNotificacionesAntiguas = async () => {
   }
 };
 
-cron.schedule("0 11 * * *", limpiarNotificacionesAntiguas);
-cron.schedule("37 15 * * *", enviarRecordatorios);
+// cron.schedule("0 11 * * *", limpiarNotificacionesAntiguas);
+// cron.schedule("13 13 * * *", enviarRecordatorios);
 
 console.log("Tareas cron configuradas.");

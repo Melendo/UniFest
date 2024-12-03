@@ -29,7 +29,7 @@ $(document).ready(function () {
                         confirmButtonText: "OK"
                     }).then(() => {
                         $('.btn-inscripcion').text('Cancelar espera');
-                        $('#eventoOcupado').text(response.plazasOcupadas + 1);
+                        $('#eventoOcupado').text(response.plazasOcupadas);
                     });
                 }
                 else{
