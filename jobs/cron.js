@@ -1,117 +1,96 @@
 const cron = require("node-cron");
-const db = require("../dataBase/db"); // Asegúrate de usar la ruta correcta
+const db = require("../dataBase/db");
 
-const enviarRecordatorios = async () => {
+const enviarRecordatorios = () => {
   console.log("Ejecutando tarea: Enviar recordatorios...");
 
-  try {
-    // 1. Recordatorios para eventos a 1 día
-    const eventosDia1 = await db.query(`
+  const procesarEventos = (dias, mensajePlantilla) => {
+    const queryEventos = `
       SELECT e.ID, e.título, e.fecha, u.id AS ID_usuario
       FROM eventos e
       JOIN inscripciones i ON e.ID = i.ID_evento
       JOIN usuarios u ON i.ID_usuario = u.ID
-      WHERE DATE(e.fecha) = DATE_ADD(CURDATE(), INTERVAL 1 DAY) AND i.activo = 1
+      WHERE DATE(e.fecha) = DATE_ADD(CURDATE(), INTERVAL ? DAY) AND i.activo = 1
       UNION
       SELECT e.ID, e.título, e.fecha, o.ID AS ID_usuario
       FROM eventos e
       JOIN usuarios o ON e.ID_org = o.ID
-      WHERE DATE(e.fecha) = DATE_ADD(CURDATE(), INTERVAL 1 DAY);
-    `);
+      WHERE DATE(e.fecha) = DATE_ADD(CURDATE(), INTERVAL ? DAY);
+    `;
 
-    eventosDia1.forEach((evento) => {
-      evento.fecha = db.formatearFecha(evento.fecha);
+    db.query(queryEventos, [dias, dias], (errEventos, eventos) => {
+      if (errEventos) {
+        console.error(`Error al obtener eventos a ${dias} días:`, errEventos);
+        return;
+      }
+
+      eventos.forEach((evento) => {
+        evento.fecha = db.formatearFecha(evento.fecha);
+      });
+
+      // Usar un for...of para manejar las consultas de manera secuencial
+      const procesarNotificaciones = async () => {
+        for (const evento of eventos) {
+          const mensaje = mensajePlantilla.replace("{título}", evento.título).replace("{fecha}", evento.fecha);
+
+          // Incluir la consulta dentro de la secuencia para que espere a que termine antes de pasar al siguiente
+          await new Promise((resolve, reject) => {
+            db.query(
+              `INSERT INTO notificaciones (ID_usuario, mensaje, tipo, ID_evento) VALUES (?, ?, 'recordatorio', ?)`,
+              [evento.ID_usuario, mensaje, evento.ID],
+              (errNoti) => {
+                if (errNoti) {
+                  console.error(`Error al programar notificación para usuario ${evento.ID_usuario}:`, errNoti);
+                  reject(errNoti); // Rechazar si hay un error
+                } else {
+                  console.log(`Notificación programada (${dias} días antes) para usuario ${evento.ID_usuario}.`);
+                  resolve(); // Resolver cuando la consulta se complete correctamente
+                }
+              }
+            );
+          });
+        }
+      };
+
+      // Ejecutar la función que procesará las notificaciones secuencialmente
+      procesarNotificaciones().catch((err) => console.error('Error en el procesamiento de notificaciones:', err));
     });
+  };
 
-    for (const evento of eventosDia1) {
-      const mensaje = `¡Recuerda! El evento "${evento.título}" es mañana, el ${evento.fecha}.`;
-      await db.query(
-        `INSERT INTO notificaciones (ID_usuario, mensaje, tipo, ID_evento) VALUES (?, ?, 'recordatorio', ?)`,
-        [evento.ID_usuario, mensaje, evento.ID]
-      );
-      console.log(
-        `Notificación programada (1 día antes) para usuario ${evento.ID_usuario}.`
-      );
-    }
+  // Enviar recordatorios a 1 día
+  procesarEventos(1, "¡Recuerda! El evento \"{título}\" es mañana, el {fecha}.");
 
-    // 2. Recordatorios para eventos a 3 días
-    const eventosDia3 = await db.query(`
-      SELECT e.ID, e.título, e.fecha, u.id AS ID_usuario
-      FROM eventos e
-      JOIN inscripciones i ON e.ID = i.ID_evento
-      JOIN usuarios u ON i.ID_usuario = u.ID
-      WHERE DATE(e.fecha) = DATE_ADD(CURDATE(), INTERVAL 3 DAY) AND i.activo = 1
-      UNION
-      SELECT e.ID, e.título, e.fecha, o.ID AS ID_usuario
-      FROM eventos e
-      JOIN usuarios o ON e.ID_org = o.ID
-      WHERE DATE(e.fecha) = DATE_ADD(CURDATE(), INTERVAL 3 DAY);
-    `);
+  // Enviar recordatorios a 3 días
+  procesarEventos(3, "¡Falta poco! El evento \"{título}\" será en 3 días, el {fecha}.");
 
-    eventosDia3.forEach((evento) => {
-      evento.fecha = db.formatearFecha(evento.fecha);
-    });
-
-    for (const evento of eventosDia3) {
-      const mensaje = `¡Falta poco! El evento "${evento.título}" será en 3 días, el ${evento.fecha}.`;
-      await db.query(
-        `INSERT INTO notificaciones (ID_usuario, mensaje, tipo, ID_evento) VALUES (?, ?, 'recordatorio', ?)`,
-        [evento.ID_usuario, mensaje, evento.ID]
-      );
-      console.log(
-        `Notificación programada (3 días antes) para usuario ${evento.ID_usuario}.`
-      );
-    }
-
-    // 3. Recordatorios para eventos a 7 días
-    const eventosDia7 = await db.query(`
-      SELECT e.ID, e.título, e.fecha, u.id AS ID_usuario
-      FROM eventos e
-      JOIN inscripciones i ON e.ID = i.ID_evento
-      JOIN usuarios u ON i.ID_usuario = u.ID
-      WHERE DATE(e.fecha) = DATE_ADD(CURDATE(), INTERVAL 7 DAY) AND i.activo = 1
-      UNION
-      SELECT e.ID, e.título, e.fecha, o.ID AS ID_usuario
-      FROM eventos e
-      JOIN usuarios o ON e.ID_org = o.ID
-      WHERE DATE(e.fecha) = DATE_ADD(CURDATE(), INTERVAL 7 DAY);
-    `);
-
-    eventosDia7.forEach((evento) => {
-      evento.fecha = db.formatearFecha(evento.fecha);
-    });
-
-    for (const evento of eventosDia7) {
-      const mensaje = `Planifica con tiempo: El evento "${evento.título}" será en 7 días, el ${evento.fecha}.`;
-      await db.query(
-        `INSERT INTO notificaciones (ID_usuario, mensaje, tipo, ID_evento) VALUES (?, ?, 'recordatorio', ?)`,
-        [evento.ID_usuario, mensaje, evento.ID]
-      );
-      console.log(
-        `Notificación programada (7 días antes) para usuario ${evento.ID_usuario}.`
-      );
-    }
-  } catch (error) {
-    console.error("Error al enviar recordatorios:", error.message);
-  }
+  // Enviar recordatorios a 7 días
+  procesarEventos(7, "Planifica con tiempo: El evento \"{título}\" será en 7 días, el {fecha}.");
 };
 
-const limpiarNotificacionesAntiguas = async () => {
+
+const limpiarNotificacionesAntiguas = () => {
   console.log("Ejecutando tarea: Limpieza de notificaciones antiguas...");
 
-  try {
-    const resultado = await db.query(
-      `UPDATE notificaciones SET activo = 0 WHERE fecha <  DATE_SUB(CURDATE(), INTERVAL 14 DAY)`
-    );
+  const query = `
+    UPDATE notificaciones 
+    SET activo = 0 
+    WHERE fecha < DATE_SUB(CURDATE(), INTERVAL 14 DAY)
+  `;
+
+  db.query(query, (err, resultado) => {
+    if (err) {
+      console.error("Error al limpiar notificaciones antiguas:", err.message);
+      return -1;
+    }
+
     console.log(
       `Limpieza completada. Filas eliminadas: ${resultado.affectedRows}`
     );
-  } catch (error) {
-    console.error("Error al limpiar notificaciones antiguas:", error.message);
-  }
+  });
 };
 
-// cron.schedule("0 11 * * *", limpiarNotificacionesAntiguas);
-// cron.schedule("13 13 * * *", enviarRecordatorios);
+
+cron.schedule("30 22 * * *", limpiarNotificacionesAntiguas);
+cron.schedule("28 22 * * *", enviarRecordatorios);
 
 console.log("Tareas cron configuradas.");

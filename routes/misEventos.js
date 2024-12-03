@@ -179,6 +179,7 @@ router.get("/misInscripciones", (req, res) => {
     JOIN inscripciones ON eventos.ID = inscripciones.ID_evento
     WHERE inscripciones.ID_usuario = ? 
       AND inscripciones.estado = 'inscrito'
+      AND inscripciones.activo = 1
       AND eventos.fecha > NOW()
     ORDER BY eventos.fecha DESC
   `;
@@ -200,6 +201,7 @@ router.get("/misInscripciones", (req, res) => {
       JOIN inscripciones ON eventos.ID = inscripciones.ID_evento
       WHERE inscripciones.ID_usuario = ? 
         AND inscripciones.estado = 'en_espera'
+        AND inscripciones.activo = 1
         AND eventos.fecha > NOW()
       ORDER BY eventos.fecha DESC
     `;

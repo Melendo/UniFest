@@ -35,7 +35,7 @@ router.get("/", (req, res) => {
       let queryEventosPasados;
       if (req.session.rol === 0) {
         queryEventosPasados =
-          "SELECT eventos.título, eventos.fecha, eventos.ID FROM eventos JOIN inscripciones ON eventos.ID = inscripciones.ID_evento WHERE inscripciones.ID_usuario = ? AND inscripciones.estado = 'inscrito' AND eventos.fecha < NOW() ORDER BY eventos.fecha DESC";
+          "SELECT eventos.título, eventos.fecha, eventos.ID FROM eventos JOIN inscripciones ON eventos.ID = inscripciones.ID_evento WHERE inscripciones.ID_usuario = ? AND inscripciones.estado = 'inscrito' AND inscripciones.activo = 1 AND eventos.fecha < NOW() ORDER BY eventos.fecha DESC";
       } else {
         queryEventosPasados =
           "SELECT eventos.título, eventos.fecha, eventos.ID FROM eventos WHERE ID_org = ? AND eventos.fecha < NOW() ORDER BY eventos.fecha DESC";
