@@ -57,11 +57,7 @@ router.post("/login", (req, res) => {
       db.query(queryConf, [req.session.userId], (err, resConf) => {
         if (err) {
           console.error("Error al consultar la configuración de accesibilidad:", err);
-          return res
-          .status(500)
-          .json({
-            message: "Hubo un error al procesar la configuración. Intenta de nuevo.",
-          });
+          return res.status(500).json({message: "Hubo un error al procesar la configuración. Intenta de nuevo."});
         }
         
         if (!resConf || resConf.length === 0) {
@@ -193,11 +189,7 @@ router.get('/restablecer/:token', async (req, res) => {
   db.query(queryToken, [token], (err, user) => {
     if (err) {
       console.error("Error al consultar el token:", err);
-      return res
-      .status(500)
-      .json({
-        message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
-      });
+      return res.status(500).json({message: "Hubo un error al procesar la solicitud. Intenta de nuevo."});
     }
     if (!user) {
       return res.status(400).send('El enlace de restablecimiento es inválido o ha caducado.');
@@ -215,7 +207,7 @@ router.post('/restablecer', async (req, res) => {
     return res.status(400).json({ message: 'Las contraseñas no coinciden.' });
   }
   
-  const queryToken = `SELECT ID FROM usuarios WHERE reset_token = ? AND token_expiry > NOW()`;
+  const queryToken = `SELECT * FROM usuarios WHERE reset_token = ? AND token_expiry > NOW()`;
   db.query(queryToken, [token], (err, user) => {
     if (err) {
       console.error("Error al consultar el token:", err);
@@ -225,6 +217,11 @@ router.post('/restablecer', async (req, res) => {
         message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
       });
     }
+
+    console.log("a" +user)
+    console.log("aa" +user[0])
+    console.log("aaa" +user.ID)
+    console.log("aaaa" +user[0].ID)
     
     if (!user) {
       return res.status(400).json({ message: 'El enlace de restablecimiento es inválido o ha caducado.' });
@@ -237,8 +234,6 @@ router.post('/restablecer', async (req, res) => {
       } 
       // Actualizar la contraseña en la base de datos y eliminar el token
       const queryUpdate = `UPDATE usuarios SET contrasenia = ?, reset_token = NULL, token_expiry = NULL WHERE ID = ?`;
-
-      console.log(user[0].ID)
 
       db.query(queryUpdate, [hashedPassword, user[0].ID], (err) => {
         if (err) {
