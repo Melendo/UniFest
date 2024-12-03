@@ -1,19 +1,25 @@
-<%- include('header') %>
-
-<div class="container">
-    <h2>Restablecer Contraseña</h2>
-    <form action="/restablecer" method="POST">
-        <input type="hidden" name="token" value="<%= token %>">
-        <div class="form-group">
-            <label for="password">Nueva Contraseña</label>
-            <input type="password" name="password" id="password" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="confirmPassword">Confirmar Contraseña</label>
-            <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Restablecer</button>
-    </form>
-</div>
-
-<%- include('footer') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Restablecer Contraseña</h2>
+        <form action="/login/restablecer" method="POST">
+            <input type="hidden" name="token" value="<%= token %>">
+            <div class="form-group">
+                <label for="password">Nueva Contraseña</label>
+                <input type="password" name="password" id="password" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirmar Contraseña</label>
+                <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Restablecer</button>
+        </form>
+    </div>
+</body>
+</html>

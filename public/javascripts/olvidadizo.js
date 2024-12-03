@@ -14,6 +14,7 @@ $(document).ready(function () {
         });
         return;
       }
+      console.log(email);
   
       $.ajax({
         url: '/login/recuperar',

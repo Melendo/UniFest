@@ -113,13 +113,11 @@ router.get("/logout", function (req, res) {
 
 router.post("/recuperar", async (req, res) => {
   
-  const { email } = req.body;
-
-  console.log(email);
+  const { correo } = req.body;
   
   const correoExiste = "SELECT ID FROM usuarios WHERE correo = ?";
   
-  db.query(correoExiste,[email], (err, user) =>{
+  db.query(correoExiste,[correo], (err, user) =>{
     
     if (err) {
       console.error("Error al consultar el correo:", err);
@@ -140,7 +138,7 @@ router.post("/recuperar", async (req, res) => {
     
     const queryToken = "UPDATE usuarios SET reset_token = ?, token_expiry = ? WHERE ID = ?";
     
-    db.query(queryToken, [token, tokenExpiry, user[0].ID]), (err) => {
+    db.query(queryToken, [token, tokenExpiry, user[0].ID], (err) => {
       if (err) {
         console.error("Error al consultar la validez del token:", err);
         return res
@@ -151,17 +149,17 @@ router.post("/recuperar", async (req, res) => {
       }
       
       const transporter = nodemailer.createTransport({
-        service: 'Gmail', // o cualquier proveedor de correo
+        service: 'Gmail', 
         auth: {
           user: 'unifestaw@gmail.com',
-          pass: 'LpkbuYFRD2Wo!6'
+          pass: 'yfdd zapy xbxp ghsc'
         }
       });
       
       const resetLink = `http://localhost:3000/login/restablecer/${token}`;
       const mailOptions = {
         from: 'unifestaw@gmail.com',
-        to: user.correo,
+        to: correo,
         subject: 'Restablecer contraseña',
         html: `<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
                    <a href="${resetLink}">${resetLink}</a>
@@ -179,7 +177,7 @@ router.post("/recuperar", async (req, res) => {
           res.status(200).json({ message: 'Correo de restablecimiento enviado con éxito.' });
         }
       });
-    };
+    });
     
   });
   
@@ -189,6 +187,7 @@ router.post("/recuperar", async (req, res) => {
 router.get('/restablecer/:token', async (req, res) => {
   const { token } = req.params;
   
+
   const queryToken = `SELECT ID FROM usuarios WHERE reset_token = ? AND token_expiry > NOW()`;
   
   db.query(queryToken, [token], (err, user) => {
@@ -231,21 +230,23 @@ router.post('/restablecer', async (req, res) => {
       return res.status(400).json({ message: 'El enlace de restablecimiento es inválido o ha caducado.' });
     }
     
-    // Encriptar la nueva contraseña
-    const hashedPassword = bcrypt.hash(password, 10, (err, hash) => {
+    // Encriptar la nueva contraseña 
+    bcrypt.hash(password, 10, (err, hashedPassword) => {
       if (err) {
         return res.status(400).json({ message: 'Las contraseñas no coinciden.' });
       } 
       // Actualizar la contraseña en la base de datos y eliminar el token
-      const queryUpdate = `UPDATE usuarios SET contraseña = ?, reset_token = NULL, token_expiry = NULL WHERE ID = ?`;
+      const queryUpdate = `UPDATE usuarios SET contrasenia = ?, reset_token = NULL, token_expiry = NULL WHERE ID = ?`;
 
-      db.query(queryUpdate, [usuario.ID], (err) => {
+      console.log(user[0].ID)
+
+      db.query(queryUpdate, [hashedPassword, user[0].ID], (err) => {
         if (err) {
           console.error("Error al modificar la contraseña:", err);
           return res.status(500).json({message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
           });
         }
-        res.render('login').json({message: 'Contraseña actualizada correctamente'});
+        res.redirect('/');
       })
     });
     
