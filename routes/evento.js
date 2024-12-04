@@ -139,6 +139,7 @@ router.get("/evento/:id", (req, res) => {
   });
 });
 
+//SOLO USUARIO
 router.post("/inscribirse/:id", (req, res) => {
   const userId = req.session.userId;
   const eventId = req.params.id;
@@ -340,6 +341,7 @@ router.post("/inscribirse/:id", (req, res) => {
   });
 });
 
+//SOLO USUARIO
 router.post("/cancelar/:id", (req, res) => {
   const userId = req.session.userId;
   const eventId = req.params.id;
@@ -486,6 +488,7 @@ router.post("/cancelar/:id", (req, res) => {
   );
 });
 
+//SOLO ORGANIZADOR
 router.get("/listadoAsistentes/:id", (req, res) => {
   const userId = req.session.userId;
   const eventId = req.params.id;
@@ -575,6 +578,7 @@ router.get("/listadoAsistentes/:id", (req, res) => {
   });
 });
 
+//SOLO ORGANIZADOR
 router.post("/actualizar/:id", (req, res) => {
   const {
     título,
@@ -762,6 +766,7 @@ router.post("/actualizar/:id", (req, res) => {
   });
 });
 
+//SOLO ORGANIZADOR
 router.post("/cancelarEvento/:id", (req, res) => {
   const eventId = req.params.id;
 

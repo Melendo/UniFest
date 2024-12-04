@@ -24,18 +24,18 @@ router.get("/", (req, res) => {
 
 
 router.post("/register", (req, res) => {
-  // Obtención de datos del formulario
+  //Obtención de datos del formulario
   const { nombre, telefono, correo, contrasenia, facultad, esOrganizador } =
     req.body;
 
-  // Validación de formato de teléfono (solo números de 9 dígitos)
+  //Validación de formato de teléfono (solo números de 9 dígitos)
   if (telefono !== "" && !/^\d{9}$/.test(telefono)) {
     return res
       .status(400)
       .json({ message: "El número de teléfono debe tener 9 dígitos o ser vacío." });
   }
 
-  // Validación del correo (solo correo de dominio ucm.es)
+  //Validación del correo (solo correo de dominio ucm.es)
   const correoSplit = correo.split("@");
   if (correoSplit.length !== 2 || correoSplit[1] !== "ucm.es") {
     return res
@@ -46,7 +46,7 @@ router.post("/register", (req, res) => {
       });
   }
 
-  // Comprobación de que no exista un usuario con el mismo correo
+  //Comprobación de que no exista un usuario con el mismo correo
   const QueryCorreoExiste = "SELECT * FROM usuarios WHERE correo = ?";
   db.query(QueryCorreoExiste, [correo], (err, resCorreo) => {
     if (err) {
@@ -65,7 +65,7 @@ router.post("/register", (req, res) => {
 
     console.log("Usuario no encontrado");
 
-    // Obtención del ID de la facultad, error si no existe
+    //Obtención del ID de la facultad, error si no existe
     const QueryFacultadExiste = "SELECT * FROM facultades WHERE ID = ?";
     db.query(QueryFacultadExiste, [facultad], (err, resFacultad) => {
       if (err) {
@@ -84,7 +84,7 @@ router.post("/register", (req, res) => {
 
       const idFacultad = resFacultad[0].ID;
 
-      // Hasheo de la contraseña antes de guardarla en la base de datos
+      //Hasheo de la contraseña antes de guardarla en la base de datos
       bcrypt.hash(contrasenia, 10, (err, hashedPassword) => {
         if (err) {
           console.log("Error al hashear la contraseña:", err);
@@ -93,7 +93,6 @@ router.post("/register", (req, res) => {
             .json({ message: "Error al procesar la contraseña." });
         }
 
-        // Consulta SQL para insertar los datos en la base de datos
         const query = `
           INSERT INTO usuarios (nombre, correo, telefono, ID_facultad, organizador, contrasenia)
           VALUES (?, ?, ?, ?, ?, ?)
@@ -117,7 +116,6 @@ router.post("/register", (req, res) => {
 
           const userId = result.insertId;
 
-          // Consulta SQL para insertar configuración de accesibilidad
           const confQuery = `
             INSERT INTO conf_accesibilidad (ID_usuario)
             VALUES (?)
@@ -133,7 +131,6 @@ router.post("/register", (req, res) => {
                 });
             }
 
-            // Respuesta exitosa
             return res
               .status(200)
               .json({
