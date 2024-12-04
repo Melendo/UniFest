@@ -12,24 +12,24 @@ router.post("/guardarConf", (req, res) => {
   req.session.color = esquema_colores;
   req.session.font = tamaño_letra;
 
-  // Consulta para verificar si ya existe la configuración
+  //Consulta para verificar si ya existe la configuración
   const query = "SELECT * FROM conf_accesibilidad WHERE ID_usuario = ?";
   db.query(query, [req.session.userId], (err, resConf) => {
     if (err) {
-      console.error("Error al cargar la configuración de accesibilidad:", err);
+      console.log("Error al cargar la configuración de accesibilidad:", err);
       return res.status(500).json({ message: "Error al cargar la configuración." });
     }
 
     if (!resConf || resConf.length === 0) {
-      // Si no existe la configuración, insertamos una nueva
+      //Si no existe la configuración, insertamos una nueva
       const confQuery = "INSERT INTO conf_accesibilidad (ID_usuario) VALUES (?)";
       db.query(confQuery, [req.session.userId], (err) => {
         if (err) {
-          console.error("Error al insertar configuración de accesibilidad:", err);
+          console.log("Error al insertar configuración de accesibilidad:", err);
           return res.status(500).json({ message: "Error al insertar configuración." });
         }
 
-        // Ahora actualizamos la configuración
+        //Actualizamos la configuración
         const queryUpdate = `
           UPDATE conf_accesibilidad
           SET colores = ?, t_size = ?
@@ -37,7 +37,7 @@ router.post("/guardarConf", (req, res) => {
         `;
         db.query(queryUpdate, [esquema_colores, tamaño_letra, req.session.userId], (err) => {
           if (err) {
-            console.error("Error al actualizar la configuración de accesibilidad:", err);
+            console.log("Error al actualizar la configuración de accesibilidad:", err);
             return res.status(500).json({ message: "Error al actualizar la configuración." });
           }
 
@@ -45,7 +45,7 @@ router.post("/guardarConf", (req, res) => {
         });
       });
     } else {
-      // Si la configuración ya existe, la actualizamos directamente
+      //Si la configuración ya existe, la actualizamos directamente
       const queryUpdate = `
         UPDATE conf_accesibilidad
         SET colores = ?, t_size = ?
@@ -53,7 +53,7 @@ router.post("/guardarConf", (req, res) => {
       `;
       db.query(queryUpdate, [esquema_colores, tamaño_letra, req.session.userId], (err) => {
         if (err) {
-          console.error("Error al actualizar la configuración de accesibilidad:", err);
+          console.log("Error al actualizar la configuración de accesibilidad:", err);
           return res.status(500).json({ message: "Error al actualizar la configuración." });
         }
 

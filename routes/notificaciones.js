@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
 
   db.query(query, [req.session.userId], (err, notificaciones) => {
     if (err) {
-      console.error("Error al obtener las notificaciones:", err);
+      console.log("Error al obtener las notificaciones:", err);
       return res.status(500).json({
         message: "Error al cargar las notificaciones.",
       });
@@ -30,7 +30,7 @@ router.get("/", (req, res) => {
 
     db.query(queryNoti, [req.session.userId], (err, resNoti) => {
       if (err) {
-        console.error("Error al contar las notificaciones no leídas:", err);
+        console.log("Error al contar las notificaciones no leídas:", err);
         return res.status(500).json({
           message: "Error al procesar la solicitud.",
         });
@@ -69,7 +69,7 @@ router.post("/marcar-leida/:id", (req, res) => {
 
   db.query(query, [notificacionId], (err, result) => {
     if (err) {
-      console.error(
+      console.log(
         "Error al marcar la notificación como leída:",
         err.message,
         err.sql

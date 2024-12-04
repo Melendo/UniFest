@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
 
   db.query(queryTodasFacultades, (err, resTodasFacultades) => {
     if (err) {
-      console.error("Error al consultar las facultades:", err);
+      console.log("Error al consultar las facultades:", err);
       return res
         .status(500)
         .json({
@@ -50,7 +50,7 @@ router.post("/register", (req, res) => {
   const QueryCorreoExiste = "SELECT * FROM usuarios WHERE correo = ?";
   db.query(QueryCorreoExiste, [correo], (err, resCorreo) => {
     if (err) {
-      console.error("Error al verificar el correo:", err);
+      console.log("Error al verificar el correo:", err);
       return res
         .status(500)
         .json({ message: "Error al verificar el correo." });
@@ -69,14 +69,14 @@ router.post("/register", (req, res) => {
     const QueryFacultadExiste = "SELECT * FROM facultades WHERE ID = ?";
     db.query(QueryFacultadExiste, [facultad], (err, resFacultad) => {
       if (err) {
-        console.error("Error al verificar la facultad:", err);
+        console.log("Error al verificar la facultad:", err);
         return res
           .status(500)
           .json({ message: "Error al verificar la facultad." });
       }
 
       if (resFacultad.length === 0) {
-        console.error("Facultad no encontrada en la base de datos:", facultad);
+        console.log("Facultad no encontrada en la base de datos:", facultad);
         return res.status(400).json({ message: "La facultad no existe." });
       }
 
@@ -87,7 +87,7 @@ router.post("/register", (req, res) => {
       // Hasheo de la contraseña antes de guardarla en la base de datos
       bcrypt.hash(contrasenia, 10, (err, hashedPassword) => {
         if (err) {
-          console.error("Error al hashear la contraseña:", err);
+          console.log("Error al hashear la contraseña:", err);
           return res
             .status(500)
             .json({ message: "Error al procesar la contraseña." });
@@ -109,7 +109,7 @@ router.post("/register", (req, res) => {
 
         db.query(query, params, (err, result) => {
           if (err) {
-            console.error("Error al insertar el usuario:", err);
+            console.log("Error al insertar el usuario:", err);
             return res
               .status(500)
               .json({ message: "Error al registrar el usuario." });
@@ -125,7 +125,7 @@ router.post("/register", (req, res) => {
 
           db.query(confQuery, [userId], (err) => {
             if (err) {
-              console.error("Error al insertar configuración de accesibilidad:", err);
+              console.log("Error al insertar configuración de accesibilidad:", err);
               return res
                 .status(500)
                 .json({

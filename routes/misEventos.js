@@ -26,7 +26,7 @@ router.get("/misEventos", (req, res) => {
   
   db.query(queryProximos, [req.session.userId], (errProximos, resProximos) => {
     if (errProximos) {
-      console.error("Error al obtener los eventos próximos:", errProximos);
+      console.log("Error al obtener los eventos próximos:", errProximos);
       return res.status(500).json({
         message: "Error al obtener eventos próximos. Intenta de nuevo.",
       });
@@ -41,7 +41,7 @@ router.get("/misEventos", (req, res) => {
     
     db.query(queryTodasFacultades, (errFacultades, resTodasFacultades) => {
       if (errFacultades) {
-        console.error("Error al obtener todas las facultades:", errFacultades);
+        console.log("Error al obtener todas las facultades:", errFacultades);
         return res.status(500).json({
           message: "Error al obtener facultades. Intenta de nuevo.",
         });
@@ -52,7 +52,7 @@ router.get("/misEventos", (req, res) => {
 
       db.query(queryNoti, [req.session.userId], (errNoti, resNoti) => {
         if (errNoti) {
-          console.error("Error al obtener notificaciones:", errNoti);
+          console.log("Error al obtener notificaciones:", errNoti);
           return res.status(500).json({
             message: "Error al obtener notificaciones. Intenta de nuevo.",
           });
@@ -114,7 +114,7 @@ router.post("/anyadir", (req, res) => {
 
   db.query(conflictQuery, conflictParams, (errConflicts, conflicts) => {
     if (errConflicts) {
-      console.error("Error al verificar conflictos:", errConflicts);
+      console.log("Error al verificar conflictos:", errConflicts);
       return res.status(500).json({ message: "Error al verificar conflictos. Intenta de nuevo." });
     }
 
@@ -144,7 +144,7 @@ router.post("/anyadir", (req, res) => {
 
     db.query(query, params, (errInsert, resEvento) => {
       if (errInsert) {
-        console.error("Error al insertar el nuevo evento:", errInsert);
+        console.log("Error al insertar el nuevo evento:", errInsert);
         return res
           .status(500)
           .json({ message: "Error al registrar el evento. Inténtalo de nuevo." });
@@ -186,7 +186,7 @@ router.get("/misInscripciones", (req, res) => {
 
   db.query(queryProximos, [req.session.userId], (errProximos, resProximos) => {
     if (errProximos) {
-      console.error("Error al obtener eventos próximos inscritos:", errProximos);
+      console.log("Error al obtener eventos próximos inscritos:", errProximos);
       return res.status(500).json({ message: "Error al obtener eventos. Intenta de nuevo." });
     }
 
@@ -208,7 +208,7 @@ router.get("/misInscripciones", (req, res) => {
 
     db.query(queryEspera, [req.session.userId], (errEspera, resEspera) => {
       if (errEspera) {
-        console.error("Error al obtener eventos en lista de espera:", errEspera);
+        console.log("Error al obtener eventos en lista de espera:", errEspera);
         return res.status(500).json({ message: "Error al obtener eventos en espera. Intenta de nuevo." });
       }
 
@@ -225,7 +225,7 @@ router.get("/misInscripciones", (req, res) => {
 
       db.query(queryNoti, [req.session.userId], (errNoti, resNoti) => {
         if (errNoti) {
-          console.error("Error al obtener notificaciones no leídas:", errNoti);
+          console.log("Error al obtener notificaciones no leídas:", errNoti);
           return res.status(500).json({ message: "Error al obtener notificaciones. Intenta de nuevo." });
         }
 

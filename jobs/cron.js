@@ -10,7 +10,7 @@ const enviarNotificaciones = async (eventos, mensaje) => {
         const queryNoti = "INSERT INTO notificaciones (ID_usuario, mensaje, tipo, ID_evento) VALUES (?, ?, 'recordatorio', ?)";
         db.query(queryNoti, [evento.ID_usuario, notificacion, evento.ID], (errNoti) => {
             if (errNoti) {
-              console.error(`Error al programar notificación para usuario ${evento.ID_usuario}:`, errNoti);
+              console.log(`Error al programar notificación para usuario ${evento.ID_usuario}:`, errNoti);
               reject(errNoti);
             } else {
               console.log(`Notificación programada para usuario ${evento.ID_usuario}.`);
@@ -21,7 +21,7 @@ const enviarNotificaciones = async (eventos, mensaje) => {
       });
     }
   } catch (err) {
-    console.error("Error en el envío de notificaciones:", err);
+    console.log("Error en el envío de notificaciones:", err);
   }
 };
 
@@ -41,7 +41,7 @@ const procesarEventos = (dias, mensaje) => {
 
   db.query(queryEventos, [dias, dias], (errEventos, eventos) => {
     if (errEventos) {
-      console.error("Error al obtener eventos:", errEventos);
+      console.log("Error al obtener eventos:", errEventos);
       return -1;
     }
 
@@ -77,7 +77,7 @@ const limpiarNotificacionesAntiguas = () => {
 
   db.query(query, (err) => {
     if (err) {
-      console.error("Error al limpiar notificaciones antiguas:", err.message);
+      console.log("Error al limpiar notificaciones antiguas:", err.message);
       return -1;
     }
 

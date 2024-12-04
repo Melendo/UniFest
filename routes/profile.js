@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
   const queryUsuario = "SELECT * FROM usuarios WHERE id = ?";
   db.query(queryUsuario, [req.session.userId], (err, user) => {
     if (err) {
-      console.error("Error al obtener datos del usuario:", err);
+      console.log("Error al obtener datos del usuario:", err);
       return res.status(500).json({ message: "Error al procesar la solicitud." });
     }
 
@@ -27,7 +27,7 @@ router.get("/", (req, res) => {
     const queryFacultad = "SELECT nombre FROM facultades WHERE id = ?";
     db.query(queryFacultad, [user[0].ID_facultad], (err, resfacultad) => {
       if (err) {
-        console.error("Error al obtener la facultad:", err);
+        console.log("Error al obtener la facultad:", err);
         return res.status(500).json({ message: "Error al procesar la solicitud." });
       }
 
@@ -43,7 +43,7 @@ router.get("/", (req, res) => {
 
       db.query(queryEventosPasados, [req.session.userId], (err, resEventos) => {
         if (err) {
-          console.error("Error al obtener eventos:", err);
+          console.log("Error al obtener eventos:", err);
           return res.status(500).json({ message: "Error al procesar la solicitud." });
         }
 
@@ -55,7 +55,7 @@ router.get("/", (req, res) => {
         const queryTodasFacultades = "SELECT * FROM facultades";
         db.query(queryTodasFacultades, (err, resTodasFacultades) => {
           if (err) {
-            console.error("Error al obtener facultades:", err);
+            console.log("Error al obtener facultades:", err);
             return res.status(500).json({ message: "Error al procesar la solicitud." });
           }
 
@@ -63,7 +63,7 @@ router.get("/", (req, res) => {
           const queryNoti = `SELECT COUNT(*) as hayNotificaciones FROM notificaciones WHERE leido = 0 AND activo = 1 AND ID_usuario = ?`;
           db.query(queryNoti, [req.session.userId], (err, resNoti) => {
             if (err) {
-              console.error("Error al obtener notificaciones:", err);
+              console.log("Error al obtener notificaciones:", err);
               return res.status(500).json({ message: "Error al procesar la solicitud." });
             }
 
@@ -107,7 +107,7 @@ router.post("/actualizar", (req, res) => {
   // Ejecutar la consulta usando el método de callback
   db.query(query, [nombre, telefono, facultad, req.session.userId], (err, result) => {
     if (err) {
-      console.error("Error al actualizar el perfil:", err);
+      console.log("Error al actualizar el perfil:", err);
       return res.status(500).json({
         success: false,
         message: "Hubo un error al actualizar el perfil. Intenta de nuevo.",
