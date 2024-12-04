@@ -1,7 +1,7 @@
 const db = require('../dataBase/db'); // Importar la conexión de la base de datos
 
 const sqlKeywords = [
-  "SELECT", "INSERT", "UPDATE", "DELETE", "DROP", "--", ";", "'", '"', "/*", "*/", "xp_"
+  "SELECT", "INSERT", "UPDATE", "DELETE", "DROP", "--", ";", "/*", "*/", "xp_"
 ];
 
 // Middleware para detectar inyecciones SQL y manejar IPs en la base de datos

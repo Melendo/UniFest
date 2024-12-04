@@ -20,7 +20,6 @@ var notificacionesRouter = require('./routes/notificaciones');
 var accesibilidadRouter = require('./routes/accesibilidad');
 
 var sessionMiddleware = require('./dataBase/session');
-var jobsMiddleware = require('./jobs/cron');
 var blacklist = require('./middlewares/blacklist');
 
 
