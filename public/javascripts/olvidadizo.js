@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    // Manejo del formulario de recuperación de contraseña
     $('#forgotPasswordForm').on('submit', function (event) {
       event.preventDefault();
   
@@ -29,7 +28,6 @@ $(document).ready(function () {
             confirmButtonText: 'Entendido'
           });
   
-          // Cerrar el modal después de un envío exitoso
           $('#forgotPasswordModal').modal('hide');
         },
         error: function (xhr) {

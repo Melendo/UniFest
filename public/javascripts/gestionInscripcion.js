@@ -6,7 +6,6 @@ $(document).ready(function () {
         const action = $(this).text().trim();
         const url = (action === 'Cancelar inscripción' || action === 'Cancelar espera') ? `/evento/cancelar/${eventoId}` : `/evento/inscribirse/${eventoId}`;
         
-        // Realizar la petición AJAX
         $.ajax({
             url: url,
             type: 'POST',

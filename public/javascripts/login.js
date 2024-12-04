@@ -15,6 +15,7 @@ $(document).ready(function() {
             return false;
         }
 
+        //Validación de la contraseña
         if(contraseña === ""){
             Swal.fire("Por favor, introduzca su contraseña.");
             return false;

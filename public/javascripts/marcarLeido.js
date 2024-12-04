@@ -7,7 +7,6 @@ $(document).ready(function () {
     const id = $(this).data("id");
     const url = `/notificaciones/marcar-leida/${id}`;
 
-    // Realizar la petición AJAX
     $.ajax({
       url: url,
       type: "POST",
@@ -20,15 +19,13 @@ $(document).ready(function () {
         }).then(() => {
           const row = $(`[data-id="${id}"]`).closest("tr");
           const button = $(`[data-id=${id}]`);
-          button.replaceWith("<span>Leído</span>");
-          row.find(".btn-leido").remove(); // Elimina el botón, ya que está marcado
-          row.removeClass("fw-bold"); // Quitar el estilo de no leído
+          button.replaceWith("<span>Leído</span>"); //Cambia el botón por el texto Leído
+          // row.find(".btn-leido").remove(); //Quita el botón
+          row.removeClass("fw-bold"); //Quita la negrita
         });
       },
       error: function (error) {
-        const errorMessage =
-          error.responseJSON?.message ||
-          "Error desconocido. Intentelo nuevamente";
+        const errorMessage = error.responseJSON?.message || "Error desconocido. Intentelo nuevamente";
         Swal.fire({
           icon: "error",
           title: "Algo salió mal",

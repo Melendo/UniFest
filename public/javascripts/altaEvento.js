@@ -19,9 +19,9 @@ $(document).ready(function () {
       return false;
     }
 
-    // Validar que la fecha y la hora sean posteriores al momento actual
-    const ahora = new Date(); // Momento actual
-    const fechaHoraIngresada = new Date(`${fecha}T${hora}`); // Combinar fecha y hora
+    // Validar que la fecha y la hora sean posteriores a hoy
+    const ahora = new Date();
+    const fechaHoraIngresada = new Date(`${fecha}T${hora}`);
 
     if (fechaHoraIngresada <= ahora) {
       Swal.fire("La fecha y hora deben ser posteriores al momento actual");
@@ -96,7 +96,7 @@ $(document).ready(function () {
           });
 
           if (!añadido) {
-            tabla.append(nuevaFila); // Agregar al final si no hay eventos más tardíos
+            tabla.append(nuevaFila);
           }
 
           $("#formNuevoEvento")[0].reset();

@@ -41,7 +41,7 @@ const procesarEventos = (dias, mensaje) => {
 
   db.query(queryEventos, [dias, dias], (errEventos, eventos) => {
     if (errEventos) {
-      console.error(`Error al obtener eventos a ${dias} días:`, errEventos);
+      console.error("Error al obtener eventos:", errEventos);
       return -1;
     }
 
@@ -75,7 +75,7 @@ const limpiarNotificacionesAntiguas = () => {
     WHERE fecha < DATE_SUB(CURDATE(), INTERVAL 14 DAY)
   `;
 
-  db.query(query, (err, resultado) => {
+  db.query(query, (err) => {
     if (err) {
       console.error("Error al limpiar notificaciones antiguas:", err.message);
       return -1;

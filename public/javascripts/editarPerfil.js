@@ -39,25 +39,24 @@ $(document).ready(function () {
           icon: "success",
           confirmButtonText: "OK",
         }).then(() => {
-          // Actualizar la tabla con los nuevos datos
-          $("#profileTable").find("td").eq(0).text(nombre); // Actualiza el nombre
+          
+          $("#profileTable").find("td").eq(0).text(nombre); //Actualiza nombre
+
           $("#profileTable")
             .find("td")
             .eq(2)
-            .text(telefono || "-"); // Actualiza el teléfono, muestra "-" si está vacío
+            .text(telefono || "-"); //Actualiza teléfono, muestra "-" si está vacío
+
           $("#profileTable")
             .find("td")
             .eq(3)
-            .text($("#facultad option:selected").text()); // Actualiza la facultad con el texto seleccionado
+            .text($("#facultad option:selected").text()); //Actualiza facultad
 
-          // Opcional: Cerrar el modal si aún está abierto
           $("#editarPerfilModal").modal("hide");
         });
       },
       error: function (error) {
-        const errorMessage =
-          error.responseJSON?.message ||
-          "Error desconocido. Inténtelo nuevamente.";
+        const errorMessage = error.responseJSON?.message || "Error desconocido. Intentelo nuevamente";
         Swal.fire({
           icon: "error",
           title: "Algo salió mal",
