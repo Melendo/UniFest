@@ -82,17 +82,17 @@ const limpiarNotificacionesAntiguas = () => {
     WHERE fecha < DATE_SUB(CURDATE(), INTERVAL 14 DAY)
   `;
 
-  db.query(query, (err) => {
+  db.query(query, (err, resultado) => {
     if (err) {
       console.log("Error al limpiar notificaciones antiguas:", err.message);
       return -1;
     }
 
     console.log(
-      "Limpieza completada. Filas eliminadas: ${resultado.affectedRows}"
+      `Limpieza completada. Filas eliminadas: ${resultado.affectedRows}`
     );
   });
 };
 
-cron.schedule("30 22 * * *", limpiarNotificacionesAntiguas);
-cron.schedule("11 23 * * *", enviarRecordatorios);
+cron.schedule("30 00 * * *", limpiarNotificacionesAntiguas);
+cron.schedule("00 01 * * *", enviarRecordatorios);
