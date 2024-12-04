@@ -9,7 +9,6 @@ $(document).ready(function() {
         events: '/home/obtenerEventos', // Ruta para obtener los eventos desde el servidor
         eventClick: function(info) { // Acción al hacer clic en un evento
 
-            //Swal.fire('Evento: ' + info.event.title );
             Swal.fire({
                 title: "Evento: " +info.event.title,
                 icon: "info",

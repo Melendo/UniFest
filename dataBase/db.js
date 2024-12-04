@@ -9,50 +9,27 @@ const pool = mysql.createPool({
   database: "aw_24",
 });
 
-// Función para ejecutar consultas a la base de datos
-// function query(sql, params) {
-//   return new Promise((resolve, reject) => {
-//     pool.getConnection((err, connection) => {
-//       if (err) {
-//         reject(err);
-//       } else {
-//         connection.query(sql, params, (error, results) => {
-//           connection.release(); // Libera la conexión una vez terminada la consulta
-//           if (error) {
-//             reject(error);
-//           } else {
-//             resolve(results);
-//           }
-//         });
-//       }
-//     });
-//   });
-// }
-
 function query(sql, params, callback) {
-  console.log("Iniciando consulta a la base de datos...");
+  //console.log("Iniciando consulta a la base de datos...");
 
   pool.getConnection((err, connection) => {
     if (err) {
-      console.error("Error al obtener conexión:", err);
-      return callback(err);  // Si hay un error al obtener la conexión, pasa el error al callback
+      console.log("Error al obtener conexión:", err);
+      return callback(err);
     }
 
-    console.log("Conexión establecida con éxito.");
+    //console.log("Conexión establecida con éxito.");
 
     connection.query(sql, params, (error, results) => {
       connection.release(); // Libera la conexión una vez terminada la consulta
       if (error) {
-        console.error("Error en la consulta:", error);
+        console.log("Error en la consulta:", error);
         return callback(error);  // Si hay un error en la consulta, pasa el error al callback
       }
 
-      console.log("Consulta ejecutada correctamente");
+      //console.log("Consulta ejecutada correctamente");
 
-      //Debugging
-      //console.log("Consulta ejecutada correctamente. Resultados:", results);
-
-      callback(null, results);  // Llama al callback con null para el error y los resultados
+      callback(null, results);
     });
   });
 }

@@ -7,10 +7,11 @@ router.get("/", (req, res) => {
   res.status(404).json({ message: "Page not found" });
 });
 
+//SOLO ORGANIZADOR
 router.get("/misEventos", (req, res) => {
-  // Verificar si el usuario está autenticado
+  //Comprobamos si el usuario está autenticado
   if (!req.session.userId) {
-    return res.redirect("/login"); // Redirigir al login si no está autenticado
+    return res.redirect("/login"); // Redirigimos al login si no está autenticado
   }
 
   if (!req.session.rol) {
@@ -20,13 +21,13 @@ router.get("/misEventos", (req, res) => {
     });
   }
 
-  // Consulta eventos próximos
+  //Próximos eventos
   const queryProximos =
     "SELECT * FROM eventos WHERE fecha > NOW() AND activo = 1 AND eventos.ID_org = ? ORDER BY fecha ASC";
   
   db.query(queryProximos, [req.session.userId], (errProximos, resProximos) => {
     if (errProximos) {
-      console.error("Error al obtener los eventos próximos:", errProximos);
+      console.log("Error al obtener los eventos próximos:", errProximos);
       return res.status(500).json({
         message: "Error al obtener eventos próximos. Intenta de nuevo.",
       });
@@ -36,23 +37,23 @@ router.get("/misEventos", (req, res) => {
       evento.fecha = db.formatearFecha(evento.fecha);
     });
 
-    // Consulta para obtener todas las facultades
+    //Obtenemos todas las facultades
     const queryTodasFacultades = "SELECT * FROM facultades";
     
     db.query(queryTodasFacultades, (errFacultades, resTodasFacultades) => {
       if (errFacultades) {
-        console.error("Error al obtener todas las facultades:", errFacultades);
+        console.log("Error al obtener todas las facultades:", errFacultades);
         return res.status(500).json({
           message: "Error al obtener facultades. Intenta de nuevo.",
         });
       }
 
-      // Consulta para contar las notificaciones no leídas del usuario
+      //Comprobamos si hay notificaciones sin leer
       const queryNoti = `SELECT COUNT(*) as hayNotificaciones FROM notificaciones WHERE leido = 0 AND activo = 1 AND ID_usuario = ?`;
 
       db.query(queryNoti, [req.session.userId], (errNoti, resNoti) => {
         if (errNoti) {
-          console.error("Error al obtener notificaciones:", errNoti);
+          console.log("Error al obtener notificaciones:", errNoti);
           return res.status(500).json({
             message: "Error al obtener notificaciones. Intenta de nuevo.",
           });
@@ -60,7 +61,7 @@ router.get("/misEventos", (req, res) => {
 
         const hayNotificaciones = resNoti[0].hayNotificaciones;
 
-        // Renderizar la vista de misEventos
+        //Renderizamos la vista de misEventos
         res.render("misEventos", {
           rol: req.session.rol,
           proximos: resProximos,
@@ -74,7 +75,7 @@ router.get("/misEventos", (req, res) => {
   });
 });
 
-
+//SOLO ORGANIZADOR
 router.post("/anyadir", (req, res) => {
   const {
     título,
@@ -88,12 +89,12 @@ router.post("/anyadir", (req, res) => {
     capacidad_máxima,
   } = req.body;
 
-  // Verificar si el usuario está autenticado
+  //Comprobamos si el usuario está autenticado
   if (!req.session.userId) {
     return res.status(401).json({ message: "Usuario no autenticado" });
   }
 
-  // Consulta para verificar conflictos de horario
+  //Comprobamos conflictos de horario
   const conflictQuery = `
     SELECT *
     FROM eventos
@@ -103,18 +104,18 @@ router.post("/anyadir", (req, res) => {
   `;
 
   const conflictParams = [
-    fecha, // Fecha del nuevo evento
-    hora, // Hora de inicio del nuevo evento
-    duración, // Duración en minutos del nuevo evento
-    fecha, // Fecha del nuevo evento
-    hora, // Hora de inicio del nuevo evento
-    ubicación, // Ubicación del nuevo evento
+    fecha,
+    hora,
+    duración,
+    fecha,
+    hora,
+    ubicación,
     facultad,
   ];
 
   db.query(conflictQuery, conflictParams, (errConflicts, conflicts) => {
     if (errConflicts) {
-      console.error("Error al verificar conflictos:", errConflicts);
+      console.log("Error al verificar conflictos:", errConflicts);
       return res.status(500).json({ message: "Error al verificar conflictos. Intenta de nuevo." });
     }
 
@@ -124,7 +125,7 @@ router.post("/anyadir", (req, res) => {
         .json({ message: "Ya existe un evento en el mismo lugar y horario." });
     }
 
-    // Si no hay conflictos, insertar el nuevo evento
+    //Si no hay conflictos, creamos el nuevo evento
     const query = `
       INSERT INTO eventos (título, descripción, tipo, fecha, hora, duración_minutos, ubicación, ID_facultad, capacidad_máxima, ID_org)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -144,7 +145,7 @@ router.post("/anyadir", (req, res) => {
 
     db.query(query, params, (errInsert, resEvento) => {
       if (errInsert) {
-        console.error("Error al insertar el nuevo evento:", errInsert);
+        console.log("Error al insertar el nuevo evento:", errInsert);
         return res
           .status(500)
           .json({ message: "Error al registrar el evento. Inténtalo de nuevo." });
@@ -152,15 +153,14 @@ router.post("/anyadir", (req, res) => {
 
       const eventoId = resEvento.insertId;
 
-      // Si todo es exitoso, devolver éxito
       return res.status(200).json({ message: "Alta de evento exitosa.", eventoId });
     });
   });
 });
 
-
+//SOLO USUARIO
 router.get("/misInscripciones", (req, res) => {
-  // Verificar si el usuario está autenticado
+  //Comprobamos si el usuario está autenticado
   if (!req.session.userId) {
     return res.redirect("/login"); // Redirigir al login si no está autenticado
   }
@@ -172,7 +172,7 @@ router.get("/misInscripciones", (req, res) => {
     });
   }
 
-  // Consulta para eventos próximos inscritos
+  //Próximos eventos en los que está inscrito
   const queryProximos = `
     SELECT eventos.título, eventos.fecha, eventos.ID
     FROM eventos
@@ -186,7 +186,7 @@ router.get("/misInscripciones", (req, res) => {
 
   db.query(queryProximos, [req.session.userId], (errProximos, resProximos) => {
     if (errProximos) {
-      console.error("Error al obtener eventos próximos inscritos:", errProximos);
+      console.log("Error al obtener eventos próximos inscritos:", errProximos);
       return res.status(500).json({ message: "Error al obtener eventos. Intenta de nuevo." });
     }
 
@@ -194,7 +194,7 @@ router.get("/misInscripciones", (req, res) => {
       evento.fecha = db.formatearFecha(evento.fecha);
     });
 
-    // Consulta para eventos próximos en lista de espera
+    //Próximos eventos en lista de espera
     const queryEspera = `
       SELECT eventos.título, eventos.fecha, eventos.ID
       FROM eventos
@@ -208,7 +208,7 @@ router.get("/misInscripciones", (req, res) => {
 
     db.query(queryEspera, [req.session.userId], (errEspera, resEspera) => {
       if (errEspera) {
-        console.error("Error al obtener eventos en lista de espera:", errEspera);
+        console.log("Error al obtener eventos en lista de espera:", errEspera);
         return res.status(500).json({ message: "Error al obtener eventos en espera. Intenta de nuevo." });
       }
 
@@ -216,7 +216,7 @@ router.get("/misInscripciones", (req, res) => {
         evento.fecha = db.formatearFecha(evento.fecha);
       });
 
-      // Consulta para contar las notificaciones no leídas
+      //Comprobamos si hay notificaciones sin leer
       const queryNoti = `
         SELECT COUNT(*) AS hayNotificaciones
         FROM notificaciones
@@ -225,13 +225,13 @@ router.get("/misInscripciones", (req, res) => {
 
       db.query(queryNoti, [req.session.userId], (errNoti, resNoti) => {
         if (errNoti) {
-          console.error("Error al obtener notificaciones no leídas:", errNoti);
+          console.log("Error al obtener notificaciones no leídas:", errNoti);
           return res.status(500).json({ message: "Error al obtener notificaciones. Intenta de nuevo." });
         }
 
         const hayNotificaciones = resNoti[0].hayNotificaciones;
 
-        // Renderizar la vista
+        //Renderizamos la vista de MisInscripciones
         res.render("misInscripciones", {
           rol: req.session.rol,
           proximos: resProximos,

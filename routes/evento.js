@@ -3,7 +3,6 @@ var express = require("express");
 var router = express.Router();
 var db = require("../dataBase/db");
 
-/* GET home page. */
 router.get("/evento/:id", (req, res) => {
   if (!req.session.userId) {
     return res.redirect("/login");
@@ -11,11 +10,11 @@ router.get("/evento/:id", (req, res) => {
 
   const idEvento = req.params.id;
 
-  // Consulta del evento
+  //Consulta del evento
   const queryEvento = "SELECT * FROM eventos WHERE ID = ?";
   db.query(queryEvento, [idEvento], (errEvento, resultEvento) => {
     if (errEvento) {
-      console.error("Error al consultar el evento:", errEvento);
+      console.log("Error al consultar el evento:", errEvento);
       return res.status(500).json({ message: "Error al cargar el evento." });
     }
     const resEvento = resultEvento[0];
@@ -23,37 +22,37 @@ router.get("/evento/:id", (req, res) => {
       return res.status(400).json({ message: "Evento no encontrado." });
     }
 
-    // Obtenemos la capacidad actual
+    //Obtenemos la capacidad actual
     const queryCapacidad = `
       SELECT COUNT(*) AS inscritos 
       FROM inscripciones 
       WHERE ID_evento = ? AND estado = 'inscrito' AND activo = 1`;
     db.query(queryCapacidad, [idEvento], (errCapacidad, resultCapacidad) => {
       if (errCapacidad) {
-        console.error("Error al obtener la capacidad actual:", errCapacidad);
+        console.log("Error al obtener la capacidad actual:", errCapacidad);
         return res.status(500).json({ message: "Error al cargar el evento." });
       }
       const capActual = resultCapacidad[0].inscritos;
 
-      // Formateamos la fecha
+      //Formateamos la fecha
       const fechaBD = db.formatearFechaEditar(resEvento.fecha);
       resEvento.fecha = db.formatearFecha(resEvento.fecha);
 
-      // Obtenemos la facultad
+      //Obtenemos la facultad
       const queryFacultadEvento = "SELECT * FROM facultades WHERE ID = ?";
       db.query(
         queryFacultadEvento,
         [resEvento.ID_facultad],
         (errFacultad, resultFacultad) => {
           if (errFacultad) {
-            console.error("Error al obtener la facultad:", errFacultad);
+            console.log("Error al obtener la facultad:", errFacultad);
             return res
               .status(500)
               .json({ message: "Error al cargar el evento." });
           }
           const resFacultad = resultFacultad[0];
 
-          // Verificar si el usuario está inscrito o en espera
+          //Verificamos si el usuario está inscrito o en espera
           const queryInscripcion = `
             SELECT estado 
             FROM inscripciones 
@@ -63,7 +62,7 @@ router.get("/evento/:id", (req, res) => {
             [req.session.userId, idEvento],
             (errInscripcion, resultInscripcion) => {
               if (errInscripcion) {
-                console.error(
+                console.log(
                   "Error al verificar la inscripción:",
                   errInscripcion
                 );
@@ -79,13 +78,13 @@ router.get("/evento/:id", (req, res) => {
                 inscrito = "Cancelar espera";
               }
 
-              // Obtener todas las facultades
+              //Obtenermos todas las facultades
               const queryTodasFacultades = "SELECT * FROM facultades";
               db.query(
                 queryTodasFacultades,
                 (errFacultades, resultFacultades) => {
                   if (errFacultades) {
-                    console.error(
+                    console.log(
                       "Error al obtener las facultades:",
                       errFacultades
                     );
@@ -94,7 +93,7 @@ router.get("/evento/:id", (req, res) => {
                       .json({ message: "Error al cargar el evento." });
                   }
 
-                  // Contar notificaciones no leídas
+                  //Vemos si hay notificaciones sin leer
                   const queryNoti = `
                   SELECT COUNT(*) as hayNotificaciones 
                   FROM notificaciones 
@@ -104,7 +103,7 @@ router.get("/evento/:id", (req, res) => {
                     [req.session.userId],
                     (errNoti, resultNoti) => {
                       if (errNoti) {
-                        console.error(
+                        console.log(
                           "Error al contar notificaciones no leídas:",
                           errNoti
                         );
@@ -114,7 +113,7 @@ router.get("/evento/:id", (req, res) => {
                       }
                       const hayNotificaciones = resultNoti[0].hayNotificaciones;
 
-                      // Renderizar la página con los datos obtenidos
+                      //Renderizamos la pagina del evento
                       res.render("evento", {
                         rol: req.session.rol,
                         evento: resEvento,
@@ -140,6 +139,7 @@ router.get("/evento/:id", (req, res) => {
   });
 });
 
+//SOLO USUARIO
 router.post("/inscribirse/:id", (req, res) => {
   const userId = req.session.userId;
   const eventId = req.params.id;
@@ -148,12 +148,12 @@ router.post("/inscribirse/:id", (req, res) => {
     return res.redirect("/login");
   }
 
-  // Verificar si el evento existe y está activo
+  //Verificamos si el evento existe y está activo
   const queryEvento =
     "SELECT activo, capacidad_máxima FROM eventos WHERE ID = ?";
   db.query(queryEvento, [eventId], (errEvento, resultEvento) => {
     if (errEvento) {
-      console.error("Error al verificar el evento:", errEvento);
+      console.log("Error al verificar el evento:", errEvento);
       return res.status(500).json({
         message: "Error al verificar el evento. Intenta de nuevo.",
         titulo: "Error",
@@ -167,7 +167,7 @@ router.post("/inscribirse/:id", (req, res) => {
       });
     }
 
-    // Verificar las inscripciones activas e inactivas para este usuario
+    //Verificamos las inscripciones activas e inactivas del usuario
     const queryInscripcion = `
       SELECT * 
       FROM inscripciones 
@@ -177,14 +177,14 @@ router.post("/inscribirse/:id", (req, res) => {
       [userId, eventId],
       (errInscripcion, resultInscripcion) => {
         if (errInscripcion) {
-          console.error("Error al verificar inscripción:", errInscripcion);
+          console.log("Error al verificar inscripción:", errInscripcion);
           return res.status(500).json({
             message: "Error al verificar tu inscripción. Intenta de nuevo.",
             titulo: "Error",
           });
         }
 
-        // Comprobar la capacidad actual del evento considerando a los usuarios con inscripción inactiva
+        //Comprobamos la capacidad actual del evento
         const queryCapacidadActual = `
         SELECT COUNT(*) AS inscritos 
         FROM inscripciones 
@@ -195,7 +195,7 @@ router.post("/inscribirse/:id", (req, res) => {
           [eventId],
           (errCapacidad, resultCapacidad) => {
             if (errCapacidad) {
-              console.error("Error al obtener capacidad actual:", errCapacidad);
+              console.log("Error al obtener capacidad actual:", errCapacidad);
               return res.status(500).json({
                 message: "Error al verificar la capacidad del evento.",
                 titulo: "Error",
@@ -205,13 +205,11 @@ router.post("/inscribirse/:id", (req, res) => {
             const plazasOcupadas = resultCapacidad[0].inscritos;
             const capacidadMaxima = evento.capacidad_máxima;
 
-            // Verificar si hay plazas disponibles
+            //Comprobamos si hay plazas disponibles
             if (plazasOcupadas < capacidadMaxima) {
-              // Si el usuario tiene inscripción inactiva, reactivamos la inscripción
-              if (
-                resultInscripcion.length > 0 &&
-                resultInscripcion[0].activo === 0
-              ) {
+
+              //Si el usuario tiene inscripción inactiva, reactivamos la inscripción
+              if (resultInscripcion.length > 0 && resultInscripcion[0].activo === 0) {
                 const queryActualizarInscripcion = `
               UPDATE inscripciones 
               SET activo = 1 
@@ -222,10 +220,7 @@ router.post("/inscribirse/:id", (req, res) => {
                   [userId, eventId],
                   (errActualizar) => {
                     if (errActualizar) {
-                      console.error(
-                        "Error al actualizar la inscripción:",
-                        errActualizar
-                      );
+                      console.log("Error al actualizar la inscripción:", errActualizar);
                       return res.status(500).json({
                         message:
                           "Error al reactivar tu inscripción. Intenta de nuevo.",
@@ -241,6 +236,7 @@ router.post("/inscribirse/:id", (req, res) => {
                   }
                 );
               } else {
+
                 // Si el usuario no tiene inscripción, lo insertamos como inscrito
                 const queryInscribir = `
               INSERT INTO inscripciones (ID_usuario, ID_evento, estado, fecha) 
@@ -248,7 +244,7 @@ router.post("/inscribirse/:id", (req, res) => {
 
                 db.query(queryInscribir, [userId, eventId], (errInscribir) => {
                   if (errInscribir) {
-                    console.error(
+                    console.log(
                       "Error al registrar la inscripción:",
                       errInscribir
                     );
@@ -258,7 +254,6 @@ router.post("/inscribirse/:id", (req, res) => {
                     });
                   }
 
-                  // Responder con éxito
                   return res.status(200).json({
                     message: "¡Inscripción completada con éxito!",
                     estado: "inscrito",
@@ -268,9 +263,9 @@ router.post("/inscribirse/:id", (req, res) => {
                 });
               }
             } else {
-              // Si no hay plazas disponibles, añadir a la lista de espera
+
+              //Si no hay plazas disponibles, añadimos a la lista de espera
               if (resultInscripcion.length === 0) {
-                // Si el usuario no está inscrito o tiene una inscripción inactiva, insertamos en espera
                 const queryInscribirEspera = `
               INSERT INTO inscripciones (ID_usuario, ID_evento, estado, fecha) 
               VALUES (?, ?, 'en_espera', NOW())`;
@@ -280,7 +275,7 @@ router.post("/inscribirse/:id", (req, res) => {
                   [userId, eventId],
                   (errInscribirEspera) => {
                     if (errInscribirEspera) {
-                      console.error(
+                      console.log(
                         "Error al añadir a la lista de espera:",
                         errInscribirEspera
                       );
@@ -291,7 +286,6 @@ router.post("/inscribirse/:id", (req, res) => {
                       });
                     }
 
-                    // Responder con mensaje de lista de espera
                     return res.status(200).json({
                       message:
                         "El evento está lleno, pero te hemos puesto en la lista de espera.",
@@ -301,10 +295,11 @@ router.post("/inscribirse/:id", (req, res) => {
                     });
                   }
                 );
+                //Si no hay plazas pero la inscripción está inactiva, reactivamos asegurando el estado espera
               } else if (resultInscripcion[0].activo === 0) {
                 const queryActualizarInscripcion = `
               UPDATE inscripciones 
-              SET activo = 1 
+              SET activo = 1 AND estado = 'en_espera'
               WHERE ID_usuario = ? AND ID_evento = ?`;
 
                 db.query(
@@ -312,7 +307,7 @@ router.post("/inscribirse/:id", (req, res) => {
                   [userId, eventId],
                   (errActualizar) => {
                     if (errActualizar) {
-                      console.error(
+                      console.log(
                         "Error al actualizar la inscripción:",
                         errActualizar
                       );
@@ -331,7 +326,7 @@ router.post("/inscribirse/:id", (req, res) => {
                   }
                 );
               } else {
-                // Si ya está inscrito o en espera, no se hace nada
+                //Si ya está inscrito o en espera, no se hace nada
                 return res.status(400).json({
                   message:
                     "Ya estás inscrito o en la lista de espera para este evento.",
@@ -346,6 +341,7 @@ router.post("/inscribirse/:id", (req, res) => {
   });
 });
 
+//SOLO USUARIO
 router.post("/cancelar/:id", (req, res) => {
   const userId = req.session.userId;
   const eventId = req.params.id;
@@ -354,7 +350,7 @@ router.post("/cancelar/:id", (req, res) => {
     return res.redirect("/login");
   }
 
-  // Verificar si el usuario está inscrito o en espera
+  //Comprobamos si el usuario está inscrito o en espera
   const queryInscripcion = `
     SELECT estado 
     FROM inscripciones 
@@ -364,7 +360,7 @@ router.post("/cancelar/:id", (req, res) => {
     [userId, eventId],
     (errInscripcion, resultInscripcion) => {
       if (errInscripcion) {
-        console.error("Error al verificar inscripción:", errInscripcion);
+        console.log("Error al verificar inscripción:", errInscripcion);
         return res.status(500).json({
           message: "Error al verificar tu inscripción.",
           titulo: "Error",
@@ -380,7 +376,8 @@ router.post("/cancelar/:id", (req, res) => {
       }
 
       if (inscripcion.estado === "inscrito") {
-        // Buscar al siguiente en la lista de espera
+
+        //Buscamos al siguiente en la lista de espera
         const querySiguienteEnCola = `
         SELECT ID_usuario 
         FROM inscripciones 
@@ -389,7 +386,7 @@ router.post("/cancelar/:id", (req, res) => {
         LIMIT 1`;
         db.query(querySiguienteEnCola, [eventId], (errCola, resultCola) => {
           if (errCola) {
-            console.error("Error al obtener siguiente en cola:", errCola);
+            console.log("Error al obtener siguiente en cola:", errCola);
             return res.status(500).json({
               message: "Error al procesar la lista de espera.",
               titulo: "Error",
@@ -398,7 +395,7 @@ router.post("/cancelar/:id", (req, res) => {
 
           const siguiente = resultCola[0];
           if (siguiente) {
-            // Actualizar el estado del siguiente como inscrito
+            //Actualizamos el estado del siguiente como inscrito
             const queryActualizarSiguiente = `
             UPDATE inscripciones 
             SET estado = 'inscrito' 
@@ -408,7 +405,7 @@ router.post("/cancelar/:id", (req, res) => {
               [siguiente.ID_usuario, eventId],
               (errActualizar) => {
                 if (errActualizar) {
-                  console.error(
+                  console.log(
                     "Error al actualizar estado del siguiente:",
                     errActualizar
                   );
@@ -421,7 +418,7 @@ router.post("/cancelar/:id", (req, res) => {
 
                 const mensaje = `Alguien ha cancelado su inscripción del evento ${eventId} y has pasado de la lista de espera a estar inscrito!`;
 
-                // Notificar al usuario actualizado
+                //Notificamos al usuario actualizado
                 const queryNotificacion = `
               INSERT INTO notificaciones (ID_usuario, mensaje, tipo, ID_evento) 
               VALUES (?, ?, 'actualización', ?)`;
@@ -430,7 +427,7 @@ router.post("/cancelar/:id", (req, res) => {
                   [siguiente.ID_usuario, mensaje, eventId],
                   (errNotificacion) => {
                     if (errNotificacion) {
-                      console.error(
+                      console.log(
                         "Error al enviar notificación:",
                         errNotificacion
                       );
@@ -447,21 +444,21 @@ router.post("/cancelar/:id", (req, res) => {
         });
       }
 
-      // Eliminar la inscripción del usuario actual
+      //Eliminamos la inscripción del usuario actual
       const queryEliminarInscripcion = `
       UPDATE inscripciones 
             SET activo = 0 
             WHERE ID_usuario = ? AND ID_evento = ?`;
       db.query(queryEliminarInscripcion, [userId, eventId], (errEliminar) => {
         if (errEliminar) {
-          console.error("Error al eliminar inscripción:", errEliminar);
+          console.log("Error al eliminar inscripción:", errEliminar);
           return res.status(500).json({
             message: "Ocurrió un error al cancelar tu inscripción.",
             titulo: "Error",
           });
         }
 
-        // Obtener la capacidad actualizada
+        //Obtenemos la capacidad actualizada
         const queryCapacidadActual = `
         SELECT COUNT(*) AS inscritos 
         FROM inscripciones 
@@ -471,7 +468,7 @@ router.post("/cancelar/:id", (req, res) => {
           [eventId],
           (errCapacidad, resultCapacidad) => {
             if (errCapacidad) {
-              console.error("Error al obtener capacidad actual:", errCapacidad);
+              console.log("Error al obtener capacidad actual:", errCapacidad);
               return res.status(500).json({
                 message: "Error al procesar la capacidad actual del evento.",
                 titulo: "Error",
@@ -491,15 +488,16 @@ router.post("/cancelar/:id", (req, res) => {
   );
 });
 
+//SOLO ORGANIZADOR
 router.get("/listadoAsistentes/:id", (req, res) => {
   const userId = req.session.userId;
   const eventId = req.params.id;
 
-  // Consulta para verificar si el usuario es el organizador del evento
+  //Obtenemos el evento
   const queryEvento = "SELECT * FROM eventos WHERE ID = ?";
   db.query(queryEvento, [eventId], (errEvento, resultEvento) => {
     if (errEvento) {
-      console.error("Error al obtener el evento:", errEvento);
+      console.log("Error al obtener el evento:", errEvento);
       return res.status(500).send("Error al procesar el evento.");
     }
 
@@ -509,12 +507,12 @@ router.get("/listadoAsistentes/:id", (req, res) => {
 
     const evento = resultEvento[0];
 
-    // Verificar si el usuario es el organizador
+    //Comprobamos si el usuario es el organizador del evento
     if (evento.ID_org !== userId) {
       return res.status(403).send("No tienes permisos para ver este listado.");
     }
 
-    // Consulta para obtener los usuarios inscritos
+    //Obtenemos los usuarios inscritos
     const queryInscritos = `
       SELECT u.nombre, u.correo, i.fecha
       FROM inscripciones i
@@ -523,11 +521,11 @@ router.get("/listadoAsistentes/:id", (req, res) => {
       ORDER BY i.fecha ASC`;
     db.query(queryInscritos, [eventId], (errInscritos, inscritos) => {
       if (errInscritos) {
-        console.error("Error al obtener inscritos:", errInscritos);
+        console.log("Error al obtener inscritos:", errInscritos);
         return res.status(500).send("Error al obtener la lista de inscritos.");
       }
 
-      // Consulta para obtener los usuarios en lista de espera
+      //Obtenemos los usuarios en lista de espera
       const queryEspera = `
         SELECT u.nombre, u.correo, i.fecha
         FROM inscripciones i
@@ -536,11 +534,10 @@ router.get("/listadoAsistentes/:id", (req, res) => {
         ORDER BY i.fecha ASC`;
       db.query(queryEspera, [eventId], (errEspera, espera) => {
         if (errEspera) {
-          console.error("Error al obtener lista de espera:", errEspera);
+          console.log("Error al obtener lista de espera:", errEspera);
           return res.status(500).send("Error al obtener la lista de espera.");
         }
 
-        // Formatear fechas y calcular posición en cola para usuarios en espera
         inscritos.forEach((usuario) => {
           usuario.fecha = db.formatearFecha(usuario.fecha);
         });
@@ -550,20 +547,20 @@ router.get("/listadoAsistentes/:id", (req, res) => {
           usuario.posicion = index + 1; // Posición en base al orden
         });
 
-        // Consulta para contar las notificaciones no leídas del usuario
+        //Comprobamos si hay notificaciones sin leer
         const queryNoti = `
           SELECT COUNT(*) as hayNotificaciones 
           FROM notificaciones 
           WHERE leido = 0 AND activo = 1 AND ID_usuario = ?`;
         db.query(queryNoti, [userId], (errNoti, resultNoti) => {
           if (errNoti) {
-            console.error("Error al contar notificaciones:", errNoti);
+            console.log("Error al contar notificaciones:", errNoti);
             return res.status(500).send("Error al contar las notificaciones.");
           }
 
           const hayNotificaciones = resultNoti[0]?.hayNotificaciones || 0;
 
-          // Renderizar la vista de listado de asistentes
+          //Renderizamos la vista de listado de asistentes
           res.render("listadoAsistentes", {
             rol: req.session.rol,
             evento,
@@ -581,6 +578,7 @@ router.get("/listadoAsistentes/:id", (req, res) => {
   });
 });
 
+//SOLO ORGANIZADOR
 router.post("/actualizar/:id", (req, res) => {
   const {
     título,
@@ -595,12 +593,12 @@ router.post("/actualizar/:id", (req, res) => {
     capacidad_original,
   } = req.body;
 
-  // Verificar si el usuario está autenticado
+  //Comprobamos si el usuario está autenticado
   if (!req.session.userId) {
     return res.status(401).json({ message: "Usuario no autenticado" });
   }
 
-  // Verificar conflictos de horario y ubicación
+  //Comprobamos conflictos entre eventos
   const conflictQuery = `
     SELECT *
     FROM eventos
@@ -620,7 +618,7 @@ router.post("/actualizar/:id", (req, res) => {
 
   db.query(conflictQuery, conflictParams, (errConflicts, conflicts) => {
     if (errConflicts) {
-      console.error("Error al verificar conflictos:", errConflicts);
+      console.log("Error al verificar conflictos:", errConflicts);
       return res
         .status(500)
         .json({ message: "Error al verificar conflictos." });
@@ -632,7 +630,7 @@ router.post("/actualizar/:id", (req, res) => {
         .json({ message: "Ya existe un evento en el mismo lugar y horario." });
     }
 
-    // Actualizar evento si no hay conflictos
+    //Actualizamos el evento si no hay conflictos
     const updateQuery = `
       UPDATE eventos 
       SET título = ?, descripción = ?, tipo = ?, fecha = ?, hora = ?, duración_minutos = ?, ubicación = ?, ID_facultad = ?, capacidad_máxima = ?
@@ -652,13 +650,13 @@ router.post("/actualizar/:id", (req, res) => {
 
     db.query(updateQuery, updateParams, (errUpdate) => {
       if (errUpdate) {
-        console.error("Error al actualizar el evento:", errUpdate);
+        console.log("Error al actualizar el evento:", errUpdate);
         return res
           .status(500)
           .json({ message: "Error al actualizar el evento." });
       }
 
-      // Notificar a los usuarios inscritos
+      //Notificamos a los usuarios inscritos
       const queryAfectados = `
         SELECT eventos.título, eventos.fecha, inscripciones.ID_usuario
         FROM eventos 
@@ -671,7 +669,7 @@ router.post("/actualizar/:id", (req, res) => {
         [req.params.id],
         (errAfectados, resAfectados) => {
           if (errAfectados) {
-            console.error("Error al obtener usuarios afectados:", errAfectados);
+            console.log("Error al obtener usuarios afectados:", errAfectados);
             return res
               .status(500)
               .json({ message: "Error al notificar usuarios." });
@@ -686,7 +684,7 @@ router.post("/actualizar/:id", (req, res) => {
               [evento.ID_usuario, mensaje, req.params.id],
               (errNoti) => {
                 if (errNoti) {
-                  console.error("Error al insertar notificación:", errNoti);
+                  console.log("Error al insertar notificación:", errNoti);
                 } else {
                   console.log(
                     `Notificación programada para usuario ${evento.ID_usuario}.`
@@ -696,7 +694,7 @@ router.post("/actualizar/:id", (req, res) => {
             );
           });
 
-          // Comprobar ampliación de aforo
+          //Si hay ampliación de aforo
           if (capacidad_máxima > capacidad_original) {
             const querySiguienteEnCola = `
             SELECT ID_usuario 
@@ -709,7 +707,7 @@ router.post("/actualizar/:id", (req, res) => {
               [req.params.id, capacidad_máxima - capacidad_original],
               (errCola, siguientes) => {
                 if (errCola) {
-                  console.error("Error al obtener lista de espera:", errCola);
+                  console.log("Error al obtener lista de espera:", errCola);
                   return res
                     .status(500)
                     .json({ message: "Error al actualizar cola." });
@@ -727,7 +725,7 @@ router.post("/actualizar/:id", (req, res) => {
                       [siguiente.ID_usuario, req.params.id],
                       (errUpdateCola) => {
                         if (errUpdateCola) {
-                          console.error(
+                          console.log(
                             `Error al actualizar inscripción para usuario ${siguiente.ID_usuario}:`,
                             errUpdateCola
                           );
@@ -739,7 +737,7 @@ router.post("/actualizar/:id", (req, res) => {
                             [siguiente.ID_usuario, mensaje, req.params.id],
                             (errNotiCola) => {
                               if (errNotiCola) {
-                                console.error(
+                                console.log(
                                   `Error al notificar usuario ${siguiente.ID_usuario}:`,
                                   errNotiCola
                                 );
@@ -759,7 +757,6 @@ router.post("/actualizar/:id", (req, res) => {
             );
           }
 
-          // Devolver éxito si todo sale bien
           return res
             .status(200)
             .json({ message: "Actualización de evento exitosa." });
@@ -769,15 +766,16 @@ router.post("/actualizar/:id", (req, res) => {
   });
 });
 
+//SOLO ORGANIZADOR
 router.post("/cancelarEvento/:id", (req, res) => {
   const eventId = req.params.id;
 
-  // Verificar si el usuario está autenticado
+  //Comprobamos si el usuario está autenticado
   if (!req.session.userId) {
     return res.status(401).json({ message: "Usuario no autenticado" });
   }
 
-  // Desactivar el evento
+  //Eliminamos el evento
   const updateQuery = `
     UPDATE eventos 
     SET activo = 0
@@ -785,11 +783,11 @@ router.post("/cancelarEvento/:id", (req, res) => {
 
   db.query(updateQuery, [eventId], (errUpdate) => {
     if (errUpdate) {
-      console.error("Error al desactivar el evento:", errUpdate);
+      console.log("Error al desactivar el evento:", errUpdate);
       return res.status(500).json({ message: "Error al cancelar el evento." });
     }
 
-    // Obtener usuarios inscritos al evento
+    //Obtenemos los usuarios inscritos al evento
     const queryAfectados = `
       SELECT eventos.título, eventos.fecha, inscripciones.ID_usuario
       FROM eventos 
@@ -799,13 +797,13 @@ router.post("/cancelarEvento/:id", (req, res) => {
 
     db.query(queryAfectados, [eventId], (errAfectados, resAfectados) => {
       if (errAfectados) {
-        console.error("Error al obtener usuarios afectados:", errAfectados);
+        console.log("Error al obtener usuarios afectados:", errAfectados);
         return res
           .status(500)
           .json({ message: "Error al notificar a los usuarios." });
       }
 
-      // Notificar a los usuarios
+      //Notificamos a los usuarios
       resAfectados.forEach((evento) => {
         evento.fecha = db.formatearFecha(evento.fecha);
         const mensaje = `Lo lamentamos mucho, pero el evento "${evento.título}" ha sido cancelado.`;
@@ -815,20 +813,20 @@ router.post("/cancelarEvento/:id", (req, res) => {
           [evento.ID_usuario, mensaje, eventId],
           (errNoti) => {
             if (errNoti) {
-              console.error(
+              console.log(
                 `Error al insertar notificación para usuario ${evento.ID_usuario}:`,
                 errNoti
               );
             } else {
               console.log(
-                `Notificación programada para usuario ${evento.ID_usuario}.`
+                `Notificación enviada por cancelación para usuario ${evento.ID_usuario}.`
               );
             }
           }
         );
       });
 
-      // Eliminar inscripciones del evento
+      //Eliminamos las inscripciones del evento
       const queryEliminarInscripcion = `
         UPDATE inscripciones 
             SET activo = 0 
@@ -836,13 +834,12 @@ router.post("/cancelarEvento/:id", (req, res) => {
 
       db.query(queryEliminarInscripcion, [eventId], (errEliminar) => {
         if (errEliminar) {
-          console.error("Error al eliminar inscripciones:", errEliminar);
+          console.log("Error al eliminar inscripciones:", errEliminar);
           return res
             .status(500)
             .json({ message: "Error al eliminar inscripciones del evento." });
         }
 
-        // Devolver éxito si todo sale bien
         return res
           .status(200)
           .json({ message: "Cancelación de evento exitosa." });

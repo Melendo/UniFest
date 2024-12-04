@@ -4,7 +4,7 @@ $(document).ready(function () {
     $('#formRegister').on('submit', async function (event) {
         event.preventDefault();
         
-        // Obtención de valores de
+        // Obtención de valores del formulario
         const nombre = $('#nombre').val();
         const telefono = $('#telefono').val().trim();
         const correo = $('#correo').val().trim();

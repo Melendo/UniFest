@@ -11,20 +11,20 @@ router.get("/", (req, res) => {
   const nombre = req.session.nombre;
   const { titulo, fecha_inicio, fecha_fin, facultad, estado, tipo } = req.query;
 
-  // Obtener las facultades
+  //Obtenemos las facultades
   const queryFacultades = "SELECT * FROM facultades";
   db.query(queryFacultades, [], (err, facultades) => {
     if (err) {
-      console.error("Error al obtener las facultades:", err);
+      console.log("Error al obtener las facultades:", err);
       return res.status(500).json({ message: "Hubo un error al obtener las facultades." });
     }
 
-    // Consulta para los eventos próximos
+    //Próximos eventos
     const queryProximos =
       "SELECT * FROM eventos WHERE activo = 1 AND fecha > NOW() ORDER BY fecha ASC LIMIT 4";
     db.query(queryProximos, [], (err, resProximos) => {
       if (err) {
-        console.error("Error al obtener los eventos próximos:", err);
+        console.log("Error al obtener los eventos próximos:", err);
         return res.status(500).json({ message: "Hubo un error al obtener los eventos próximos." });
       }
 
@@ -32,18 +32,18 @@ router.get("/", (req, res) => {
         evento.fecha = db.formatearFecha(evento.fecha);
       });
 
-      // Lógica para el buscador
+      //Lógica para el buscador
       let queryBuscar =
         "SELECT * FROM eventos WHERE activo = 1 AND fecha >= NOW()";
       const params = [];
 
-      // Filtrar por título
+      //Filtrar por título
       if (titulo) {
         queryBuscar += " AND título LIKE ?";
         params.push(`%${titulo}%`);
       }
 
-      // Filtrar por fecha de inicio y fin
+      //Filtrar por fecha de inicio y fin
       if (fecha_inicio) {
         queryBuscar += " AND fecha >= ?";
         params.push(fecha_inicio);
@@ -53,19 +53,19 @@ router.get("/", (req, res) => {
         params.push(fecha_fin);
       }
 
-      // Filtrar por facultad
+      //Filtrar por facultad
       if (facultad) {
         queryBuscar += " AND ID_facultad = ?";
         params.push(facultad);
       }
 
-      // Filtrar por tipo
+      //Filtrar por tipo
       if (tipo) {
         queryBuscar += " AND tipo = ?";
         params.push(tipo);
       }
 
-      // Filtrar por estado (llenos o disponibles)
+      //Filtrar por estado (llenos o disponibles)
       if (estado === "llenos") {
         queryBuscar += ` AND ID IN ( SELECT e.ID FROM eventos e LEFT JOIN inscripciones i ON e.ID = i.ID_evento AND i.estado = 'inscrito' AND i.activo = 1 GROUP BY e.ID, e.capacidad_máxima HAVING COUNT(i.ID) >= e.capacidad_máxima )`;
       }
@@ -76,10 +76,10 @@ router.get("/", (req, res) => {
 
       queryBuscar += " ORDER BY fecha ASC";
 
-      // Ejecutar la búsqueda de eventos
+      //Búsqueda de eventos
       db.query(queryBuscar, params, (err, resultados) => {
         if (err) {
-          console.error("Error al buscar los eventos:", err);
+          console.log("Error al buscar los eventos:", err);
           return res.status(500).json({ message: "Hubo un error al realizar la búsqueda de eventos." });
         }
 
@@ -87,17 +87,17 @@ router.get("/", (req, res) => {
           evento.fecha = db.formatearFecha(evento.fecha);
         });
 
-        // Consulta para contar las notificaciones no leídas del usuario
+        //Comprobamos si hay notificaciones sin leer
         const queryNoti = `SELECT COUNT(*) as hayNotificaciones FROM notificaciones WHERE leido = 0 AND activo = 1 AND ID_usuario = ?`;
         db.query(queryNoti, [req.session.userId], (err, resNoti) => {
           if (err) {
-            console.error("Error al obtener las notificaciones:", err);
+            console.log("Error al obtener las notificaciones:", err);
             return res.status(500).json({ message: "Hubo un error al obtener las notificaciones." });
           }
 
           const hayNotificaciones = resNoti[0].hayNotificaciones;
 
-          // Renderizar la vista con los resultados
+          //Renderizamos la vista
           res.render("home", {
             rol: req.session.rol,
             nombre,
@@ -114,23 +114,22 @@ router.get("/", (req, res) => {
   });
 });
 
-//Obtener todos los eventos para el FullCalendar
+//Obtenemos todos los eventos para el FullCalendar
 router.get("/obtenerEventos", (req, res) => {
-  // Consulta para obtener los eventos futuros
+  //Obtenemos los eventos futuros
   db.query("SELECT * FROM eventos WHERE activo = 1 AND fecha >= NOW()", [], (err, eventos) => {
     if (err) {
-      console.error("Error al obtener eventos:", err);
+      console.log("Error al obtener eventos:", err);
       return res.status(500).send("Error al obtener eventos");
     }
 
-    // Formatear los eventos en un formato que FullCalendar espera
+    //Formateo de los eventos en formato FullCalendar
     const eventosFormateados = eventos.map((evento) => ({
       title: evento.título,
       start: evento.fecha,
       end: evento.fecha,
     }));
 
-    // Responde con los eventos en formato JSON
     res.json(eventosFormateados);
   });
 });

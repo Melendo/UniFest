@@ -5,7 +5,6 @@ $(document).ready(function () {
     const eventoId = $(this).data("evento-id");
     const url = `/evento/cancelarEvento/${eventoId}`;
 
-    // Realizar la petición AJAX
     $.ajax({
       url: url,
       type: "POST",
@@ -20,9 +19,7 @@ $(document).ready(function () {
         });
       },
       error: function (error) {
-        const errorMessage =
-          error.responseJSON?.message ||
-          "Error desconocido. Intentelo nuevamente";
+        const errorMessage = error.responseJSON?.message || "Error desconocido. Intentelo nuevamente";
         Swal.fire({
           icon: "error",
           title: "Algo salió mal",

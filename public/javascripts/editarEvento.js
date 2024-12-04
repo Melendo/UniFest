@@ -33,9 +33,9 @@ $(document).ready(function () {
       return false;
     }
 
-    // Validar que la fecha y la hora sean posteriores al momento actual
-    const ahora = new Date(); // Momento actual
-    const fechaHoraIngresada = new Date(`${fecha}T${hora}`); // Combinar fecha y hora
+    // Validar que la fecha y la hora sean posteriores a hoy
+    const ahora = new Date();
+    const fechaHoraIngresada = new Date(`${fecha}T${hora}`);
 
     if (fechaHoraIngresada <= ahora) {
       Swal.fire("La fecha y hora deben ser posteriores al momento actual");
@@ -62,7 +62,6 @@ $(document).ready(function () {
       return false;
     }
 
-    //Si todo es válido
     $.ajax({
       url: url,
       method: "POST",
@@ -97,18 +96,14 @@ $(document).ready(function () {
           $("#eventoUbicacion").text(ubicación);
           $("#eventoCapacidad").text(capacidad_máxima);
 
-          // Actualizar la facultad seleccionada
           const facultadNombre = $("#facultad option:selected").text();
           $("#eventoFacultad").text(facultadNombre);
 
-          // Cerrar el modal de edición
           $("#editarEvento").modal("hide");
         });
       },
       error: function (error) {
-        const errorMessage =
-          error.responseJSON?.message ||
-          "Error desconocido. Intentelo nuevamente";
+        const errorMessage = error.responseJSON?.message || "Error desconocido. Intentelo nuevamente";
         Swal.fire({
           icon: "error",
           title: "Algo salió mal",

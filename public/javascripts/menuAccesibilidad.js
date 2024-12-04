@@ -184,9 +184,7 @@ $(document).ready(function () {
         }).then(() => {});
       },
       error: function (error) {
-        const errorMessage =
-          error.responseJSON?.message ||
-          "Error desconocido. Inténtelo nuevamente.";
+        const errorMessage = error.responseJSON?.message || "Error desconocido. Intentelo nuevamente";
         Swal.fire({
           icon: "error",
           title: "Algo salió mal",
