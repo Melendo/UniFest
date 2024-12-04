@@ -101,13 +101,13 @@ router.get("/logout", function (req, res) {
       console.log("Error al cerrar sesión:", err);
       return res.status(500).send("No se pudo cerrar sesión");
     }
-    res.redirect("/login"); // Redirige al login tras cerrar sesión
+    res.redirect("/login"); 
   });
 });
 
 
 router.post("/recuperar", async (req, res) => {
-  
+
   const { correo } = req.body;
   
   const correoExiste = "SELECT ID FROM usuarios WHERE correo = ?";
@@ -194,60 +194,62 @@ router.get('/restablecer/:token', async (req, res) => {
       return res.status(400).send('El enlace de restablecimiento es inválido o ha caducado.');
     }
     
-    //Renderiza la página de restablecimiento
     res.render('restablecer', { token });
   })
 });
 
 router.post('/restablecer', async (req, res) => {
-  const {token, password, confirmPassword } = req.body;
-  
-  if(password !== confirmPassword){
+  const { token, password, confirmPassword } = req.body;
+
+  if (password !== confirmPassword) {
     return res.status(400).json({ message: 'Las contraseñas no coinciden.' });
   }
-  
+
   const queryToken = `SELECT * FROM usuarios WHERE reset_token = ? AND token_expiry > NOW()`;
-  db.query(queryToken, [token], (err, user) => {
+
+  db.query(queryToken, [token], (err, results) => {
     if (err) {
-      console.log("Error al consultar el token:", err);
-      return res
-      .status(500)
-      .json({
+      console.error("Error al consultar el token:", err);
+      return res.status(500).json({
         message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
       });
     }
 
-    console.log("a" +user)
-    console.log("aa" +user[0])
-    console.log("aaa" +user.ID)
-    console.log("aaaa" +user[0].ID)
-    
-    if (!user) {
-      return res.status(400).json({ message: 'El enlace de restablecimiento es inválido o ha caducado.' });
+    if (!results || results.length === 0) {
+      return res.status(400).json({
+        message: 'El enlace de restablecimiento es inválido o ha caducado.',
+      });
     }
-    
-    //Encripta la nueva contraseña 
+
+    const user = results[0]; // Aseguramos que hay un resultado
+
+    // Encripta la nueva contraseña
     bcrypt.hash(password, 10, (err, hashedPassword) => {
       if (err) {
-        return res.status(400).json({ message: 'Las contraseñas no coinciden.' });
-      } 
-      //Actualiza la contraseña en la base de datos y elimina el token
-      const queryUpdate = `UPDATE usuarios SET contrasenia = ?, reset_token = NULL, token_expiry = NULL WHERE ID = ?`;
+        console.error("Error al encriptar la contraseña:", err);
+        return res.status(500).json({
+          message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
+        });
+      }
 
-      db.query(queryUpdate, [hashedPassword, user[0].ID], (err) => {
+      // Actualiza la contraseña en la base de datos y elimina el token
+      const queryUpdate = ` UPDATE usuarios SET contrasenia = ?, reset_token = NULL, token_expiry = NULL WHERE ID = ?`;
+
+      db.query(queryUpdate, [hashedPassword, user.ID], (err) => {
         if (err) {
-          console.log("Error al modificar la contraseña:", err);
-          return res.status(500).json({message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
+          console.error("Error al modificar la contraseña:", err);
+          return res.status(500).json({
+            message: "Hubo un error al procesar la solicitud. Intenta de nuevo.",
           });
         }
-        res.redirect('/');
-      })
+
+        // Redirige o responde con éxito
+        res.status(200).json({message: "Constraseña cambiada con exito"});
+      });
     });
-    
-    
-    
-  })
+  });
 });
+
 
 
 

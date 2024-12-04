@@ -16,6 +16,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/javascripts/restablecer.js"></script>
 </head>
 <body>
     <div class="container-fluid">
@@ -26,7 +27,7 @@
                     <h1 class="h1">UNIFEST</h1>
                     <div class="containeruser mt-3">
                         <img
-                        src="./images/logoComplu.jpg"
+                        src="/images/logoComplu.jpg"
                         class="rounded mx-auto d-block w-50"
                         />
                     </div>
@@ -38,18 +39,19 @@
                     
                     <div class="container">
                         <h2>Restablecer Contraseña</h2>
-                        <form action="/login/restablecer" method="POST">
+                        <form id="restablecerForm">
                             <input type="hidden" name="token" value="<%= token %>">
                             <div class="form-group">
                                 <label for="password">Nueva Contraseña</label>
                                 <input type="password" name="password" id="password" class="form-control" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mt-3">
                                 <label for="confirmPassword">Confirmar Contraseña</label>
                                 <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" required>
                             </div>
-                            <button type="submit" class="btn btn-primary">Restablecer</button>
+                            <button type="submit" class="btn btn-primary mt-3">Restablecer</button>
                         </form>
+                        
                     </div>
                     
                     
@@ -59,24 +61,5 @@
         </div>
     </div>
     
-    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="forgotPasswordModalLabel">Recuperar contraseña</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="forgotPasswordForm">
-                        <div class="mb-3">
-                            <label for="emailRecuperar" class="form-label">Correo electrónico:</label>
-                            <input type="email" class="form-control" id="emailRecuperar" placeholder="Introduce tu correo">
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Enviar</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
