@@ -299,8 +299,8 @@ router.post("/inscribirse/:id", (req, res) => {
                     }
                     return res.status(200).json({
                       message: "Tu espera ha sido reactivada con éxito.",
-                      estado: "inscrito",
-                      titulo: "Felicidades",
+                      estado: "en_espera",
+                      titulo: "En lista de espera",
                       plazasOcupadas,
                     });
                   }
