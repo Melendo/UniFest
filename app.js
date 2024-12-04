@@ -21,6 +21,7 @@ var accesibilidadRouter = require('./routes/accesibilidad');
 
 var sessionMiddleware = require('./dataBase/session');
 var blacklist = require('./middlewares/blacklist');
+var jobsMiddleware = require('./jobs/cron')
 
 
 //Definimos el servidor
