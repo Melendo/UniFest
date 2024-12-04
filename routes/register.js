@@ -1,3 +1,6 @@
+"use strict"
+
+//Dependencias
 var express = require("express");
 var router = express.Router();
 var db = require("../dataBase/db");
@@ -5,8 +8,9 @@ var bcrypt = require("bcrypt");
 
 //Carga página registro
 router.get("/", (req, res) => {
-  const queryTodasFacultades = "SELECT * FROM facultades";
 
+  //Obtenemos las facultades
+  const queryTodasFacultades = "SELECT * FROM facultades";
   db.query(queryTodasFacultades, (err, resTodasFacultades) => {
     if (err) {
       console.log("Error al consultar las facultades:", err);
@@ -24,9 +28,9 @@ router.get("/", (req, res) => {
 
 
 router.post("/register", (req, res) => {
+
   //Obtención de datos del formulario
-  const { nombre, telefono, correo, contrasenia, facultad, esOrganizador } =
-    req.body;
+  const { nombre, telefono, correo, contrasenia, facultad, esOrganizador } = req.body;
 
   //Validación de formato de teléfono (solo números de 9 dígitos)
   if (telefono !== "" && !/^\d{9}$/.test(telefono)) {
@@ -49,6 +53,7 @@ router.post("/register", (req, res) => {
   //Comprobación de que no exista un usuario con el mismo correo
   const QueryCorreoExiste = "SELECT * FROM usuarios WHERE correo = ?";
   db.query(QueryCorreoExiste, [correo], (err, resCorreo) => {
+
     if (err) {
       console.log("Error al verificar el correo:", err);
       return res
@@ -68,6 +73,7 @@ router.post("/register", (req, res) => {
     //Obtención del ID de la facultad, error si no existe
     const QueryFacultadExiste = "SELECT * FROM facultades WHERE ID = ?";
     db.query(QueryFacultadExiste, [facultad], (err, resFacultad) => {
+
       if (err) {
         console.log("Error al verificar la facultad:", err);
         return res
@@ -105,8 +111,8 @@ router.post("/register", (req, res) => {
           esOrganizador,
           hashedPassword,
         ];
-
         db.query(query, params, (err, result) => {
+
           if (err) {
             console.log("Error al insertar el usuario:", err);
             return res
@@ -116,12 +122,9 @@ router.post("/register", (req, res) => {
 
           const userId = result.insertId;
 
-          const confQuery = `
-            INSERT INTO conf_accesibilidad (ID_usuario)
-            VALUES (?)
-          `;
-
+          const confQuery = `INSERT INTO conf_accesibilidad (ID_usuario) VALUES (?) `;
           db.query(confQuery, [userId], (err) => {
+
             if (err) {
               console.log("Error al insertar configuración de accesibilidad:", err);
               return res
@@ -131,11 +134,7 @@ router.post("/register", (req, res) => {
                 });
             }
 
-            return res
-              .status(200)
-              .json({
-                message: "Registro exitoso, por favor inicie sesión.",
-              });
+            return res.status(200).json({message: "Registro exitoso, por favor inicie sesión.",});
           });
         });
       });

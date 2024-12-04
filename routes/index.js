@@ -1,8 +1,11 @@
+"use strict";
+
+//Dependencias
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
+//Ruta para cargar el inicio de la aplicación
+router.get('/', function(req, res) {
   res.render('index');
 });
 
