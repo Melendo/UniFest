@@ -7,6 +7,7 @@ const pool = mysql.createPool({
   user: "root",
   password: "",
   database: "aw_24",
+  connectionLimit: 50,
 });
 
 function query(sql, params, callback) {
