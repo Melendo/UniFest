@@ -20,7 +20,9 @@ var notificacionesRouter = require('./routes/notificaciones');
 var accesibilidadRouter = require('./routes/accesibilidad');
 
 var sessionMiddleware = require('./dataBase/session');
-var jobsMiddleware = require('./jobs/cron')
+var jobsMiddleware = require('./jobs/cron');
+var blacklist = require('./middlewares/blacklist');
+
 
 //Definimos el servidor
 var app = express();
@@ -31,6 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(sessionMiddleware);
+app.use(blacklist)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
