@@ -1,9 +1,14 @@
+"use strict";
+
+//Cuando se envie el formulario "forgotPasswordForm"
 $(document).ready(function () {
     $('#forgotPasswordForm').on('submit', function (event) {
       event.preventDefault();
   
+      //Obtención de datos
       const email = $('#emailRecuperar').val().trim();
   
+      //Validación de que se haya introducido un email
       if (!email) {
         Swal.fire({
           title: 'Error',
@@ -13,8 +18,8 @@ $(document).ready(function () {
         });
         return;
       }
-      console.log(email);
   
+      //Petición ajax a /login/recuperar para enviar el correo de recuperación
       $.ajax({
         url: '/login/recuperar',
         method: 'POST',

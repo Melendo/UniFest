@@ -11,7 +11,6 @@ const pool = mysql.createPool({
 });
 
 function query(sql, params, callback) {
-  //console.log("Iniciando consulta a la base de datos...");
 
   pool.getConnection((err, connection) => {
     if (err) {
@@ -19,16 +18,12 @@ function query(sql, params, callback) {
       return callback(err);
     }
 
-    //console.log("Conexión establecida con éxito.");
-
     connection.query(sql, params, (error, results) => {
       connection.release(); // Libera la conexión una vez terminada la consulta
       if (error) {
         console.log("Error en la consulta:", error);
         return callback(error);  // Si hay un error en la consulta, pasa el error al callback
       }
-
-      //console.log("Consulta ejecutada correctamente");
 
       callback(null, results);
     });

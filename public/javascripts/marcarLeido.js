@@ -1,12 +1,15 @@
 "use strict";
 
+//Cuando se clique el boton con clase "btn-leido"
 $(document).ready(function () {
   $(".btn-leido").click(function (event) {
     event.preventDefault();
 
+    //Obtención de datos
     const id = $(this).data("id");
     const url = `/notificaciones/marcar-leida/${id}`;
 
+    //Petición a notificaciones/marcar-leida/id
     $.ajax({
       url: url,
       type: "POST",
@@ -19,9 +22,8 @@ $(document).ready(function () {
         }).then(() => {
           const row = $(`[data-id="${id}"]`).closest("tr");
           const button = $(`[data-id=${id}]`);
-          button.replaceWith("<span>Leído</span>"); //Cambia el botón por el texto Leído
-          // row.find(".btn-leido").remove(); //Quita el botón
-          row.removeClass("fw-bold"); //Quita la negrita
+          button.replaceWith("<span>Leído</span>"); 
+          row.removeClass("fw-bold");
         });
       },
       error: function (error) {

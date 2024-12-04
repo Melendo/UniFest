@@ -1,5 +1,6 @@
 "use strict";
 
+//Cuando la pagina se cargue
 $(document).ready(function() {
     var calendarEl = $('#calendar')[0]; 
 
@@ -16,10 +17,10 @@ $(document).ready(function() {
         }
     });
 
-    // Renderiza el calendario, pero aún no lo ajustamos
+    //Renderiza el calendario, pero aún no lo ajustamos
     calendar.render();
 
-    // Escuchar cuando el modal se haya mostrado completamente
+    //Escuchar cuando el modal se haya mostrado completamente para mostrar el calendario
     $('#calendarModal').on('shown.bs.modal', function () {
         calendar.render();
     });

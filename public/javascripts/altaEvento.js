@@ -1,9 +1,11 @@
 "use strict";
 
+//Cuando se envie el formulario "formNuevoEvento"
 $(document).ready(function () {
   $("#formNuevoEvento").on("submit", async function (event) {
     event.preventDefault();
 
+    //Obtenemos datos
     const título = $("#título").val();
     const descripción = $("#descripción").val();
     const tipo = $("#tipo").val();
@@ -14,36 +16,39 @@ $(document).ready(function () {
     const facultad = $("#facultad").val();
     const capacidad_máxima = $("#capacidad_máxima").val();
 
+    //Validación de que el título no sea vacio
     if (título === " ") {
       Swal.fire("El título no puede ser vacío");
       return false;
     }
 
-    // Validar que la fecha y la hora sean posteriores a hoy
+    //Validación de que la fecha y la hora sean posteriores a hoy
     const ahora = new Date();
     const fechaHoraIngresada = new Date(`${fecha}T${hora}`);
-
     if (fechaHoraIngresada <= ahora) {
       Swal.fire("La fecha y hora deben ser posteriores al momento actual");
       return false;
     }
 
+    //Validación de que el evento dure algo de tiempo
     if (isNaN(duración) || duración <= 0) {
       Swal.fire("La duración debe ser un número mayor a 0");
       return false;
     }
 
+    //Validación de que ubicación no sea vacía
     if (ubicación === " ") {
       Swal.fire("La ubicación no puede ser vacía");
       return false;
     }
 
+    //Validación de que tenga capacidad positiva
     if (capacidad_máxima <= 0) {
       Swal.fire("La capacidad debe ser positiva");
       return false;
     }
 
-    //Si todo es válido
+    //Petición ajax al endpoint /misEvento/anyadir y carga dinámica
     $.ajax({
       url: "/misEventos/anyadir",
       method: "POST",

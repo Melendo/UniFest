@@ -1,9 +1,11 @@
 "use strict";
 
+//Cuando se envie el formulario "formEditarPerfil"
 $(document).ready(function () {
   $("#formEditarPerfil").on("submit", async function (event) {
     event.preventDefault();
 
+    //Obtención de datos
     const nombre = $("#nombre").val();
     const telefono = $("#telefono").val().trim();
     const facultad = $("#facultad").val();
@@ -28,6 +30,7 @@ $(document).ready(function () {
       return false;
     }
 
+    //Petición ajax a /profile/actualizar y cargado dinámico
     $.ajax({
       url: "/profile/actualizar",
       method: "POST",
@@ -40,17 +43,17 @@ $(document).ready(function () {
           confirmButtonText: "OK",
         }).then(() => {
           
-          $("#profileTable").find("td").eq(0).text(nombre); //Actualiza nombre
+          $("#profileTable").find("td").eq(0).text(nombre);
 
           $("#profileTable")
             .find("td")
             .eq(2)
-            .text(telefono || "-"); //Actualiza teléfono, muestra "-" si está vacío
+            .text(telefono || "-");
 
           $("#profileTable")
             .find("td")
             .eq(3)
-            .text($("#facultad option:selected").text()); //Actualiza facultad
+            .text($("#facultad option:selected").text());
 
           $("#editarPerfilModal").modal("hide");
         });

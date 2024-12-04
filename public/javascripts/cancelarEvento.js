@@ -1,10 +1,15 @@
+"use strict";
+
+//Cuando se clique la clase btn-cancelar
 $(document).ready(function () {
   $(".btn-cancelar").click(function (event) {
     event.preventDefault();
 
+    //Obtenemos datos
     const eventoId = $(this).data("evento-id");
     const url = `/evento/cancelarEvento/${eventoId}`;
 
+    //Petición a /evento/cancelarEvento/IdDelEvento
     $.ajax({
       url: url,
       type: "POST",

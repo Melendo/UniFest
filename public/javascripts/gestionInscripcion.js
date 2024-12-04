@@ -1,11 +1,16 @@
+"use strict";
+
+//Cuando se clique en el boton con clase "btn-inscripcion"
 $(document).ready(function () {
     $('.btn-inscripcion').click(function (event) {
         event.preventDefault();
         
+        //Obtención de datos
         const eventoId = $(this).data('evento-id');
         const action = $(this).text().trim();
         const url = (action === 'Cancelar inscripción' || action === 'Cancelar espera') ? `/evento/cancelar/${eventoId}` : `/evento/inscribirse/${eventoId}`;
         
+        //Petición ajax al enpoint específico dependiendo de el rol y estado del usuario en respecto al evento
         $.ajax({
             url: url,
             type: 'POST',

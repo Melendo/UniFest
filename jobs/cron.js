@@ -1,6 +1,10 @@
+"use strict";
+
+//Dependencias
 const cron = require("node-cron");
 const db = require("../dataBase/db");
 
+//Función que envia las notificaciones a los suariois
 const enviarNotificaciones = async (eventos, mensaje) => {
   try {
     for (const evento of eventos) {
@@ -25,6 +29,7 @@ const enviarNotificaciones = async (eventos, mensaje) => {
   }
 };
 
+//Funcion sacar eventos a x dias
 const procesarEventos = (dias, mensaje) => {
   const queryEventos = `
     SELECT e.ID, e.título, e.fecha, u.id AS ID_usuario
@@ -53,6 +58,7 @@ const procesarEventos = (dias, mensaje) => {
   });
 };
 
+//Función que envia los recordatorios cuando falten 7, 3 y 1 dias
 const enviarRecordatorios = () => {
   console.log("Ejecutando tarea: Enviar recordatorios...");
 
@@ -66,6 +72,7 @@ const enviarRecordatorios = () => {
   procesarEventos(7,'Planifica con tiempo: El evento "{título}" será en 7 días, el {fecha}.');
 };
 
+//Limpiar la bandeja de entrada de mensajes antiguos
 const limpiarNotificacionesAntiguas = () => {
   console.log("Ejecutando tarea: Limpieza de notificaciones antiguas...");
 

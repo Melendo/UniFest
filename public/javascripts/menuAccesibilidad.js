@@ -1,5 +1,6 @@
 "use strict";
 
+//Función auxiliar para aplicar la configuración seleccionada por el usuario
 function aplicarConf(esquema_colores, tamaño_letra) {
   const tables = document.querySelectorAll("table");
   const buttons = document.querySelectorAll("button");
@@ -83,13 +84,16 @@ function aplicarConf(esquema_colores, tamaño_letra) {
   }
 }
 
+//Cuando se envie el formulario "formMenuAccesibilidad"
 $(document).ready(function () {
   $("#formMenuAccesibilidad").on("submit", async function (event) {
     event.preventDefault();
 
+    //Obtención de datos
     const tamaño_letra = $("#tamaño-letra").val();
     const esquema_colores = $("#esquema-colores").val();
 
+    //Selección de elementos a cambiar
     const tables = document.querySelectorAll("table");
     const buttons = document.querySelectorAll("button");
     const links = document.querySelectorAll("a");
@@ -97,6 +101,7 @@ $(document).ready(function () {
     const textareas = document.querySelectorAll("textarea");
     const selects = document.querySelectorAll("select");
 
+    //Ajustes en de clases para el cambio
     if (esquema_colores === "oscuro") {
       document.body.classList.add("dark-scheme");
       tables.forEach((table) => {
@@ -171,6 +176,7 @@ $(document).ready(function () {
       });
     }
 
+    //Petición ajax para guardar la configuración de accesibilidad en la bd
     $.ajax({
       url: "/accesibilidad/guardarConf",
       method: "POST",

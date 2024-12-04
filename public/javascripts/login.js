@@ -1,5 +1,6 @@
 "use strict";
 
+//Cuando se envie el formulario "formLogin"
 $(document).ready(function() {
     $('#formLogin').on('submit', async function (event) {
         event.preventDefault();
@@ -21,7 +22,7 @@ $(document).ready(function() {
             return false;
         }
 
-        //Si todo es válido
+        //Petición al endpoint /login/login para iniciar la sesión
         $.ajax({
             url: '/login/login',
             method: 'POST',
