@@ -1,2 +1,47 @@
 # UniFest
-Página web de eventos universitarios
+Unifest es una aplicación web que gestiona eventos universitarios.
+Esta aplicación cuenta con funcionalidades que solo estarán disponibles para uno de los dos roles posibles del sistema (organizador y usuario). Toda la aplicación puede ser navegada a través de tabulación y uso del teclado de modo que aunque en los próximos apartados no se indique de manera explícita tanto la navegación por ratón como la de por teclado, el usuario podrá acceder a los distintos elementos interactivos (enlaces, botones, campos de formulario, menús de selección, etc) tanto pulsando en ellos como navegando como anteriormente se ha indicado por tabulación y bien uso de las flechas o del Enter en función del elemento que se trate. Para poder acceder a cualquiera de las funcionalidades dentro de la aplicación se deberá estar logueado (pudiendo no tener que realizar el inicio de sesión de manera activa si en las anteriores 24 horas el usuario realizó un inicio de sesión de manera éxitosa y esta no ha sido cerrada). 
+
+## 1.- Funcionalidades comunes para organizador y usuario
+
+### 1.1 Página de inicio:
+
+Nuestra página de inicio mostrará 2 botones, uno para el registro de nuevos usuarios y uno para el inicio de sesión de usuarios que ya se han registrado. 
+
+#### 1.1.1 Registro:
+
+En el caso de pulsar el botón de registro se nos mostrará la vista del mismo donde podremos observar un formulario con los campos de datos necesarios para la creación del usuario. Al final del formulario contaremos tanto con un botón para volver ‘Atrás’ a la página de inicio en caso de haber accedido por error, como un botón ‘Enviar’ para que los datos del formulario sean procesados.
+
+En el formulario se nos pedirá que indiquemos obligatoriamente nuestro nombre, un correo que debe pertenecer a la UCM (formato @ucm.es), una contraseña con al menos 4 carácteres, y la facultad a la que se pertenece. Asimismo habrá un campo opcional de teléfono (que en caso de querer ser rellenado debe tener 9 dígitos) y la opción de indicar si la cuenta a crear en la plataforma será de usuario o de organizador, de modo que se tenga acceso a determinadas funcionalidades exclusivas de cada rol. Si los datos introducidos en el formulario cumplen con los criterios establecidos previamente aparecerá un mensaje emergente de éxito, en caso contrario aparecerá uno de error especificando según se van procesando los campos si hay algún problema. Ambos mensajes cuentan con un botón de ‘OK’ que cerrará el modal, dirigiendo al usuario al inicio de sesión en caso de éxito o no ocurriendo nada en caso de error.
+
+#### 1.1.2 Inicio de sesión:
+
+En el caso de pulsar el botón de inicio de sesión se nos mostrará un breve formulario con dos únicos campos: el correo y la contraseña que se proporcionó cuando se hizo el registro previo. Además al final del formulario contaremos tanto con un botón para volver ‘Atrás’ a la página de inicio en caso de haber accedido por error, como un botón ‘Enviar’ para que los datos del formulario sean procesados. Si los datos introducidos coinciden con los de un usuario existente, al pulsar en ‘Enviar’ se mostrará un mensaje emergente de éxito que contará con un botón de ‘OK’ que cerrará el modal y redireccionará al usuario a la ‘Página principal’ o ‘Home’; en caso contrario simplemente el mensaje que se mostrará será de error y tras pulsar el botón de ‘OK’ simplemente se cerrará el modal.
+
+A continuación de los botones de ‘Atrás’ y ‘Enviar’, hay un enlace para restablecer la contraseña en caso de haberla perdido o requiera cambiarla por motivos de seguridad. Al pulsar sobre él, nos abrirá un modal en el que tendremos que introducir el correo asociado a nuestra cuenta de usuario de Unifest y pulsar el botón ‘Enviar’ de modo que la aplicación de manera automática nos mandará un correo en el que nos facilitará un enlace que al ser pulsado nos llevará a la vista de restablecimiento de contraseña. Asimismo sabremos que el correo efectivamente ha sido enviado con éxito mediante un mensaje emergente como los anteriormente descritos.
+
+#### 1.1.3 Restablecer contraseña:
+	
+En la página de restablecimiento de contraseña aparecerán los campos en los que introducir la nueva contraseña (que deberá tener 4 caracteres igual que en el formulario de registro) y un botón con la palabra ‘Restablecer’ que al ser pulsado se procesará el formulario y en caso de ir todo bien aparecerá el ya conocido mensaje de éxito que al cerrarse nos mandará de nuevo al login. El enlace de restablecimiento de usuario tiene una caducidad de una hora, por lo que si se accede a él pasado ese tiempo, aunque se muestre el formulario y lo rellenemos en un formato válido nos aparecerá un mensaje de error indicándonos que el enlace ha caducado.
+
+### 1.2 Página principal / Home:
+
+En todas las pantallas internas de la aplicación se cuenta con un footer donde se muestran los nombres de los autores de la aplicación y una barra de navegación en la que aparece el nombre y logo de Unifest junto a las distintas opciones de navegación (las cuales algunas serán distintas para un usuario común que para un organizador) en forma de enlace. A través de estos se podrá acceder a las vistas del propio ‘Home’, el perfil del usuario, los eventos del usuario (la cual según el rol se llamará ‘Mis eventos’ para los organizadores - y mostrará los futuros eventos creados por él - o ‘Mis inscripciones’ para los usuarios comúnes - y mostrará los futuros eventos en los que está inscrito o en lista de espera) y su bandeja de entrada. Hay un último enlace dedicado a poder cerrar la sesión del usuario al pulsarlo.
+
+De igual manera hay un menú de accesibilidad al que se puede acceder desde cualquier vista interna, ubicado en la parte inferior izquierda (mediante teclado se accede a él tras la barra de navegación, no requiriendo de navegar toda la vista). Al pulsar sobre el botón ‘Configuración de accesibilidad’ aparecerá un modal con los campos configurables para el tamaño de letra y el esquema de colores que se aplicarán tras pulsar el botón que las sucede y cuya aplicación será confirmada por un mensaje de éxito o error. El tamaño de letra tiene las opciones de ‘Normal’, ‘Grande’ y ‘Muy grande’, mientras que el esquema de color tiene las opciones ‘Claro’ y ‘Oscuro’. La configuración de accesibilidad del usuario queda almacenada en la base de datos de modo que cada vez que el usuario inicie sesión esta quedará aplicada tal y cómo el usuario haya especificado en su anterior sesión. Durante el desarrollo de la aplicación se tuvo en cuenta que entre los distintos elementos hubiera un alto contraste y no hubiera acciones cuyo color pudiera ser determinante ni pudiera ser confuso para usuarios con baja visibilidad o daltonismo, de modo que aunque estas características no aparezcan de manera explícita en la configuración ya están aplicadas por defecto en la propia aplicación.
+
+En el lado izquierdo del Home podremos mediante el botón de ‘Mostrar calendario’ desplegar un calendario mensual en el que se mostrarán los eventos registrados en la aplicación y observar una breve selección de próximos eventos. El modal puede ser cerrado pulsando el botón de cierre del modal señalado con una ‘X’ o clicando fuera del modal.
+
+En el lado derecho tenemos un botón ‘Mostrar buscador’ que desplegará el formulario de búsqueda que cuenta con varios filtros avanzados y cuyos resultados se mostrarán en una tabla con scroll vertical al pulsar en el botón ‘Buscar’ al final de este.
+
+A cualquiera de los eventos que se muestran tanto en la página principal como en el resto de vistas en las que están disponibles, tienen en sus tablas un botón ‘Ver evento’ que nos llevará a la vista de mayor detalle del evento la cual será explicada en un posterior apartado al contener funcionalidades particulares según el rol.
+
+### 1.3 Mi perfil:
+
+En el perfil podremos ver por un lado los datos asociados a la cuenta del usuario y que fueron proporcionados durante el registro y por el otro lado una tabla con el historial de los eventos pasados del usuario (si es organizador le mostrará aquellos eventos que creó pero cuya fecha ya ha pasado; si es un usuario común le mostrará aquellos eventos pasados en los que estuvo inscrito y por ende entendemos asistió). Los datos personales del usuario pueden ser modificados mediante un formulario que se despliega mediante el botón ‘Editar perfil’ bajo la información y cuyos campos estarán rellenos por defecto con la información actual del usuario y deberán seguir el mismo formato que cuando el registro si desean modificarse. Si se pulsa el botón ‘Guardar cambios’ al final del formulario y todo es correcto aparecerá un mensaje de éxito (y se reflejarán de manera dinámica los cambios), sino aparecerá uno de error.
+
+### 1.4.- Bandeja de entrada:
+En la bandeja de entrada del usuario se encuentran las notificaciones de este. El tipo de notificación que recibe un usuario puede ser de actualización (si un evento al que está inscrito o en espera ha modificado su información - pudiendo incluso haber pasado de una lista de espera a estar inscrito - , de cancelación (si se ha cancelado un evento al que estaba inscrito o en espera, o simplemente un recordatorio notificando tanto a los usuarios inscritos de manera efectiva como al propio organizador del evento que este ocurrirá en un plazo de 7, 3 o 1 día.
+
+Desde cualquier vista interna, si el usuario tiene notificaciones sin leer, junto al enlace de la bandeja de entrada aparecerá un círculo rojo. El usuario puede marcar mediante el botón que aparece junto a cada notificación como leída esa misma notificación.
+
