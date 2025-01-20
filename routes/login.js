@@ -154,6 +154,7 @@ router.post("/recuperar", async (req, res) => {
       }
       
       //Preparamos el gmail que envia la petición (no se deberia hardcodear pero para que funcione en la entrega lo dejamos)
+      //This email does not longer exist so nice try <3
       const transporter = nodemailer.createTransport({
         service: 'Gmail', 
         auth: {
